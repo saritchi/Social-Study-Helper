@@ -1,3 +1,14 @@
+/*
+    new_card.js
+
+    Description: 
+        When the "New Card" button is clicked, two new text fields will be created (Term and Definition)
+
+    
+
+*/
+
+
 var newCard = document.getElementById("new_card_btn");
 var labelCount = 1; //number of starting cards (before new card btn is clicked)
 
@@ -5,7 +16,6 @@ newCard.onclick = () => {
     labelCount++;
     //gets the "div" where all the term and definition pairs sit
     var termList = document.getElementById("TermList");
-    termList.setAttribute("value", labelCount);
 
     //Creates a new label and text field for the term portion of card
     var node = document.createElement("Label");
