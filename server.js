@@ -20,6 +20,11 @@ app.post('/create_deck', (req, res) =>{
 })
 
 
+app.post('/api/auth', (req, res) => {
+    console.log("Got login request");
+});
+
+
 app.listen(port, () => {
     console.log("Server Running on Port " + port)
 })
