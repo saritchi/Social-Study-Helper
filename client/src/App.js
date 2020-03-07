@@ -1,33 +1,59 @@
-import React from 'react';
+import React, { Component } from 'react';
 import './App.css';
-import Home from './components/Home';
-import SignUp from './components/SignUp';
-import { Provider } from 'react-redux';
+import CardExample from './components/CardExample';
+import Hover from './components/Hover';
+import Toggle from './components/Toggle';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import store from './store';
+import axios from "axios";
 
-function App() {
-  return (
-    <Router>
-    <Provider store={store}>
-    <div className="App">
-        <Switch>
-          <Route 
-            path="/" 
-            exact               
-            render={props => (
-                  <React.Fragment>
-                    <Home/>
-                  </React.Fragment>
-                )} 
-            />
+import "bootstrap/dist/css/bootstrap.min.css";
+import "shards-ui/dist/css/shards.min.css"
 
-          <Route path="/SignUp" component={SignUp} />
-        </Switch>
-    </div>
-    </Provider>
-    </Router>
-  );
+class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      serverTime: "",
+      serverData: "",
+      cardData: ""
+    };
+  }
+
+  async componentDidMount() {
+    try {
+      const serverTimeResponse = await axios.get('/api/serverTime');
+      const serverDataResponse = await axios.get('/api/serverData');
+      const serverCardDataResponse = await axios.get('/api/cardData');
+
+      this.setState({serverTime: serverTimeResponse.data.result, 
+                     serverData: serverDataResponse.data.result, 
+                     cardData: serverCardDataResponse.data.result});
+    } catch (error) {
+      console.error("Server error: " + error);
+    }
+  }
+
+  render() {
+    return (
+      <Router>
+      <div className="App">
+          <Switch>
+            <Route 
+              path="/" 
+              exact               
+              render={props => (
+                    <React.Fragment>
+                      <CardExample value={this.state.cardData}/>
+                      <Hover value={this.state.serverTime}/>
+                      <Toggle value={this.state.serverData}/>
+                    </React.Fragment>
+                  )} 
+              />
+          </Switch>
+      </div>
+      </Router>
+    );
+  }
 }
 
 export default App;
