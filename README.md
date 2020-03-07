@@ -1,6 +1,39 @@
-EXECUTING:
-1. run the command: node server.js (or nodemon server.js)
-2. open a browser and type localhost:3003/edit_flashcard.html
+# Development
+To set up your development environment you must do the following
+
+ 1. Run npm install to locally install all the correct packages
+ 2. See the  [Database-Setup Section](#Database-Setup)
+ 3. Navigate to the root project directory (the directory with server.js)
+ 4. Run npm start to build and run both the client and the server
+ 
+ Currently the project has been set up to run the client through a webpack development server that sends the bundle.js to the client through port 3000. At the same time any API request to the server is proxy'd through the webpack development server to the server side application running on port 3003. Any changes to the client side or server side code with refresh that section of the app upon file save.
+
+## Creating a New Endpoint
+When creating a new end point on the server follow the convention of `"/api/endPointName"`. On the client side a request can then be made through [axios](https://www.npmjs.com/package/axios). An example of accessing an endpoint from the client is provided below:
+Server Side Node:
+```
+....
+app.get('/api/endPoint', (req, res) => {
+    res.json({result:  "Some Server Data"});
+});
+....
+```
+
+Client Side JS:
+```
+import axios from "axios" 
+
+...
+
+try {
+    const response = await axios.get('/api/endPoint');
+    console.log(response.data.result);
+} catch(error) {
+    console.error("Server error: " + error)
+}
+
+....
+```
 
 # Database Setup
 To set up the database to be used in on a local machine for development we need to first created the database in MySQL and then populate the .env configuration file.
