@@ -33,17 +33,22 @@ app.get('/api/cardData', (req, res) => {
     res.json({result: lp});
 });
 
+app.get('/api/courses', (req, res) => {
+
+});
+
 //TODO: temporary function - user information should be returned by authentication once that's set up
 app.get('/api/user', (req, res) => {
     console.log("Returning user");
     res.json({result: "John Doe"});
 });
 
-    console.log("Returning user");
-app.post('/api/auth', (req, res) => {
-    console.log("Got login request");
-});
+app.post('/api/addCourse', (req, res) => {
+    var body = req.body;
+    var course = body.name;
 
+    console.log("Add course with name: " + course);
+});
 
 app.listen(port, () => {
     console.log("Server Running on Port " + port)
