@@ -38,10 +38,23 @@
         this.db = mysql.createConnection(connectionObject);
         this.db.connect((err) => {
             if (err) {
+                console.log("Unable to initialize database connection! Aborting server start up with error: " + err.message);
                 throw err;
             }
 
             console.log("Sucessfully connected to database.");
+        });
+    }
+
+    initializeTablesIfNeeded() {
+        const createCoursesTableSQL = `CREATE TABLE IF NOT EXISTS Courses(
+            id INT PRIMARY KEY AUTO_INCREMENT,
+            name varchar(255) not null)`
+        this.db.query(createCoursesTableSQL, (err) => {
+            if (err) {
+                console.log("Unable to initialize database tables! Aborting server start up with error: " + err.message);
+                throw err;
+            }
         });
     }
 

@@ -52,7 +52,7 @@ class Home extends Component {
                     {this.renderCard(8)}
                 </div>
                 <div>
-                    <Button onClick={() => this.addCourse}>Add New Course</Button>
+                    <Button onClick={this.addCourse}>Add New Course</Button>
                 </div>
             </div>
             
