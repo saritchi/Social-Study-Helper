@@ -8,7 +8,8 @@ const fs = require('fs');
 const app = express()
 app.use(morgan('short'))
 app.use(express.static('./public'))
-app.use(bodyParser.urlencoded({extended: false}))
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}))
 
 const database = new Database(process.env);
 
@@ -32,6 +33,13 @@ app.get('/api/cardData', (req, res) => {
     res.json({result: lp});
 });
 
+//TODO: temporary function - user information should be returned by authentication once that's set up
+app.get('/api/user', (req, res) => {
+    console.log("Returning user");
+    res.json({result: "John Doe"});
+});
+
+    console.log("Returning user");
 app.post('/api/auth', (req, res) => {
     console.log("Got login request");
 });

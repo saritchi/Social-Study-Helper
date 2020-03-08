@@ -1,100 +1,77 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux';
-import { logIn } from '../actions/logInActions';
-import Student from './Student';
-import Teacher from './Teacher';
-import {Link} from 'react-router-dom';
- class Home extends Component {
-    constructor(props){
+import React, {Component} from 'react'
+import {withRouter } from "react-router-dom"
+import { Button, Card, CardBody } from 'shards-react'
+import './Home.css'
+import axios from "axios"
+
+class Home extends Component {
+    constructor(props) {
         super(props);
         this.state = {
-            username:'',
-            password:'',
-            type:'0'
+            courses: [],
+            username: null,
         };
-        this.onChange = this.onChange.bind(this);
-        this.onSubmit = this.onSubmit.bind(this);
+
+        this.addCourse = this.addCourse.bind(this);
     }
 
-    onChange(e) {
-        this.setState({ [e.target.name]: e.target.value });
-      }
-    
-    onSubmit(e) {
-    e.preventDefault();
-    var type = document.getElementsByClassName("myradio");
-    if(type[0].checked == true){type = type[0].value;}
-    else if (type[1].checked == true){type = type[1].value;}
-    else{type = 0;}
-    this.state.type = type;
-    const user = {
-        username: this.state.username,
-        password: this.state.password,
-        type: this.state.type
-    };
-    this.props.logIn(user);
-
-    //Was Thinking about prompting an alert window if authentication being failed but as told by bobby it runs the next line 
-    //before this.props.logIn(user) I trid await but did not worked we need to fix this
-
-    /*await this.props.logIn(user);
-    var arr = Object.values(this.props.user);
-    console.log(arr);
-    if(arr.length>0){
-        if(arr[0].auth == 'false'){
-            alert("You are not a valid user please sign up");
-        }
-        
-    }*/
-    
+    async componentDidMount() {
+        //TODO: should not need to make a request for this. Should be passed in from login page.
+        const user = (await axios.get('/api/user')).data.result ?? "";
+        this.setState({username: user});
     }
 
+    addCourse() {
+        this.props.history.push("/addCourse");
+    }
+
+    
     render() {
-
-        var arr = Object.values(this.props.user);
-        if(arr.length>0){
-            if(arr[0].auth == 'true'){
-                if(arr[0].type == '1'){
-                    return(
-                        <div><Student/></div>
-                    )
-                }
-                else{
-                    return(
-                        <div><Teacher/></div>
-                    )
-                }
-
-            }
-           
-        }
         return (
             <div>
-                <div>
-                <h1>I am home</h1>
-                <form onSubmit = {this.onSubmit}>
-                    <label>Username</label>
-                    <input type="text" name="username" onChange = {this.onChange}></input><br></br>
-                    <label>Password</label>
-                    <input type="password" name="password" onChange = {this.onChange}></input><br></br><br></br>
-                    <div>
-                        <label>User type:</label><br></br>
-                        <input className = "myradio" type="radio" name="type" value = "1" /><label>Student</label><br></br>
-                        <input className = "myradio" type="radio" name="type" value = "2"/><label>Teacher</label>
-                    </div>
-                    <input type="submit" value="submit"></input><br></br>
-                </form> 
+                <div id="user">
+                    <h1>Welcome {this.state.username}!</h1>
                 </div>
                 <div>
-                    <Link to="/signUp">SignUp</Link>
+                    <p>Courses: </p>
+                    <p>View All Courses</p>
+                </div>
+                <div className="cardRow">
+                    {this.renderCard(0)}
+                    {this.renderCard(1)}
+                    {this.renderCard(2)}
+                </div>
+                <div className="cardRow">
+                    {this.renderCard(3)}
+                    {this.renderCard(4)}
+                    {this.renderCard(5)}
+                </div>
+                <div className="cardRow">
+                    {this.renderCard(6)}
+                    {this.renderCard(7)}
+                    {this.renderCard(8)}
+                </div>
+                <div>
+                    <Button onClick={() => this.addCourse}>Add New Course</Button>
                 </div>
             </div>
-        )
-    }
-}
+            
+            )
+        }
 
-const mapStateToProps = state => ({
-    user: state.user.item
-  });
-  
-export default connect(mapStateToProps, { logIn })(Home);
+        renderCard(i) {
+            if (i > this.state.courses.length) {
+                return;
+            }
+    
+            return (
+                <Card>
+                    <CardBody>
+                        {this.state.courses[i]}
+                    </CardBody>
+                </Card>
+            );
+        }
+};
+
+export default withRouter(Home)
