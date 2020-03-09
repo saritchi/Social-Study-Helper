@@ -27,10 +27,38 @@ app.get('/api/serverData', (req, res) => {
 });
 
 app.get('/api/cardData', (req, res) => {
-    let lp = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vel mollis ante. Suspendisse nulla lorem, tempus nec congue vel, aliquam.";
+    let lp = "Hello";
+
+    // let queryString = "INSERT INTO cards (card_id, prompt, answer) VALUES(?,?,?)"
+    // database.runQuery(queryString, [2, "This is a new card", "This is the new card's answer"], (err, rows, fields) => {
+    //     if(err){
+    //         console.log("Query Failed: " + err)
+    //         res.sendStatus(500) //internal server error
+    //         return
+    //     }
+
+    // })
+
+    // database.runQuery("SELECT * FROM cards", (err, rows, fields) => {
+    //     if(err){
+    //         console.log("Query Failed: " + err)
+    //         res.sendStatus(500) //internal server error
+    //         return
+    //     }else{
+    //         console.log("Data Fetched")
+    //         console.log(rows)
+    //         console.log(rows[0].answer)
+
+    //         res.json({result: "Prompt: "  + rows[0].prompt + " Answer: " + rows[0].answer})
+    //     }
+
+    // })
     console.log("Lorem Ipsum: " + lp);
     res.json({result: lp});
 });
+
+
+
 
 app.listen(port, () => {
     console.log("Server Running on Port " + port)

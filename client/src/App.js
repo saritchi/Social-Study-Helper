@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
+import CreateDeck from './components/CreateDeck';
 import CardExample from './components/CardExample';
 import Hover from './components/Hover';
 import Toggle from './components/Toggle';
@@ -37,7 +38,8 @@ class App extends Component {
     return (
       <Router>
       <div className="App">
-          <Switch>
+        <CreateDeck/>
+          {/* <Switch>
             <Route 
               path="/" 
               exact               
@@ -49,7 +51,8 @@ class App extends Component {
                     </React.Fragment>
                   )} 
               />
-          </Switch>
+          </Switch> */}
+
       </div>
       </Router>
     );
