@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {withRouter } from "react-router-dom"
 import { Button, Card, CardBody, Nav, NavItem, NavLink } from 'shards-react'
+import EventAlert from './EventAlert';
 import './Home.css'
 import axios from "axios"
 
@@ -10,6 +11,8 @@ class Home extends Component {
         this.state = {
             courses: [],
             username: null,
+            networkError: false,
+            networkErrorMessage: '',
         };
 
         this.addCourse = this.addCourse.bind(this);
@@ -18,22 +21,40 @@ class Home extends Component {
     async componentDidMount() {
         //TODO: should not need to make a request for this. Should be passed in from login page.
         const user = (await axios.get('/api/user')).data.result ?? "";
-        const coursesResponse = await axios.get('/api/courses');
-        const courses = coursesResponse.data.result;
-        courses.forEach((course) => {
-            console.log(course);
-        })
-        this.setState({username: user, courses: courses});
+        try {
+            const coursesResponse = await axios.get('/api/courses');
+            const courses = coursesResponse.data.result;
+            courses.forEach((course) => {
+                console.log(course);
+            })
+            this.setState({username: user, courses: courses});
+        } catch(error) {
+            console.error(error);
+            this.setState(
+            {
+                networkError: true,
+                networkErrorMessage: error.response.data.result,
+            });
+        }
     }
 
     addCourse() {
         this.props.history.push("/addCourse");
     }
 
+    dismissAlert = () => {
+        this.setState({showAlert: false});
+    }
     
     render() {
         return (
             <div>
+                <EventAlert 
+                    visible={this.state.networkError} 
+                    dismissAlert={this.dismissAlert} 
+                    theme={"danger"} 
+                    message={this.state.networkErrorMessage} 
+                />
                 <div id="user">
                     <h1>Welcome {this.state.username}!</h1>
                 </div>

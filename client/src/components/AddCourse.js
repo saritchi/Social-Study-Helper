@@ -13,7 +13,7 @@ export default class AddCourse extends Component {
       chapters: [],
       showAlert: false,
       networkError: false,
-      message: ''
+      alertMessage: ''
     }
   }
   
@@ -71,7 +71,7 @@ export default class AddCourse extends Component {
           chapters: [],
           showAlert: true,
           networkError: false,
-          message: "Added Course"
+          alertMessage: "Added Course"
         }, this.addChapterInput);
     } catch (error) {
       console.error(error);
@@ -79,7 +79,7 @@ export default class AddCourse extends Component {
         {
           showAlert: true,
           networkError: true,
-          message: error.response.data.result,
+          alertMessage: error.response.data.result,
         });
     }
   }
@@ -103,7 +103,7 @@ export default class AddCourse extends Component {
     const chapters = this.state.chapters;
     const visible = this.state.showAlert;
     const theme = this.state.networkError ? "danger" : "success";
-    const messasge = this.state.message;
+    const messasge = this.state.alertMessage;
 
     return (
       <div>
