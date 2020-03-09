@@ -35,7 +35,21 @@ app.get('/api/cardData', (req, res) => {
 });
 
 app.get('/api/courses', (req, res) => {
+    console.log("Getting courses....");
+    const addCourseSQL = `SELECT * FROM Courses`;
+    database.runQuery(addCourseSQL, [], (error, results, fields) => {
+        if (error) {
+            console.log(`Unable to get courses from the database. Error: ${error.message}`)
+            res.status(500).json({result: "An error occured while attempting to get your courses. Please try again later."})
+        } 
 
+        var courses = [];
+        results.forEach((course) => {
+            console.log(course);
+            courses.push(course);
+        })
+        res.status(200).json({result: courses});
+    })
 });
 
 //TODO: temporary function - user information should be returned by authentication once that's set up
@@ -55,10 +69,10 @@ app.post('/api/addCourse', (req, res) => {
         if (error) {
             console.log(`Unable to add course with name: ${coursename} to database. Error: ${error.message}`)
             res.status(500).json({result: "An error occured while attempting to add the course to the database. Please try again later."})
-        } else {
-            console.log("Add course with name: " + coursename);
-            res.sendStatus(200);
         }
+
+        console.log("Add course with name: " + coursename);
+        res.sendStatus(200);
     })
 });
 
