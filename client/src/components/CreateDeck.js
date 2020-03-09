@@ -1,114 +1,122 @@
 import React from 'react'
-import { Form, FormGroup, FormTextarea, FormCheckbox} from "shards-react";
+import { Form, FormGroup, FormTextarea, FormInput} from "shards-react";
 import { Container, Row, Col } from "shards-react";
 import {
-    Card,
-    CardBody,
     Button
   } from "shards-react";
+import EventAlert from './EventAlert';
+import Axios from 'axios';
+import './CreateDeck.css';
 
 
 export default class CreateDeck extends React.Component {
     constructor(props) {
         super(props);
-
+        this.state = {
+            deckname: '',
+            cards: [],
+            prompts: {},
+            answers: {}
+        }
     }
     
-    handleSubmit(event){
-        this.setState(event.target.value)
+    componentDidMount(){
+        this.addCard();
+    }
+
+    addCard = () => {
+        const numberOfCards = this.state.cards.length;
+        const newCards = [...this.state.cards, this.renderNewCard(numberOfCards)];
+
+        this.setState({cards: newCards})
+        this.forceUpdate();
+        console.log("New Card Added!")
+    }
+
+    renderNewCard = i => {
+        const cardId = "card" + i;
+        const promptId = "prompt" + i;
+        const answerId = "answer" + i;
+
+        return (
+            <FormGroup key={cardId}>
+                <Container id="cards">
+                    <Row>
+                        <h6>{i+1}</h6> 
+                    </Row>
+                    <hr></hr>
+                    
+                    <Row>
+                        <Col>
+                            <label htmlFor={promptId}>Card Prompt:</label>
+                            <FormTextarea id={promptId} onChange={this.onInputChange} name="card_prompt"/>
+                        </Col>
+                        <Col>
+                            <label htmlFor={answerId}>Card Answer:</label>
+                            <FormTextarea id={answerId} onChange={this.onInputChange} name="card_answer"/>
+                        </Col>
+                    </Row>
+                </Container>
+
+            </FormGroup>
+        )
+    }
+
+
+    onSubmit = async event => {
         event.preventDefault();
+        const deckname = this.state.deckname;
+
+        const json = {
+            deckname: deckname
+        }
+ 
+        console.log(json);
+
+        try{
+            const response = await Axios.post("/api/addDeck", json);
+            console.log(response.status);
+            this.setState(
+                {
+                    deckname: ''
+                }
+            )
+        } catch (error){
+            console.log(error);
+        }
+    }
+
+    onInputChange = event => {
+        if(event.target.name === "card_prompt") {
+            const prompt = this.state.prompts;
+            prompt[event.target.id] = event.target.value;
+            console.log(event.target.id)
+            this.setState({[event.target.id]: prompt});
+        }else if(event.target.name === "card_answer"){
+            const answer = this.state.answers;
+            answer[event.target.id] = event.target.value;
+            this.setState({[event.target.name]: answer})
+        }else{
+            console.log([event.target.name]);
+            this.setState({[event.target.name]: event.target.value});
+        }
     }
 
     render(){
+        const cards = this.state.cards;
         return(
-            <Container
-                style={{
-                    position: 'absolute', left: '50%', top: '50%',
-                    transform: 'translate(-50%, -50%)'
-                }}>
-                <Row>
-                    <Col></Col>
-                    <Col>
-                        <Card>
-                            <CardBody>
-                                <Form on>
-                                <FormGroup>
-                                    <label htmlFor="#CardPrompt">Card Prompt:</label>
-                                    <FormTextarea id="#CardPrompt" placeholder="Enter a prompt"></FormTextarea>
-                                </FormGroup>
-                                <FormGroup>
-                                    <label htmlFor="#CardAnswer">Answer:</label>
-                                    <FormTextarea id="#CardAnswer" placeholder="Enter the answer for the prompt"></FormTextarea>
-                                </FormGroup>
-                                <FormGroup>
-                                    <Container>
-                                        <Row>
-                                            <Col></Col>
-                                            <Col></Col>
-                                            <Col></Col>
-                                        </Row>
-                                        <Row>
-                                            <Col><Button theme="danger">Cancel</Button></Col>
-                                            <Col></Col>
-                                            <Col><Button type="submit">Add</Button></Col>
-                                        </Row>
-                                    </Container>
-                                </FormGroup>
-                                </Form>
-                            </CardBody>
-                        </Card>
-                    
-                    </Col>
-                    <Col></Col>
-                </Row>
-            </Container>
+            <div>
+                <Form id="deck">
+                    <Container>
+                        <label htmlFor="deckName">Deck Name:</label>
+                        <FormInput id="deckName" name="deckname" onChange={this.onInputChange} value={this.state.deckname} placeholder="Deck Name"/>
+                    </Container>
+                    {cards}
+                    <Button id="addCard" onClick={this.addCard}>Add Card</Button>
+                    <br></br>
+                    <Button id="addDeck" theme="danger" onClick={this.onSubmit}>Finished</Button>
+                </Form>
+            </div>
         );
     }
 }
-
-// export default function CreateDeck(){
-//     return(
-//         <Container
-//             style={{
-//                 position: 'absolute', left: '50%', top: '50%',
-//                 transform: 'translate(-50%, -50%)'
-//             }}>
-//             <Row>
-//                 <Col></Col>
-//                 <Col>
-//                     <Card>
-//                         <CardBody>
-//                             <Form>
-//                             <FormGroup>
-//                                 <label htmlFor="#CardPrompt">Card Prompt:</label>
-//                                 <FormTextarea id="#CardPrompt" placeholder="Enter a prompt"></FormTextarea>
-//                             </FormGroup>
-//                             <FormGroup>
-//                                 <label htmlFor="#CardAnswer">Answer:</label>
-//                                 <FormTextarea id="#CardAnswer" placeholder="Enter the answer for the prompt"></FormTextarea>
-//                             </FormGroup>
-//                             <FormGroup>
-//                                 <Container>
-//                                     <Row>
-//                                         <Col></Col>
-//                                         <Col></Col>
-//                                         <Col></Col>
-//                                     </Row>
-//                                     <Row>
-//                                         <Col><Button theme="danger">Cancel</Button></Col>
-//                                         <Col></Col>
-//                                         <Col><Button type="submit">Add</Button></Col>
-//                                     </Row>
-//                                 </Container>
-//                             </FormGroup>
-//                             </Form>
-//                         </CardBody>
-//                     </Card>
-                
-//                 </Col>
-//                 <Col></Col>
-//             </Row>
-//         </Container>
-
-//     );
-// }

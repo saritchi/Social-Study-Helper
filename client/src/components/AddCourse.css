@@ -1,0 +1,31 @@
+#courseInfo {
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 3%;
+    padding: 5%;
+    -moz-box-shadow: 0 0 3px #ccc;
+    -webkit-box-shadow: 0 0 3px #ccc;
+    box-shadow: 0 0 3px #ccc;
+}
+h1 {
+    margin-bottom: 5%;
+}
+h2 {
+    float: left;
+    margin-bottom: 3%;
+    margin-top: 3%;
+}
+
+label  {
+    clear: both;
+    position: relative;
+    float: left;
+}
+
+#addChapter {
+    float: left;
+}
+
+#addCourse {
+    float: right;
+}
