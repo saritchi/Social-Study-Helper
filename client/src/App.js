@@ -38,21 +38,18 @@ class App extends Component {
     return (
       <Router>
       <div className="App">
-        <CreateDeck/>
-          {/* <Switch>
-            <Route 
-              path="/" 
-              exact               
-              render={props => (
-                    <React.Fragment>
-                      <CardExample value={this.state.cardData}/>
-                      <Hover value={this.state.serverTime}/>
-                      <Toggle value={this.state.serverData}/>
-                    </React.Fragment>
-                  )} 
-              />
-          </Switch> */}
-
+        <Switch>
+          <Route
+            path="/create_deck"
+            exact
+            render={props => (
+              <React.Fragment>
+                <CreateDeck/>
+              </React.Fragment>
+            )}
+          />
+        </Switch>
+    
       </div>
       </Router>
     );
