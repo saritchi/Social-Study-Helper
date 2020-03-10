@@ -91,6 +91,23 @@ app.post('/api/addDeck', (req, res) => {
     })
 })
 
+app.get('/api/viewCards', (req, res) => {
+    console.log("Fetching Cards...");
+    const getFlashData = 'SELECT * FROM Decks WHERE id = 1';
+    database.runQuery(getFlashData, [], (error, results, fields) => {
+        if (error) {
+            console.log(`Unable to get courses from the database. Error: ${error.message}`)
+            res.status(500).json({result: "An error occured while attempting to get your courses. Please try again later."})
+        } 
+        var cards = [];
+        results.forEach((card) => {
+            console.log(cards);
+            cards.push(card);
+        })
+        res.status(200).json({result: cards});
+    })
+});
+
 app.listen(port, () => {
     console.log("Server Running on Port " + port)
 })
