@@ -20,14 +20,12 @@ export const withAlert = (WrappedComponent) => {
             );
         }
 
-        showAlert = (theme, message) => {
-            this.setState({theme: theme, message: message, visible:true})
-        }
+        showAlert = (theme, message) => this.setState({theme: theme, message: message, visible:true})
+        
         
 
-        dismiss = () => {
-          this.setState({visible: false});
-        }
+        dismiss = () => this.setState({visible: false});
+        
     }
 
     return WithAlert;
