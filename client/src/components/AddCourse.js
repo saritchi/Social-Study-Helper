@@ -5,12 +5,15 @@ import './AddCourse.css';
 import axios from "axios";
 
 export default class AddCourse extends Component {
+  chpaterInputTitle = "Chapter Name";
+  chapterInputToolTip = "Introduction to HTML";
+
   constructor(props) {
     super(props);
     this.state = {
       coursename: '',
       chapternames: {},
-      chapters: [],
+      chapterInputs: [],
       showAlert: false,
       networkError: false,
       alertMessage: ''
@@ -22,61 +25,37 @@ export default class AddCourse extends Component {
   }
 
   addChapterInput = () => {
-    const numberOfChapters = this.state.chapters.length;
-    const newChapters = [...this.state.chapters, this.renderChapterInput(numberOfChapters)];
-
-    this.setState({chapters: newChapters})
-    this.forceUpdate();
-    console.log("added new chapter");
+    const newChapterInputs = [...this.state.chapterInputs, {name: this.chpaterInputTitle, toolTip: this.chapterInputToolTip}];
+    this.setState({chapterInputs: newChapterInputs});
   }
 
-  renderChapterInput = i => {
-    const chapterId = "chapter" + i;
-    
-    let defaultValue = this.state.chapternames[chapterId];
-    return (
-      <FormGroup key={chapterId}>
-        <label htmlFor={chapterId}>Chapter Name</label>
-        <FormInput id={chapterId} 
-                   name="chapternames" 
-                   onChange={this.onInputChange} 
-                   value={defaultValue} 
-                   placeholder="Introduction to HTML"
-          />
-    </FormGroup>
-    );
+  renderAllChapterInputs = () => {
+    return this.state.chapterInputs.map((chapterInput, index) => {
+      const chapterId = "chapter" + index;
+      return (
+        <FormGroup key={chapterId}>
+          <label htmlFor={chapterId}>{chapterInput.name}</label>
+          <FormInput id={chapterId} 
+                     name="chapternames" 
+                     onChange={this.onInputChange} 
+                     placeholder={chapterInput.toolTip}
+            />
+        </FormGroup>
+      )
+    });
   }
-
-  // renderAllChaptterInputs = () => {
-  //   return this.state.chapters.map(chap => {
-  //     const chapterId = "chapter" + i;
-    
-  //   let defaultValue = this.state.chapternames[chapterId];
-  //   return (
-  //     <FormGroup key={chapterId}>
-  //       <label htmlFor={chapterId}>Chapter Name</label>
-  //       <FormInput id={chapterId} 
-  //                  name="chapternames" 
-  //                  onChange={this.onInputChange} 
-  //                  value={defaultValue} 
-  //                  placeholder="Introduction to HTML"
-  //         />
-  //   </FormGroup>
-  //   );
-  //   })
-  // }
 
   onSubmit = async e => {
     e.preventDefault();
-    //TODO: check for empty valeus and change validation state 
+    //TODO: check for empty values and change validation state 
     const coursename =  this.state.coursename;    
-    const chaptersObject = this.state.chapternames;
-    const chapternames = Object.keys(chaptersObject).map((key) => {
-      return chaptersObject[key];
+    const chapterNamesObjects = this.state.chapternames;
+    const chapterNames = Object.keys(chapterNamesObjects).map((key) => {
+      return chapterNamesObjects[key];
     });
     const json = {
       coursename: coursename,
-      chapternames: chapternames,
+      chapters: chapterNames,
     }
 
     console.log(json);
@@ -87,7 +66,7 @@ export default class AddCourse extends Component {
         {
           coursename: '', 
           chapternames: {}, 
-          chapters: [],
+          chapterInputs: [],
           showAlert: true,
           networkError: false,
           alertMessage: "Added Course"
@@ -113,15 +92,13 @@ export default class AddCourse extends Component {
     }
   }
 
-
+  
 
   dismissAlert = () => {
     this.setState({showAlert: false});
   }
 
   render() {
-    console.log("rendering...")
-    const chapters = this.state.chapters;
     const visible = this.state.showAlert;
     const theme = this.state.networkError ? "danger" : "success";
     const messasge = this.state.alertMessage;
@@ -137,7 +114,7 @@ export default class AddCourse extends Component {
           </FormGroup>
 
           <h2>Chapters:</h2>
-          {chapters}
+          {this.renderAllChapterInputs()}
           <Button id="addChapter" onClick={this.addChapterInput}>Add Chapter</Button>
           <Button id="addCourse" onClick={this.onSubmit}>Add Course</Button>
         </Form>
