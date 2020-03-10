@@ -47,6 +47,25 @@ export default class AddCourse extends Component {
     );
   }
 
+  // renderAllChaptterInputs = () => {
+  //   return this.state.chapters.map(chap => {
+  //     const chapterId = "chapter" + i;
+    
+  //   let defaultValue = this.state.chapternames[chapterId];
+  //   return (
+  //     <FormGroup key={chapterId}>
+  //       <label htmlFor={chapterId}>Chapter Name</label>
+  //       <FormInput id={chapterId} 
+  //                  name="chapternames" 
+  //                  onChange={this.onInputChange} 
+  //                  value={defaultValue} 
+  //                  placeholder="Introduction to HTML"
+  //         />
+  //   </FormGroup>
+  //   );
+  //   })
+  // }
+
   onSubmit = async e => {
     e.preventDefault();
     //TODO: check for empty valeus and change validation state 
@@ -93,6 +112,8 @@ export default class AddCourse extends Component {
       this.setState({[e.target.name]: e.target.value});
     }
   }
+
+
 
   dismissAlert = () => {
     this.setState({showAlert: false});

@@ -1,17 +1,16 @@
 import React, {Component} from 'react'
 import {withRouter } from "react-router-dom"
-import { Button, Card, CardBody, Nav, NavItem, NavLink } from 'shards-react'
+import { Button, Card, CardBody } from 'shards-react'
 import EventAlert from './EventAlert';
+import InfoCard from "./InfoCard";
 import './Home.css'
 import axios from "axios"
-import InfoCard from './InfoCard';
 
-class Home extends Component {
+class AllCourses extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            courses: [],
-            username: null,
+            courseCards: [],
             networkError: false,
             networkErrorMessage: '',
         };
@@ -20,15 +19,13 @@ class Home extends Component {
     }
 
     async componentDidMount() {
-        //TODO: should not need to make a request for this. Should be passed in from login page.
-        const user = (await axios.get('/api/user')).data.result ?? "";
         try {
             const coursesResponse = await axios.get('/api/courses');
             const courses = coursesResponse.data.result;
             courses.forEach((course) => {
                 console.log(course);
             })
-            this.setState({username: user, courses: courses});
+            this.generateCourseCards(courses);
         } catch(error) {
             console.error(error);
             this.setState(
@@ -39,6 +36,18 @@ class Home extends Component {
         }
     }
 
+    generateCourseCards = (courses) => {
+        var newCourseCards = []
+        courses.forEach((course) => {
+            newCourseCards.push(this.renderCard(course.name));
+        });
+        this.setState({courseCards: newCourseCards});
+    }
+
+    renderCard = (coursename) => {
+        return <InfoCard info={coursename} />;
+    }
+
     addCourse() {
         this.props.history.push("/addCourse");
     }
@@ -46,9 +55,8 @@ class Home extends Component {
     dismissAlert = () => {
         this.setState({showAlert: false});
     }
-
-    //TODO: Add callback
     
+    //TODO: add callback to update courses
     render() {
         return (
             <div>
@@ -59,42 +67,16 @@ class Home extends Component {
                     message={this.state.networkErrorMessage} 
                 />
                 <div id="user">
-                    <h1>Welcome {this.state.username}!</h1>
-                </div>
-                <div>
-                    <Nav>
-                        <NavItem id="recentCourses">
-                            <h3>Recent Courses: </h3>
-                        </NavItem>
-                        <NavItem id="allCourses">
-                            <NavLink href='/allCourses'>View All Courses</NavLink>
-                        </NavItem>
-                    </Nav>
+                    <h1>All Courses</h1>
                 </div>
                 <div className="cards">
-                    {this.renderCard(0)}
-                    {this.renderCard(1)}
-                    {this.renderCard(2)}
-                    {this.renderCard(3)}
-                    {this.renderCard(4)}
-                    {this.renderCard(5)}
-                    {this.renderCard(6)}
-                    {this.renderCard(7)}
-                    {this.renderCard(8)}
+                    {this.state.courseCards}
                 </div>
                     <Button id="addCourse" onClick={this.addCourse}>Add New Course</Button>
             </div>
             
             )
         }
-
-        renderCard(i) {
-            if (i > this.state.courses.length - 1) {
-                return;
-            }
-    
-            return <InfoCard info={this.state.courses[i].name}/>;
-        }
 };
 
-export default withRouter(Home)
+export default withRouter(AllCourses)

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import Home from './components/Home';
+import AllCourses from './components/AllCourses';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -27,6 +28,15 @@ function App() {
                 render={props => (
                       <React.Fragment>
                         <AddCourse />
+                      </React.Fragment>
+                    )} 
+              />
+               <Route
+                path="/allCourses" 
+                exact               
+                render={props => (
+                      <React.Fragment>
+                        <AllCourses />
                       </React.Fragment>
                     )} 
               />
