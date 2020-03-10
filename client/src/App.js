@@ -7,6 +7,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "shards-ui/dist/css/shards.min.css"
 import AddCourse from './components/AddCourse';
 import CreateDeck from './components/CreateDeck';
+import ViewCards from './components/ViewCards';
 
 function App() {
     return (
@@ -39,6 +40,15 @@ function App() {
                         <CreateDeck />
                       </React.Fragment>
                     )} 
+              />
+              <Route
+                path="/viewCards"
+                exact
+                render={props => (
+                  <React.Fragment>
+                    <ViewCards />
+                  </React.Fragment>
+                )}
               />
           </Switch>
       </div>
