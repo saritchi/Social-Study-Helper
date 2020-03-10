@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {withRouter } from "react-router-dom"
 import { Button } from 'shards-react'
-import './Home.css'
+import './AllCourses.css'
 import axios from "axios"
 import CardDisplay from './CardDisplay';
 import * as withAlert from "./ComponentWithAlert";
@@ -37,7 +37,7 @@ class AllCourses extends Component {
                     <h1>All Courses</h1>
                 </div>
                 <CardDisplay cardsInfo={this.state.courses} />
-                <Button id="addCourse" onClick={this.addCourse}>Add New Course</Button>
+                <Button id="newCourse" onClick={this.addCourse}>Add New Course</Button>
             </div>
             
             )

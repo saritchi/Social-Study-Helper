@@ -52,7 +52,7 @@ class Home extends Component {
                     </Nav>
                 </div>
                 <CardDisplay cardsInfo={this.state.courses.slice(0, 9)}/>
-                <Button id="addCourse" onClick={this.addCourse}>Add New Course</Button>
+                <Button id="newCourse" onClick={this.addCourse}>Add New Course</Button>
             </div>
             )
         }

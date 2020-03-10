@@ -1,11 +1,10 @@
 .cards {
-    margin: 2%;
+    padding: 1%;
     margin-left: 10%;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
-    column-gap: 2%;
-    row-gap: 4%;
+    gap: 1vw;
     align-items: center;
     justify-items: center;
     width: 80%;
