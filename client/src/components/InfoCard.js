@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Card, CardBody } from 'shards-react'
+import { Card, CardBody } from 'shards-react'
 
 const InfoCard = (props) => {
     return (
