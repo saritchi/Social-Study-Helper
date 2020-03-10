@@ -1,10 +1,11 @@
 import React, {Component} from "react";
 import { Button, Form, FormInput, FormGroup } from "shards-react";
-import EventAlert from './EventAlert';
 import './AddCourse.css';
 import axios from "axios";
+import './ComponentWithAlert';
+import * as withAlert from "./ComponentWithAlert";
 
-export default class AddCourse extends Component {
+class AddCourse extends Component {
   chpaterInputTitle = "Chapter Name";
   chapterInputToolTip = "Introduction to HTML";
 
@@ -14,9 +15,6 @@ export default class AddCourse extends Component {
       coursename: '',
       chapternames: {},
       chapterInputs: [],
-      showAlert: false,
-      networkError: false,
-      alertMessage: ''
     }
   }
   
@@ -67,18 +65,11 @@ export default class AddCourse extends Component {
           coursename: '', 
           chapternames: {}, 
           chapterInputs: [],
-          showAlert: true,
-          networkError: false,
-          alertMessage: "Added Course"
         }, this.addChapterInput);
+        this.props.showAlert(withAlert.successTheme, "Added Course");
     } catch (error) {
       console.error(error);
-      this.setState(
-        {
-          showAlert: true,
-          networkError: true,
-          alertMessage: error.response.data.result,
-        });
+      this.props.showAlert(withAlert.errorTheme, error.response.data.result);
     }
   }
 
@@ -92,20 +83,9 @@ export default class AddCourse extends Component {
     }
   }
 
-  
-
-  dismissAlert = () => {
-    this.setState({showAlert: false});
-  }
-
   render() {
-    const visible = this.state.showAlert;
-    const theme = this.state.networkError ? "danger" : "success";
-    const messasge = this.state.alertMessage;
-
     return (
       <div>
-        <EventAlert visible={visible} dismissAlert={this.dismissAlert} theme={theme} message={messasge} />
         <Form id="courseInfo">
         <h1>Course Information</h1>
           <FormGroup>
@@ -122,3 +102,5 @@ export default class AddCourse extends Component {
     );
   }
 }
+
+export default withAlert.withAlert(AddCourse);

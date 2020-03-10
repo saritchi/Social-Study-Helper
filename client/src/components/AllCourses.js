@@ -1,21 +1,15 @@
 import React, {Component} from 'react'
 import {withRouter } from "react-router-dom"
-import { Button, Card, CardBody } from 'shards-react'
-import EventAlert from './EventAlert';
+import { Button } from 'shards-react'
 import './Home.css'
 import axios from "axios"
 import CardDisplay from './CardDisplay';
+import * as withAlert from "./ComponentWithAlert";
 
 class AllCourses extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            courses: [],
-            networkError: false,
-            networkErrorMessage: '',
-        };
-
-        this.addCourse = this.addCourse.bind(this);
+        this.state = { courses: [] };
     }
 
     async componentDidMount() {
@@ -28,31 +22,17 @@ class AllCourses extends Component {
             this.setState({courses: courses})
         } catch(error) {
             console.error(error);
-            this.setState(
-            {
-                networkError: true,
-                networkErrorMessage: error.response.data.result,
-            });
+            this.props.showAlert(withAlert.errorTheme, error.response.data.result);
         }
     }
 
-    addCourse() {
+    addCourse = () => {
         this.props.history.push("/addCourse");
-    }
-
-    dismissAlert = () => {
-        this.setState({showAlert: false});
     }
     
     render() {
         return (
             <div>
-                <EventAlert 
-                    visible={this.state.networkError} 
-                    dismissAlert={this.dismissAlert} 
-                    theme={"danger"} 
-                    message={this.state.networkErrorMessage} 
-                />
                 <div id="user">
                     <h1>All Courses</h1>
                 </div>
@@ -64,4 +44,4 @@ class AllCourses extends Component {
         }
 };
 
-export default withRouter(AllCourses)
+export default withRouter(withAlert.withAlert(AllCourses));
