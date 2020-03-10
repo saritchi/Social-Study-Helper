@@ -5,6 +5,7 @@ import EventAlert from './EventAlert';
 import './Home.css'
 import axios from "axios"
 import InfoCard from './InfoCard';
+import CardDisplay from './CardDisplay';
 
 class Home extends Component {
     constructor(props) {
@@ -15,8 +16,6 @@ class Home extends Component {
             networkError: false,
             networkErrorMessage: '',
         };
-
-        this.addCourse = this.addCourse.bind(this);
     }
 
     async componentDidMount() {
@@ -39,15 +38,13 @@ class Home extends Component {
         }
     }
 
-    addCourse() {
+    addCourse = () => {
         this.props.history.push("/addCourse");
     }
 
     dismissAlert = () => {
         this.setState({showAlert: false});
     }
-
-    //TODO: Add callback
     
     render() {
         return (
@@ -71,29 +68,11 @@ class Home extends Component {
                         </NavItem>
                     </Nav>
                 </div>
-                <div className="cards">
-                    {this.renderCard(0)}
-                    {this.renderCard(1)}
-                    {this.renderCard(2)}
-                    {this.renderCard(3)}
-                    {this.renderCard(4)}
-                    {this.renderCard(5)}
-                    {this.renderCard(6)}
-                    {this.renderCard(7)}
-                    {this.renderCard(8)}
-                </div>
-                    <Button id="addCourse" onClick={this.addCourse}>Add New Course</Button>
+                <CardDisplay cardsInfo={this.state.courses.slice(0, 9)}/>
+                <Button id="addCourse" onClick={this.addCourse}>Add New Course</Button>
             </div>
             
             )
-        }
-
-        renderCard(i) {
-            if (i > this.state.courses.length - 1) {
-                return;
-            }
-    
-            return <InfoCard info={this.state.courses[i].name}/>;
         }
 };
 

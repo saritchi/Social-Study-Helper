@@ -2,15 +2,15 @@ import React, {Component} from 'react'
 import {withRouter } from "react-router-dom"
 import { Button, Card, CardBody } from 'shards-react'
 import EventAlert from './EventAlert';
-import InfoCard from "./InfoCard";
 import './Home.css'
 import axios from "axios"
+import CardDisplay from './CardDisplay';
 
 class AllCourses extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            courseCards: [],
+            courses: [],
             networkError: false,
             networkErrorMessage: '',
         };
@@ -25,7 +25,7 @@ class AllCourses extends Component {
             courses.forEach((course) => {
                 console.log(course);
             })
-            this.generateCourseCards(courses);
+            this.setState({courses: courses})
         } catch(error) {
             console.error(error);
             this.setState(
@@ -36,18 +36,6 @@ class AllCourses extends Component {
         }
     }
 
-    generateCourseCards = (courses) => {
-        var newCourseCards = []
-        courses.forEach((course) => {
-            newCourseCards.push(this.renderCard(course.name));
-        });
-        this.setState({courseCards: newCourseCards});
-    }
-
-    renderCard = (coursename) => {
-        return <InfoCard info={coursename} />;
-    }
-
     addCourse() {
         this.props.history.push("/addCourse");
     }
@@ -56,7 +44,6 @@ class AllCourses extends Component {
         this.setState({showAlert: false});
     }
     
-    //TODO: add callback to update courses
     render() {
         return (
             <div>
@@ -69,10 +56,8 @@ class AllCourses extends Component {
                 <div id="user">
                     <h1>All Courses</h1>
                 </div>
-                <div className="cards">
-                    {this.state.courseCards}
-                </div>
-                    <Button id="addCourse" onClick={this.addCourse}>Add New Course</Button>
+                <CardDisplay cardsInfo={this.state.courses} />
+                <Button id="addCourse" onClick={this.addCourse}>Add New Course</Button>
             </div>
             
             )
