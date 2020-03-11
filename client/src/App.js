@@ -2,9 +2,7 @@ import React from 'react';
 import './App.css';
 import Home from './components/Home';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Home from './components/Home';
 import AllCourses from './components/AllCourses';
-import AddCourse from './components/AddCourse';
 
 import './App.css';
 import "bootstrap/dist/css/bootstrap.min.css";
