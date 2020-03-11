@@ -1,8 +1,10 @@
 import React, {Component} from 'react'
 import {withRouter } from "react-router-dom"
-import { Button, Card, CardBody, Nav, NavItem, NavLink } from 'shards-react'
+import { Button, Nav, NavItem, NavLink } from 'shards-react'
 import './Home.css'
 import axios from "axios"
+import CardDisplay from './CardDisplay';
+import * as withAlert from "./ComponentWithAlert";
 
 class Home extends Component {
     constructor(props) {
@@ -11,25 +13,27 @@ class Home extends Component {
             courses: [],
             username: null,
         };
-
-        this.addCourse = this.addCourse.bind(this);
     }
 
     async componentDidMount() {
         //TODO: should not need to make a request for this. Should be passed in from login page.
         const user = (await axios.get('/api/user')).data.result ?? "";
-        const coursesResponse = await axios.get('/api/courses');
-        const courses = coursesResponse.data.result;
-        courses.forEach((course) => {
-            console.log(course);
-        })
-        this.setState({username: user, courses: courses});
+        try {
+            const coursesResponse = await axios.get('/api/courses');
+            const courses = coursesResponse.data.result;
+            courses.forEach((course) => {
+                console.log(course);
+            })
+            this.setState({username: user, courses: courses});
+        } catch(error) {
+            console.error(error);
+            this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+        }
     }
 
-    addCourse() {
+    addCourse = () => {
         this.props.history.push("/addCourse");
     }
-
     
     render() {
         return (
@@ -43,40 +47,15 @@ class Home extends Component {
                             <h3>Recent Courses: </h3>
                         </NavItem>
                         <NavItem id="allCourses">
-                            <NavLink href='#'>View All Courses</NavLink>
+                            <NavLink href='/allCourses'>View All Courses</NavLink>
                         </NavItem>
                     </Nav>
                 </div>
-                <div className="cards">
-                    {this.renderCard(0)}
-                    {this.renderCard(1)}
-                    {this.renderCard(2)}
-                    {this.renderCard(3)}
-                    {this.renderCard(4)}
-                    {this.renderCard(5)}
-                    {this.renderCard(6)}
-                    {this.renderCard(7)}
-                    {this.renderCard(8)}
-                </div>
-                    <Button id="addCourse" onClick={this.addCourse}>Add New Course</Button>
+                <CardDisplay cardsInfo={this.state.courses.slice(0, 9)}/>
+                <Button id="newCourse" onClick={this.addCourse}>Add New Course</Button>
             </div>
-            
             )
-        }
-
-        renderCard(i) {
-            if (i > this.state.courses.length - 1) {
-                return;
-            }
-    
-            return (
-                <Card>
-                    <CardBody>
-                        <p>{this.state.courses[i].name}</p>
-                    </CardBody>
-                </Card>
-            );
         }
 };
 
-export default withRouter(Home)
+export default withRouter(withAlert.withAlert(Home))

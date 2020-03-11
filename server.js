@@ -34,6 +34,7 @@ app.get('/api/cardData', (req, res) => {
     res.json({result: lp});
 });
 
+//TODO: endpoint will need a query paremeter for the number of courses.
 app.get('/api/courses', (req, res) => {
     console.log("Getting courses....");
     const addCourseSQL = `SELECT * FROM Courses`;
@@ -74,6 +75,7 @@ app.post('/api/addCourse', (req, res) => {
         console.log("Add course with name: " + coursename);
         res.sendStatus(200);
     })
+
 });
 
 app.post('/api/addDeck', (req, res) => {
