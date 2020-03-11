@@ -93,7 +93,7 @@ app.post('/api/addDeck', (req, res) => {
 
 app.get('/api/viewCards', (req, res) => {
     console.log("Fetching Cards...");
-    const getFlashData = 'SELECT * FROM Decks WHERE id = 1';
+    const getFlashData = 'SELECT * FROM Decks';
     database.runQuery(getFlashData, [], (error, results, fields) => {
         if (error) {
             console.log(`Unable to get courses from the database. Error: ${error.message}`)
