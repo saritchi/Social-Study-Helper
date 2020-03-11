@@ -89,13 +89,14 @@ export default class CreateDeck extends React.Component {
             this.setState(
                 {
                     deckname: '',
+                    cards: [],
                     prompts: {}, 
                     answers: {},
                     showAlert: true,
                     networkError: false,
                     message: "Added Deck"
-                }
-            )
+                }, this.addCard
+            );
         } catch (error){
             console.log(error);
             this.setState(

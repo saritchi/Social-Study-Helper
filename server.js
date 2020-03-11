@@ -97,8 +97,8 @@ app.post('/api/addDeck', (req, res) => {
         var deckId = results.insertId;
         for(var i = 0; i < numCards; i++){
             cards.push([deckId, prompts["prompt"+i], answers["answer"+i]])
-           
         }
+        
         const cardQueryString = 'INSERT INTO Cards(deck_id, prompt, answer) VALUES ?';
         database.runQuery(cardQueryString, [cards], (error) => {
             if(error){
