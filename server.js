@@ -5,14 +5,15 @@ const bodyParser = require('body-parser')
 const Database = require('./database.js')
 const fs = require('fs');
 
-const app = express()
-app.use(morgan('short'))
-app.use(express.static('./public'))
-app.use(bodyParser.urlencoded({extended: false}))
+const app = express();
+app.use(morgan('short'));
+app.use(express.static('./public'));
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(express.json());
 
 const database = new Database(process.env);
 
-var port = 3003
+var port = 3003;
 
 app.get('/api/serverTime', (req, res) => {
     const serverTime = "The current time on the server is: " + Date.now();
@@ -30,6 +31,16 @@ app.get('/api/cardData', (req, res) => {
     let lp = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vel mollis ante. Suspendisse nulla lorem, tempus nec congue vel, aliquam.";
     console.log("Lorem Ipsum: " + lp);
     res.json({result: lp});
+});
+
+app.post('/api/register', (req, res) => {
+    let post = req.body;
+    console.log(post);
+    let sql = 'INSERT INTO user SET ?';
+    let query = database.runQuery(sql, post, (err, result) => {
+        if(err) throw err;
+        res.send('User added...');
+    });
 });
 
 app.listen(port, () => {

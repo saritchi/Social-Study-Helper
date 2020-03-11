@@ -3,7 +3,8 @@ import './App.css';
 import CardExample from './components/CardExample';
 import Hover from './components/Hover';
 import Toggle from './components/Toggle';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import Register from './components/Register';
+import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
 import axios from "axios";
 
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -46,9 +47,11 @@ class App extends Component {
                       <CardExample value={this.state.cardData}/>
                       <Hover value={this.state.serverTime}/>
                       <Toggle value={this.state.serverData}/>
+                      <Link to="/register">SignUP</Link>
                     </React.Fragment>
                   )} 
               />
+              <Route path="/register" component={Register} />
           </Switch>
       </div>
       </Router>
