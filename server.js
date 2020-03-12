@@ -75,13 +75,12 @@ app.post('/api/addCourse', (req, res) => {
 
 });
 
+//TODO: error check client request
 app.post('/api/addDeck', (req, res) => {
     console.log("New Deck Added..."); 
     var body = req.body;
     var deckname = body.deckname;
     var cards = body.cards;
-
-    
 
     const queryString = 'INSERT INTO Decks(name) VALUES(?)';
     database.runQuery(queryString, [deckname], (error, results, fields) => {
@@ -97,7 +96,6 @@ app.post('/api/addDeck', (req, res) => {
             cards[i] = [deckId, cards[i].prompt, cards[i].answer];
         }
         
-
         const cardQueryString = 'INSERT INTO Cards(deck_id, prompt, answer) VALUES ?';
         database.runQuery(cardQueryString, [cards], (error) => {
             if(error){
@@ -108,7 +106,6 @@ app.post('/api/addDeck', (req, res) => {
         })
          
         res.sendStatus(200);
-        
     })
 })
 
