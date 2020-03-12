@@ -4,12 +4,11 @@ import { Container, Row, Col } from "shards-react";
 import {
     Button
   } from "shards-react";
-import EventAlert from './EventAlert';
+import * as withAlert from "./ComponentWithAlert"
 import Axios from 'axios';
 import './CreateDeck.css';
 
-
-export default class CreateDeck extends React.Component {
+class CreateDeck extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -17,9 +16,6 @@ export default class CreateDeck extends React.Component {
             cards: [],
             prompts: {},
             answers: {},
-            showAlert: false,
-            networkError: false,
-            message: ''
         }
     }
     
@@ -92,19 +88,13 @@ export default class CreateDeck extends React.Component {
                     cards: [],
                     prompts: {}, 
                     answers: {},
-                    showAlert: true,
-                    networkError: false,
-                    message: "Added Deck"
                 }, this.addCard
             );
+            this.props.showAlert(withAlert.successTheme, "Deck Added!");
         } catch (error){
             console.log(error);
-            this.setState(
-                {
-                  showAlert: true,
-                  networkError: true,
-                  message: error.response.data.result,
-            });
+            this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+            
         }
     }
 
@@ -128,13 +118,9 @@ export default class CreateDeck extends React.Component {
 
     render(){
         const cards = this.state.cards;
-        const visible = this.state.showAlert;
-        const theme = this.state.networkError ? "danger" : "success";
-        const messasge = this.state.message;
         
         return(
             <div>
-                <EventAlert visible={visible} dismissAlert={this.dismissAlert} theme={theme} message={messasge} />
                 <Container id="newDeckHeading"><h4>Create New Deck: </h4></Container>
                 <Form id="deck">
                     
@@ -151,3 +137,5 @@ export default class CreateDeck extends React.Component {
         );
     }
 }
+
+export default withAlert.withAlert(CreateDeck);
