@@ -4,7 +4,9 @@ import './AddCourse.css';
 import axios from "axios";
 import './ComponentWithAlert';
 import * as withAlert from "./ComponentWithAlert";
+import { TiDelete } from 'react-icons/ti';
 
+//TODO: needs a way to remove added chapters in case of mistakes
 class AddCourse extends Component {
   chpaterInputTitle = "Chapter Name";
   chapterInputToolTip = "Introduction to HTML";
@@ -13,8 +15,9 @@ class AddCourse extends Component {
     super(props);
     this.state = {
       coursename: '',
-      chapternames: {},
-      chapterInputs: [],
+      //object of inputFormId : inputFormData
+      //This stores data that the user types into the input fields
+      chapterInfo: {},
     }
   }
   
@@ -23,21 +26,24 @@ class AddCourse extends Component {
   }
 
   addChapterInput = () => {
-    const newChapterInputs = [...this.state.chapterInputs, {name: this.chpaterInputTitle, toolTip: this.chapterInputToolTip}];
-    this.setState({chapterInputs: newChapterInputs});
+    const currentKey = "chapter" + Object.keys(this.state.chapterInfo).length;
+    const newChapterInfo = this.state.chapterInfo;
+    newChapterInfo[currentKey] = '';
+    this.setState({chapterInfo: newChapterInfo});
   }
 
   renderAllChapterInputs = () => {
-    return this.state.chapterInputs.map((chapterInput, index) => {
-      const chapterId = "chapter" + index;
+    const chapterInfoArray = Object.keys(this.state.chapterInfo);
+    return chapterInfoArray.map((chapterInputKey, index) => {
       return (
-        <FormGroup key={chapterId}>
-          <label htmlFor={chapterId}>{chapterInput.name}</label>
-          <FormInput id={chapterId} 
-                     name="chapternames" 
-                     onChange={this.onInputChange} 
-                     placeholder={chapterInput.toolTip}
-            />
+        <FormGroup key={chapterInputKey}>
+          <label htmlFor={chapterInputKey}>{this.chpaterInputTitle}</label>
+          <FormInput id={chapterInputKey} 
+                     name="chapterInfo" 
+                     onChange={this.onInputChange}
+                     placeholder={this.chapterInputToolTip}
+          />
+          {index >= 1 && <TiDelete className="deleteChapter" id={index} onClick={(evt) => this.deleteChapter(evt, chapterInputKey)} size={"2em"}/>}
         </FormGroup>
       )
     });
@@ -47,10 +53,8 @@ class AddCourse extends Component {
     e.preventDefault();
     //TODO: check for empty values and change validation state 
     const coursename =  this.state.coursename;    
-    const chapterNamesObjects = this.state.chapternames;
-    const chapterNames = Object.keys(chapterNamesObjects).map((key) => {
-      return chapterNamesObjects[key];
-    });
+    const chapterNamesObject = this.state.chapterInfo;
+    const chapterNames = Object.keys(chapterNamesObject).map((key) => chapterNamesObject[key]);
     const json = {
       coursename: coursename,
       chapters: chapterNames,
@@ -63,8 +67,7 @@ class AddCourse extends Component {
       this.setState(
         {
           coursename: '', 
-          chapternames: {}, 
-          chapterInputs: [],
+          chapterInfo: {}, 
         }, this.addChapterInput);
         this.props.showAlert(withAlert.successTheme, "Added Course");
     } catch (error) {
@@ -74,13 +77,21 @@ class AddCourse extends Component {
   }
 
   onInputChange = e => {
-    if(e.target.name === "chapternames") {
-      const chapterNames = this.state.chapternames;
-      chapterNames[e.target.id] = e.target.value;
-      this.setState({[e.target.name]: chapterNames});
+    if(e.target.name === "chapterInfo") {
+      const chapterInfo = this.state.chapterInfo;
+      chapterInfo[e.target.id] = e.target.value;
+      this.setState({[e.target.name]: chapterInfo});
     } else {
       this.setState({[e.target.name]: e.target.value});
     }
+  }
+
+  deleteChapter = (e, id) => {
+    console.log(e.target.id);
+    const updatedChapterNames = this.state.chapterInfo;
+    //delete property for that chapter name
+    delete updatedChapterNames[id];
+    this.setState({[e.target.name]: updatedChapterNames});
   }
 
   render() {
@@ -88,7 +99,7 @@ class AddCourse extends Component {
       <div>
         <Form id="courseInfo">
         <h1>Course Information</h1>
-          <FormGroup>
+          <FormGroup id="courseNameGroup">
             <label htmlFor="courseName">Course Name:</label>
             <FormInput id="courseName" name="coursename" onChange={this.onInputChange} value={this.state.coursename} placeholder="CMPT 470" />
           </FormGroup>
