@@ -35,10 +35,10 @@ class ViewCards extends React.Component {
     if(e.key === ' ' || e.key === 'ArrowUp' || e.key === 'ArrowDown'){
       this.setState(prevState => ({ isFlipped: !prevState.isFlipped }));
     }
-    if(e.key === 'ArrowRight'){
+    if(e.key === 'ArrowRight' && this.state.cardIndex < this.state.cards.length){
       this.setState({cardIndex: this.state.cardIndex + 1})
     }
-    if(e.key === 'ArrowLeft'){
+    if(e.key === 'ArrowLeft' && this.state.cardIndex > 0){
       this.setState({cardIndex: this.state.cardIndex - 1})
     }
     
