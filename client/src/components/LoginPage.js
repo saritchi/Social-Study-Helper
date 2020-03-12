@@ -20,28 +20,21 @@ import axios from "axios";
         this.setState({ [e.target.name]: e.target.value });
       }
     
-    onSubmit(e) {
+    async onSubmit(e) {
     e.preventDefault();
-    const user = {
-        username: this.state.username,
-        password: this.state.password
-    };
 
-    axios.post('/api/auth',user).then(
-        response =>{
-            const user = {
-                username: response.data[0].username,
-                password: response.data[0].password,
-                fname: response.data[0].fname,
-                lname: response.data[0].fname,
-                auth: response.data[0].auth
-            };
-            console.log(user);
-            this.setState(user);
-        }
-    ).then(()=>{
-        console.log(this.state);
-    });
+    try {
+        let user = {
+            username: this.state.username,
+            password: this.state.password
+        };
+        const response = await axios.post('/api/auth', user);
+        user = response.data[0];
+        this.setState(user)
+    } catch(error) {
+        alert(error);
+    }
+    
     }
     
     render() {
@@ -52,12 +45,13 @@ import axios from "axios";
                 </div>
             )
         }
+        else if(this.state.auth == 'false'){
+            alert("Invalid username or password");
+            this.state.auth = '';
+        }
         return (
             <div id ='mainbody'>
                 <h1 id = 'header' >Welcome To Social Study Helper</h1>
-                <nav id="nav">
-                    <Link to="/home">SignUp</Link>
-                </nav>
                 <form  onSubmit = {this.onSubmit}>
                     <label>Username: </label>
                     <input type="text" name="username" onChange = {this.onChange}></input><br></br><br></br>
@@ -65,6 +59,10 @@ import axios from "axios";
                     <input type="password" name="password" onChange = {this.onChange}></input><br></br><br></br>
                     <input type="submit" value="Sign in" id ='SignIn'></input><br></br>
                 </form> 
+                <br></br>
+                <nav id="nav">
+                    <Link to="/home">SignUp</Link>
+                </nav>
             </div>
         )
     }

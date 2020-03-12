@@ -34,11 +34,14 @@ app.get('/api/cardData', (req, res) => {
 });
 
 app.post('/api/auth', (req, res) => {
-    console.log(req.body);
-    let sql = `SELECT * FROM user WHERE username = '${req.body.username}' AND password = '${req.body.password}'`;
-    console.log(sql);
-    let query = database.runQuery(sql, (err, results) => {
-        if(err) throw err;
+    let sql = `SELECT * FROM user WHERE username = ? AND password = ?`;
+    let query = database.runQuery(sql,[req.body.username,req.body.password], (err, results) => {
+        if(err){
+            console.log(err);
+            res.status(500);
+            res.send("Internal server error");
+            return;
+        };
         if(results.length > 0){
             results[0].auth ='true';
         }
