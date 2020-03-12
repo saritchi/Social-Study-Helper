@@ -3,6 +3,7 @@ import './App.css';
 import CardExample from './components/CardExample';
 import Hover from './components/Hover';
 import Toggle from './components/Toggle';
+import LoginPage from './components/LoginPage';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import axios from "axios";
 
@@ -38,8 +39,17 @@ class App extends Component {
       <Router>
       <div className="App">
           <Switch>
-            <Route 
+          <Route 
               path="/" 
+              exact               
+              render={props => (
+                    <React.Fragment>
+                      <LoginPage/>
+                    </React.Fragment>
+                  )} 
+              />
+            <Route 
+              path="/home" 
               exact               
               render={props => (
                     <React.Fragment>

@@ -9,6 +9,7 @@ const app = express()
 app.use(morgan('short'))
 app.use(express.static('./public'))
 app.use(bodyParser.urlencoded({extended: false}))
+app.use(express.json());
 
 const database = new Database(process.env);
 
@@ -30,6 +31,26 @@ app.get('/api/cardData', (req, res) => {
     let lp = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vel mollis ante. Suspendisse nulla lorem, tempus nec congue vel, aliquam.";
     console.log("Lorem Ipsum: " + lp);
     res.json({result: lp});
+});
+
+app.post('/api/auth', (req, res) => {
+    console.log(req.body);
+    let sql = `SELECT * FROM user WHERE username = '${req.body.username}' AND password = '${req.body.password}'`;
+    console.log(sql);
+    let query = database.runQuery(sql, (err, results) => {
+        if(err) throw err;
+        if(results.length > 0){
+            results[0].auth ='true';
+        }
+        else{
+            const result = {auth: 'false'};
+            results.push(result);
+        }
+        
+        res.send(results);
+        return;
+    });
+
 });
 
 app.listen(port, () => {
