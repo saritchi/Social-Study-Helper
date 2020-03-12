@@ -6,10 +6,11 @@ import './ComponentWithAlert';
 import * as withAlert from "./ComponentWithAlert";
 import { TiDelete } from 'react-icons/ti';
 
-//TODO: needs a way to remove added chapters in case of mistakes
 class AddCourse extends Component {
   chpaterInputTitle = "Chapter Name";
   chapterInputToolTip = "Introduction to HTML";
+  courseNameId = "courseName";
+  invalidInputClassName = "is-invalid";
 
   constructor(props) {
     super(props);
@@ -51,10 +52,16 @@ class AddCourse extends Component {
 
   onSubmit = async e => {
     e.preventDefault();
-    //TODO: check for empty values and change validation state 
-    const coursename =  this.state.coursename;    
-    const chapterNamesObject = this.state.chapterInfo;
-    const chapterNames = Object.keys(chapterNamesObject).map((key) => chapterNamesObject[key]);
+
+    if (!this.isValidInput()) {
+      this.props.showAlert(withAlert.errorTheme, "Error some inputs are empty. Please remove or fill empty forms.")
+      return;
+    }
+    
+    const coursename =  this.state.coursename;
+    const chapterInfo = this.state.chapterInfo;
+    const chapterNames = Object.keys(chapterInfo).map((key) => chapterInfo[key]);
+
     const json = {
       coursename: coursename,
       chapters: chapterNames,
@@ -74,6 +81,36 @@ class AddCourse extends Component {
       console.error(error);
       this.props.showAlert(withAlert.errorTheme, error.response.data.result);
     }
+  }
+
+  isValidInput() {
+    var validInput = true;
+    const coursename =  this.state.coursename;
+    
+    var courseNameInput = document.getElementById(this.courseNameId);
+    if (!coursename) {
+      courseNameInput.className += ' ' + this.invalidInputClassName;
+      validInput = false;
+    }
+    else {
+      courseNameInput.classList.remove(this.invalidInputClassName);
+    }
+    
+    const chapterInfo = this.state.chapterInfo;
+    const chapterInfoArray = Object.keys(chapterInfo)
+    for(var i = 0; i < chapterInfoArray.length; i++)  {
+      const key = chapterInfoArray[i];
+      var courseNameInput = document.getElementById(key);
+      if(!chapterInfo[key]) {
+        courseNameInput.className += ' ' + this.invalidInputClassName;
+        validInput = false;
+      }
+      else {
+        courseNameInput.classList.remove(this.invalidInputClassName);
+      }
+    }
+    
+    return validInput;
   }
 
   onInputChange = e => {
@@ -100,8 +137,8 @@ class AddCourse extends Component {
         <Form id="courseInfo">
         <h1>Course Information</h1>
           <FormGroup id="courseNameGroup">
-            <label htmlFor="courseName">Course Name:</label>
-            <FormInput id="courseName" name="coursename" onChange={this.onInputChange} value={this.state.coursename} placeholder="CMPT 470" />
+            <label htmlFor={this.courseNameId}>Course Name:</label>
+            <FormInput id={this.courseNameId} name="coursename" onChange={this.onInputChange} value={this.state.coursename} placeholder="CMPT 470" />
           </FormGroup>
 
           <h2>Chapters:</h2>
