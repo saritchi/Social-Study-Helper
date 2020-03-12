@@ -7,7 +7,6 @@ const fs = require('fs');
 
 const app = express()
 app.use(morgan('short'))
-app.use(express.static('./public'))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}))
 
