@@ -89,6 +89,7 @@ app.post('/api/addDeck', (req, res) => {
         if(error){
             console.log(`Unable to add card deck with name: ${deckname} to database. Error: ${error.message}`)
             res.status(500).json({result: "An error has occured while attempting to add the deck to the database. Please try again later."})
+            return;
         }
 
         var deckId = results.insertId;
@@ -103,6 +104,7 @@ app.post('/api/addDeck', (req, res) => {
             if(error){
                 console.log(error.message)
                 res.status(500).json({result: "An error has occured while attempting to add the deck to the database. Please try again later."});
+                return;
             }
         })
          
