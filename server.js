@@ -82,7 +82,7 @@ app.post('/api/addDeck', (req, res) => {
         }
         
 
-        const cardQueryString = 'INSERT INTO Cards(deck_id, prompt, answer) VALUES ?';
+        const cardQueryString = 'INSERT INTO cards(deck_id, prompt, answer) VALUES ?';
         database.runQuery(cardQueryString, [cards], (error) => {
             if(error){
                 console.log(error.message)
@@ -97,7 +97,7 @@ app.post('/api/addDeck', (req, res) => {
 
 app.get('/api/viewCards', (req, res) => {
     console.log("Fetching Cards...");
-    const getFlashData = 'SELECT * FROM Decks';
+    const getFlashData = 'SELECT * FROM cards WHERE deck_id = 6';
     database.runQuery(getFlashData, [], (error, results, fields) => {
         if (error) {
             console.log(`Unable to get courses from the database. Error: ${error.message}`)

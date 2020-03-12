@@ -43,7 +43,7 @@ class ViewCards extends React.Component {
     if(e.key === ' ' || e.key === 'ArrowUp' || e.key === 'ArrowDown'){
       this.setState(prevState => ({ isFlipped: !prevState.isFlipped }));
     }
-    else if(e.key === 'ArrowRight' && this.state.cardIndex < this.state.cards.length){
+    else if(e.key === 'ArrowRight' && this.state.cardIndex < this.state.cards.length - 1){
       this.setState({cardIndex: this.state.cardIndex + 1})
     }
     else if(e.key === 'ArrowLeft' && this.state.cardIndex > 0){
@@ -69,19 +69,19 @@ class ViewCards extends React.Component {
   }
 
   renderPrompt = (index) => {
-    const id = this.state.cards.map(card => card.id);
-    console.log(id)
+    const prompts = this.state.cards.map(card => card.prompt);
+    console.log(prompts)
     return (
-      <p>{id[index]}</p>
+      <p>{prompts[index]}</p>
     );
 
   }
 
   renderAnswer = (index) => {
-    const name = this.state.cards.map(card => card.name);
-    console.log(name)
+    const answers = this.state.cards.map(card => card.answer);
+    console.log(answers)
     return (
-      <p>{name[index]}</p>
+      <p>{answers[index]}</p>
     );
   }
 
