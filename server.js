@@ -16,24 +16,7 @@ database.initializeTablesIfNeeded();
 
 var port = 3003
 
-app.get('/api/serverTime', (req, res) => {
-    const serverTime = "The current time on the server is: " + Date.now();
-    console.log(serverTime);
-    res.json({result: serverTime});
-});
-
-app.get('/api/serverData', (req, res) => {
-    let r = Math.random().toString(36).substring(7);
-    console.log("random string: " + r);
-    res.json({result: r});
-});
-
-app.get('/api/cardData', (req, res) => {
-    let lp = "Hello";
-    console.log("Lorem Ipsum: " + lp);
-    res.json({result: lp});
-});
-
+//TODO: endpoint will need a query paremeter for the number of courses.
 app.get('/api/courses', (req, res) => {
     console.log("Getting courses....");
     const addCourseSQL = `SELECT * FROM Courses`;
@@ -74,20 +57,41 @@ app.post('/api/addCourse', (req, res) => {
         console.log("Add course with name: " + coursename);
         res.sendStatus(200);
     })
+
 });
 
 app.post('/api/addDeck', (req, res) => {
     console.log("New Deck Added..."); 
     var body = req.body;
     var deckname = body.deckname;
+    var cards = body.cards;
+
+    
 
     const queryString = 'INSERT INTO Decks(name) VALUES(?)';
-    database.runQuery(queryString, [deckname], (error) => {
+    database.runQuery(queryString, [deckname], (error, results, fields) => {
         if(error){
-            onsole.log(`Unable to add card deck with name: ${deckname} to database. Error: ${error.message}`)
+            console.log(`Unable to add card deck with name: ${deckname} to database. Error: ${error.message}`)
             res.status(500).json({result: "An error has occured while attempting to add the deck to the database. Please try again later."})
         }
+
+        var deckId = results.insertId;
+        numCards = Object.keys(cards).length;
+        for(var i = 0; i < numCards; i++){
+            cards[i] = [deckId, cards[i].prompt, cards[i].answer];
+        }
+        
+
+        const cardQueryString = 'INSERT INTO Cards(deck_id, prompt, answer) VALUES ?';
+        database.runQuery(cardQueryString, [cards], (error) => {
+            if(error){
+                console.log(error.message)
+                res.status(500).json({result: "An error has occured while attempting to add the deck to the database. Please try again later."});
+            }
+        })
+         
         res.sendStatus(200);
+        
     })
 })
 

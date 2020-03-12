@@ -4,7 +4,6 @@ h6{
 
 #cards{
     margin-top: 5%;
-    background-color: #F5F5F5;
     padding-top: 1%;
     padding-bottom: 1%;
 }
@@ -12,7 +11,7 @@ h6{
 #deck{
     margin-left: 10%;
     margin-right: 10%;
-    margin-top: 3%;
+
     margin-bottom: 3%;
     padding: 5%;
     -moz-box-shadow: 0 0 3px #ccc;
@@ -33,4 +32,15 @@ h6{
 
 hr{
     margin-top: 0;
+}
+
+#newDeckHeading{
+    padding-left: 0;
+    margin-left: 10%;
+    margin-top: 3%;
+    text-align: left;
+}
+
+h4{
+    margin-bottom: 0;
 }
