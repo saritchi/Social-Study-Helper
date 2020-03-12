@@ -24,6 +24,7 @@ app.get('/api/courses', (req, res) => {
         if (error) {
             console.log(`Unable to get courses from the database. Error: ${error.message}`)
             res.status(500).json({result: "An error occurred while attempting to get your courses. Please try again later."})
+            return;
         } 
 
         var courses = [];
@@ -46,12 +47,27 @@ app.post('/api/addCourse', (req, res) => {
     var coursename = body.coursename;
     var chapters = body.chapters;
 
+    const chapterKeys = Object.keys(chapters);
+    var emptyChapters = false;
+    for(var i = 0; i < chapterKeys.length; i++) {
+        const key = chapterKeys[i];
+        if(!chapters[key]) {
+            emptyChapters = true;
+        }
+    }
+
+    if(!coursename || emptyChapters) {
+        res.status(400).json({result: "Error processing request."})
+        return;
+    }
+
     //TODO: when chapters table is set up, insert chapters into that table with FK is the course PK.
     const addCourseSQL = `INSERT INTO Courses(name) VALUES(?)`;
     database.runQuery(addCourseSQL, [coursename], (error) => {
         if (error) {
             console.log(`Unable to add course with name: ${coursename} to database. Error: ${error.message}`)
             res.status(500).json({result: "An error occurred while attempting to add the course to the database. Please try again later."})
+            return;
         }
 
         console.log("Add course with name: " + coursename);
