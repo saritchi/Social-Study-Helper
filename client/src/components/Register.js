@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import {  Link } from 'react-router-dom';
+import {  Form} from "shards-react";
 import axios from "axios";
  class Register extends Component {
     constructor(props){
@@ -18,7 +19,7 @@ import axios from "axios";
         this.setState({ [e.target.name]: e.target.value });
       }
     
-    onSubmit(e) {
+   async onSubmit(e) {
     e.preventDefault();
     const user = {
         username: this.state.username,
@@ -26,18 +27,22 @@ import axios from "axios";
         fname: this.state.fname,
         lname: this.state.lname
     };
-   axios.post('/api/register',user);
-    alert("Succesfully Registered");
+    try {
+        const response = await axios.post('/api/register', user);
+        console.log(response);
+        alert(` Response status ${response.status} Congratulation ${response.data}`);
+    } catch (error) {
+        console.log(error);
+        alert(error);
+    }
     
     }
     render() {
         return (
             <div>
                 <h1 >Registering User</h1>
-                <nav id="nav">
-                    <Link to ="/" >Go Home Page</Link>
-                </nav>
-                <form onSubmit = {this.onSubmit}>
+                <br></br>
+                <Form onSubmit = {this.onSubmit}>
                     <label>Username: </label>
                     <input type="text" name="username" onChange = {this.onChange}></input><br></br>
                     <label>Password: </label>
@@ -47,7 +52,11 @@ import axios from "axios";
                     <label>Last name: </label>
                     <input type="text" name="lname" onChange = {this.onChange}></input><br></br><br></br>
                     <input type="submit" value="SignUp"></input>
-                </form> 
+                </Form> 
+                <br></br>
+                <nav id="nav">
+                    <Link to ="/" >Go Home Page</Link>
+                </nav>
             </div>
         )
     }

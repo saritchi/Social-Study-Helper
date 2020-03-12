@@ -12,7 +12,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.json());
 
 const database = new Database(process.env);
-
+database.initializeTablesIfNeeded();
 var port = 3003;
 
 app.get('/api/serverTime', (req, res) => {
@@ -35,12 +35,35 @@ app.get('/api/cardData', (req, res) => {
 
 app.post('/api/register', (req, res) => {
     let post = req.body;
-    console.log(post);
-    let sql = 'INSERT INTO user SET ?';
-    let query = database.runQuery(sql, post, (err, result) => {
-        if(err) throw err;
-        res.send('User added...');
+    let sql = `Select * from user where username = '${post.username}'`;
+    console.log(sql);
+    let query = database.runQuery(sql, (err, result) => {
+        if(err){
+            console.log(err);
+            res.status(500);
+            res.send("Internal server error");
+            return;
+        }
+        if(result.length > 0){ 
+            res.status('409');
+            res.send('Username already Exists');
+        }
+        else{
+            sql = 'INSERT INTO user SET ?';
+            console.log(sql);
+            query = database.runQuery(sql, post, (err, result) => {
+                if(err){
+                    console.log(err);
+                    res.status(500);
+                    res.send("Internal server error");
+                    return;
+                }
+                res.status(200);
+                res.send('Registration succesful');
+            });
+        }
     });
+
 });
 
 app.listen(port, () => {
