@@ -10,10 +10,11 @@ class ViewCards extends React.Component {
     super(props);
       this.state = {
       isFlipped: false,
+      cardIndex: 0,
       cards: []
     };
     this.handleClick = this.handleClick.bind(this);
-    this.handleKeyPress = this.handleKeyPress.bind(this);
+    document.addEventListener("keydown", this.handleKeyDown);
   }
 
   async componentDidMount() {
@@ -25,17 +26,22 @@ class ViewCards extends React.Component {
     this.setState({cards: flashcards});
   }
  
-  handleClick(e) {
-    console.log(e.keyCode)
+  handleClick = (e) => {
     this.setState(prevState => ({ isFlipped: !prevState.isFlipped }));
   }
 
-  //Not currently used in build
-  handleKeyPress(e) {
-    console.log(e.keyCode)
-    if(e.key === "Space"){
+  handleKeyDown = (e) => {
+    console.log(e)
+    if(e.key === ' ' || e.key === 'ArrowUp' || e.key === 'ArrowDown'){
       this.setState(prevState => ({ isFlipped: !prevState.isFlipped }));
     }
+    if(e.key === 'ArrowRight'){
+      this.setState({cardIndex: this.state.cardIndex + 1})
+    }
+    if(e.key === 'ArrowLeft'){
+      this.setState({cardIndex: this.state.cardIndex - 1})
+    }
+    
   }
 
   render(){
@@ -43,10 +49,10 @@ class ViewCards extends React.Component {
       <div className="flash-container">  
           <ReactCardFlip isFlipped={this.state.isFlipped} flipDirection="vertical">
             <div className="card" onClick={this.handleClick}>
-              {this.renderPrompt()}
+              {this.renderPrompt(this.state.cardIndex)}
             </div >
             <div className="card" onClick={this.handleClick}>
-              {this.renderAnswer()}
+              {this.renderAnswer(this.state.cardIndex)}
             </div>
           </ReactCardFlip>
       </div>
@@ -54,20 +60,20 @@ class ViewCards extends React.Component {
     );
   }
 
-  renderPrompt = () => {
+  renderPrompt = (index) => {
     const id = this.state.cards.map(card => card.id);
     console.log(id)
     return (
-      <p>{id[0]}</p>
+      <p>{id[index]}</p>
     );
 
   }
 
-  renderAnswer = () => {
+  renderAnswer = (index) => {
     const name = this.state.cards.map(card => card.name);
     console.log(name)
     return (
-      <p>{name[0]}</p>
+      <p>{name[index]}</p>
     );
   }
 
