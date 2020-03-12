@@ -16,24 +16,6 @@ database.initializeTablesIfNeeded();
 
 var port = 3003
 
-app.get('/api/serverTime', (req, res) => {
-    const serverTime = "The current time on the server is: " + Date.now();
-    console.log(serverTime);
-    res.json({result: serverTime});
-});
-
-app.get('/api/serverData', (req, res) => {
-    let r = Math.random().toString(36).substring(7);
-    console.log("random string: " + r);
-    res.json({result: r});
-});
-
-app.get('/api/cardData', (req, res) => {
-    let lp = "Hello";
-    console.log("Lorem Ipsum: " + lp);
-    res.json({result: lp});
-});
-
 //TODO: endpoint will need a query paremeter for the number of courses.
 app.get('/api/courses', (req, res) => {
     console.log("Getting courses....");
