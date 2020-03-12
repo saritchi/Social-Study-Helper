@@ -14,8 +14,6 @@ class CreateDeck extends React.Component {
         this.state = {
             deckname: '',
             cards: [],
-            prompts: {},
-            answers: {},
         }
     }
     
@@ -24,60 +22,52 @@ class CreateDeck extends React.Component {
     }
 
     addCard = () => {
-        const numberOfCards = this.state.cards.length;
-        const newCards = [...this.state.cards, this.renderNewCard(numberOfCards)];
-
-        this.setState({cards: newCards})
-        this.forceUpdate();
-        console.log("New Card Added!")
+        const newCards = [...this.state.cards, {prompt: this.prompt, answer: this.answer}];
+        this.setState({cards: newCards});
     }
 
-
-    renderNewCard = i => {
-        const cardId = "card" + i;
-        const promptId = "prompt" + i;
-        const answerId = "answer" + i;
-
-        return (
-            <FormGroup key={cardId}>
+    renderCardInputs = () => {
+        return this.state.cards.map((cardInput, index) => {
+            const cardId = "card" + index;
+            return (
+                <FormGroup key={cardId}>
                 <Container id="cards">
                     <Row>
-                        <h6>{i+1}</h6>
+                        <h6>{index+1}</h6>
                     </Row>
                     <hr></hr>
                     
                     <Row>
                         <Col>
-                            <label htmlFor={promptId}>Card Prompt:</label>
-                            <FormTextarea id={promptId} onChange={this.onInputChange} name="card_prompt"/>
+                            <label htmlFor={index}>Card Prompt:</label>
+                            <FormTextarea id={index} onChange={this.onInputChange} name="card_prompt"/>
                         </Col>
                         <Col>
-                            <label htmlFor={answerId}>Card Answer:</label>
-                            <FormTextarea id={answerId} onChange={this.onInputChange} name="card_answer"/>
+                            <label htmlFor={index}>Card Answer:</label>
+                            <FormTextarea id={index} onChange={this.onInputChange} name="card_answer"/>
                         </Col>
                     </Row>
                 </Container>
 
-            </FormGroup>
-        )
+                </FormGroup>
+            )
+        })
+
     }
 
 
     onSubmit = async event => {
         event.preventDefault();
         const deckname = this.state.deckname;
-        const prompts = this.state.prompts;
-        const answers = this.state.answers;
-
-
+        const cardsObject = this.state.cards;
+        const card = Object.keys(cardsObject).map((key) => {
+            return cardsObject[key];
+        });
+        
         const json = {
             deckname: deckname,
-            prompts: prompts,
-            answers: answers,
-            
+            cards: card
         }
- 
-        console.log(json);
 
         try{
             const response = await Axios.post("/api/addDeck", json);
@@ -86,39 +76,29 @@ class CreateDeck extends React.Component {
                 {
                     deckname: '',
                     cards: [],
-                    prompts: {}, 
-                    answers: {},
                 }, this.addCard
             );
             this.props.showAlert(withAlert.successTheme, "Deck Added!");
         } catch (error){
             console.log(error);
             this.props.showAlert(withAlert.errorTheme, error.response.data.result);
-            
         }
     }
 
     onInputChange = event => {
         if(event.target.name === "card_prompt") {
-            const prompt = this.state.prompts;
-            prompt[event.target.id] = event.target.value;
-            this.setState({[event.target.id]: prompt});
+            const cards = this.state.cards;
+            cards[event.target.id].prompt = event.target.value;
         }else if(event.target.name === "card_answer"){
-            const answer = this.state.answers;
-            answer[event.target.id] = event.target.value;
-            this.setState({[event.target.name]: answer})
+            const cards = this.state.cards;
+            cards[event.target.id].answer = event.target.value;
         }else{
             this.setState({[event.target.name]: event.target.value});
         }
     }
 
-    dismissAlert = () => {
-        this.setState({showAlert: false});
-    }
 
-    render(){
-        const cards = this.state.cards;
-        
+    render(){  
         return(
             <div>
                 <Container id="newDeckHeading"><h4>Create New Deck: </h4></Container>
@@ -128,7 +108,7 @@ class CreateDeck extends React.Component {
                         <label htmlFor="deckName">Deck Name:</label>
                         <FormInput id="deckName" name="deckname" onChange={this.onInputChange} value={this.state.deckname} placeholder="Deck Name"/>
                     </Container>
-                    {cards}
+                    {this.renderCardInputs()}
                     <Button id="addCard" onClick={this.addCard}>Add Card</Button>
                     <br></br>
                     <Button id="addDeck" theme="danger" onClick={this.onSubmit}>Finished</Button>

@@ -64,11 +64,9 @@ app.post('/api/addDeck', (req, res) => {
     console.log("New Deck Added..."); 
     var body = req.body;
     var deckname = body.deckname;
-    var prompts = body.prompts;
-    var answers = body.answers;
-    var cards = [];
+    var cards = body.cards;
 
-    numCards = Object.keys(prompts).length;
+    
 
     const queryString = 'INSERT INTO Decks(name) VALUES(?)';
     database.runQuery(queryString, [deckname], (error, results, fields) => {
@@ -76,11 +74,14 @@ app.post('/api/addDeck', (req, res) => {
             console.log(`Unable to add card deck with name: ${deckname} to database. Error: ${error.message}`)
             res.status(500).json({result: "An error has occured while attempting to add the deck to the database. Please try again later."})
         }
+
         var deckId = results.insertId;
+        numCards = Object.keys(cards).length;
         for(var i = 0; i < numCards; i++){
-            cards.push([deckId, prompts["prompt"+i], answers["answer"+i]])
+            cards[i] = [deckId, cards[i].prompt, cards[i].answer];
         }
         
+
         const cardQueryString = 'INSERT INTO Cards(deck_id, prompt, answer) VALUES ?';
         database.runQuery(cardQueryString, [cards], (error) => {
             if(error){
@@ -88,7 +89,7 @@ app.post('/api/addDeck', (req, res) => {
                 res.status(500).json({result: "An error has occured while attempting to add the deck to the database. Please try again later."});
             }
         })
-        
+         
         res.sendStatus(200);
         
     })
