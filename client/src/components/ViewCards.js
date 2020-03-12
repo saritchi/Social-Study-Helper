@@ -1,8 +1,7 @@
 import React from 'react';
 import ReactCardFlip from 'react-card-flip';
-import "bootstrap/dist/css/bootstrap.min.css";
-import "shards-ui/dist/css/shards.min.css"
 import './ViewCards.css';
+import * as withAlert from "./ComponentWithAlert";
 import axios from 'axios';
 
 class ViewCards extends React.Component {
@@ -14,16 +13,25 @@ class ViewCards extends React.Component {
       cards: []
     };
     this.handleClick = this.handleClick.bind(this);
-    document.addEventListener("keydown", this.handleKeyDown);
   }
 
   async componentDidMount() {
-    const cardResponse = await axios.get('/api/viewCards');
-    const flashcards = cardResponse.data.result;
-    flashcards.forEach((card) => {
-      console.log(card);
-    })
-    this.setState({cards: flashcards});
+    try {
+      const cardResponse = await axios.get('/api/viewCards');
+      const flashcards = cardResponse.data.result;
+      flashcards.forEach((card) => {
+        console.log(card);
+      })
+      this.setState({cards: flashcards});
+      document.addEventListener("keydown", this.handleKeyDown);
+    } catch(error) {
+      console.error(error);
+      this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+    }
+  }
+
+  async componentWillUnmount() {
+    document.removeEventListener("keydown", this.handleKeyDown);
   }
  
   handleClick = (e) => {
@@ -35,10 +43,10 @@ class ViewCards extends React.Component {
     if(e.key === ' ' || e.key === 'ArrowUp' || e.key === 'ArrowDown'){
       this.setState(prevState => ({ isFlipped: !prevState.isFlipped }));
     }
-    if(e.key === 'ArrowRight' && this.state.cardIndex < this.state.cards.length){
+    else if(e.key === 'ArrowRight' && this.state.cardIndex < this.state.cards.length){
       this.setState({cardIndex: this.state.cardIndex + 1})
     }
-    if(e.key === 'ArrowLeft' && this.state.cardIndex > 0){
+    else if(e.key === 'ArrowLeft' && this.state.cardIndex > 0){
       this.setState({cardIndex: this.state.cardIndex - 1})
     }
     
@@ -79,4 +87,4 @@ class ViewCards extends React.Component {
 
 }
 
-export default ViewCards;
+export default withAlert.withAlert(ViewCards);
