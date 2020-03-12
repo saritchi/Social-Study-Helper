@@ -1,12 +1,14 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import './App.css';
 import Home from './components/Home';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import AllCourses from './components/AllCourses';
-import AddCourse from './components/AddCourse';
 
 import './App.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "shards-ui/dist/css/shards.min.css"
+import AddCourse from './components/AddCourse';
+import CreateDeck from './components/CreateDeck';
 
 function App() {
     return (
@@ -30,6 +32,15 @@ function App() {
                         <AddCourse />
                       </React.Fragment>
                     )} 
+              />
+              <Route
+                path="/createDeck" 
+                exact               
+                render={props => (
+                      <React.Fragment>
+                        <CreateDeck />
+                      </React.Fragment>
+                    )}
               />
                <Route
                 path="/allCourses" 

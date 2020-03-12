@@ -56,6 +56,31 @@
                 throw err;
             }
         });
+
+        const createDeckTableSQL = `CREATE TABLE IF NOT EXISTS Decks(
+            id INT PRIMARY KEY AUTO_INCREMENT,
+            name varchar(255) not null)`
+        this.db.query(createDeckTableSQL, (err) => {
+            if (err) {
+                console.log("Unable to initialize database tables! Aborting server start up with error: " + err.message);
+                throw err;
+            }
+        });
+
+        const createCardTableSQL = `CREATE TABLE  IF NOT EXISTS cards(
+            id INT NOT NULL AUTO_INCREMENT,
+            deck_id INT NULL,
+            prompt VARCHAR(2000) NULL DEFAULT 'This card is blank',
+            answer VARCHAR(2000) NULL DEFAULT 'This card is blank',
+            PRIMARY KEY (id));`
+ 
+        this.db.query(createCardTableSQL, (err) => {
+            if (err) {
+                console.log("Unable to initialize database tables! Aborting server start up with error: " + err.message);
+                throw err;
+            }
+        });
+
     }
 
     /**
