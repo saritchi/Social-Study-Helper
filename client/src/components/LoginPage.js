@@ -9,7 +9,7 @@ import axios from "axios";
     constructor(props){
         super(props);
         this.state = {
-            username:'',
+            email:'',
             password:'',
             fname:'',
             lname:'',
@@ -27,7 +27,7 @@ import axios from "axios";
     e.preventDefault();
     try {
         let user = {
-            username: this.state.username,
+            email: this.state.email,
             password: this.state.password
         };
         const response = await axios.post('/api/auth', user);
@@ -39,7 +39,7 @@ import axios from "axios";
 }
     componentDidUpdate() {
         if (this.state.auth === 'false') {
-            this.props.showAlert(withAlert.errorTheme, "Invalid username or password. Please try again");
+            this.props.showAlert(withAlert.errorTheme, "Invalid email or password. Please try again");
          }
          this.state.auth = '';        
       }
@@ -59,8 +59,8 @@ import axios from "axios";
                 </nav>
                 <Form  id="loginform" onSubmit = {this.onSubmit}>
                     <FormGroup>
-                    <label>Username: </label>
-                    <FormInput type="text" name="username" onChange = {this.onChange}></FormInput>
+                    <label>email: </label>
+                    <FormInput type="text" name="email" onChange = {this.onChange}></FormInput>
                     </FormGroup>
 
                     <FormGroup>

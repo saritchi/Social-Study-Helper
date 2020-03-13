@@ -62,8 +62,8 @@ app.post('/api/addCourse', (req, res) => {
 });
 
 app.post('/api/auth', (req, res) => {
-    let sql = `SELECT * FROM user WHERE username = ? AND password = ?`;
-    let query = database.runQuery(sql,[req.body.username,req.body.password], (err, results) => {
+    let sql = `SELECT * FROM user WHERE email = ? AND password = ?`;
+    let query = database.runQuery(sql,[req.body.email,req.body.password], (err, results) => {
         if(err){
             console.log(err);
             res.status(500).json({result: "An error occured while attempting to authenticate. Please try again later."})
