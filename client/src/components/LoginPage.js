@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
+import { FormGroup } from 'shards-react'
 import {Link,Redirect} from 'react-router-dom';
+import * as withAlert from "./ComponentWithAlert";
 import axios from "axios";
  class LoginPage extends Component {
 
@@ -15,14 +17,13 @@ import axios from "axios";
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);       
     }
-    
+
     onChange(e) {
         this.setState({ [e.target.name]: e.target.value });
       }
     
     async onSubmit(e) {
     e.preventDefault();
-
     try {
         let user = {
             username: this.state.username,
@@ -32,22 +33,22 @@ import axios from "axios";
         user = response.data[0];
         this.setState(user)
     } catch(error) {
-        alert(error);
+        this.props.showAlert(withAlert.errorTheme, error.response.data.result);
     }
-    
-    }
-    
+}
+    componentDidUpdate() {
+        if (this.state.auth === 'false') {
+            this.props.showAlert(withAlert.errorTheme, "Invalid username or password. Please try again");
+         }
+         this.state.auth = '';        
+      }
     render() {
-        if(this.state.auth == 'true'){
+        if(this.state.auth === 'true'){
             return(
                 <div>
                     {<Redirect to='/home'/>}
                 </div>
             )
-        }
-        else if(this.state.auth == 'false'){
-            alert("Invalid username or password");
-            this.state.auth = '';
         }
         return (
             <div>
@@ -68,4 +69,4 @@ import axios from "axios";
     }
 }
 
-export default LoginPage;
+export default withAlert.withAlert(LoginPage);

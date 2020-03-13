@@ -66,8 +66,7 @@ app.post('/api/auth', (req, res) => {
     let query = database.runQuery(sql,[req.body.username,req.body.password], (err, results) => {
         if(err){
             console.log(err);
-            res.status(500);
-            res.send("Internal server error");
+            res.status(500).json({result: "An error occured while attempting to authenticate. Please try again later."})
             return;
         };
         if(results.length > 0){
