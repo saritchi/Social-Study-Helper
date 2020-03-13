@@ -9,6 +9,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "shards-ui/dist/css/shards.min.css"
 import AddCourse from './components/AddCourse';
 import CreateDeck from './components/CreateDeck';
+import DeckDisplay from './components/DeckDisplay';
 
 function App() {
     return (
@@ -21,6 +22,15 @@ function App() {
               render={props => (
                     <React.Fragment>
                       <Home />
+                    </React.Fragment>
+                  )} 
+              />
+            <Route 
+              path="/deckDisplay" 
+              exact               
+              render={props => (
+                    <React.Fragment>
+                      <DeckDisplay />
                     </React.Fragment>
                   )} 
               />
