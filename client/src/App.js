@@ -10,6 +10,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "shards-ui/dist/css/shards.min.css"
 import AddCourse from './components/AddCourse';
 import CreateDeck from './components/CreateDeck';
+import EditDeck from './components/EditDeck';
 import ViewCards from './components/ViewCards';
 
 function App() {
@@ -68,6 +69,15 @@ function App() {
                 render={props => (
                   <React.Fragment>
                     <ViewCards deckId={7}/>
+                  </React.Fragment>
+                )}
+              />
+              <Route
+                path="/editDeck"
+                exact
+                render={props => (
+                  <React.Fragment>
+                    <EditDeck deckId={7}/>
                   </React.Fragment>
                 )}
               />

@@ -117,6 +117,49 @@ app.post('/api/addDeck', (req, res) => {
     })
 })
 
+app.post('/api/editDeck', (req, res) => {
+    console.log("Updating Deck..."); 
+    var body = req.body;
+    var deckname = body.deckname;
+    var cards = body.cards;
+    var deck_id = body.deck;
+
+
+    const cardQueryString = 'UPDATE cards SET prompt = ?, answer = ? WHERE deck_id = ?';
+    for(var i = 0; i < cards.length; i++){
+        database.runQuery(cardQueryString, [cards[i].prompt, cards[i].answer, deck_id], (error) => {
+            if(error){
+                console.log(error.message)
+                res.status(500).json({result: "An error has occured while attempting to add the deck to the database. Please try again later."});
+            }
+    
+            res.sendStatus(200);
+        })
+    }
+
+})
+
+app.get('/api/editDeck', (req, res) => {
+    console.log("Fetching Deck Data..."); 
+    const deck_id = req.query.deck
+    const queryString = 'SELECT * FROM cards WHERE deck_id = ?';
+    database.runQuery(queryString, deck_id, (error, results, fields) => {
+        if(error){
+            console.log(`Unable to get card deck with deck_id: ${deck_id} to database. Error: ${error.message}`)
+            res.status(500).json({result: "An error has occured while attempting to find the deck in the database. Please try again later."})
+        }
+
+        var cards = [];
+        results.forEach((card) => {
+            console.log(cards);
+            cards.push(card);
+        })
+         
+        res.status(200).json({result: cards});
+        
+    })
+})
+
 app.get('/api/viewCards', (req, res) => {
     console.log("Fetching Cards...");
     const deck_id = req.query.deck
