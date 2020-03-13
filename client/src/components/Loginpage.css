@@ -1,0 +1,14 @@
+#loginform{
+    width:30%;
+    margin-left: 450px;
+}
+#loginnav{
+    background-color: black;
+    padding: 10px;
+    margin-bottom: 40px;
+    text-align: right;
+}
+#link{
+   font-size: x-large;
+   color:greenyellow
+}

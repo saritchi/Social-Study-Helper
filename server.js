@@ -8,6 +8,7 @@ const fs = require('fs');
 const app = express()
 app.use(morgan('short'))
 app.use(express.static('./public'))
+app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}))
 
@@ -78,6 +79,27 @@ app.post('/api/addCourse', (req, res) => {
 
 });
 
+app.post('/api/auth', (req, res) => {
+    let sql = `SELECT * FROM user WHERE email = ? AND password = ?`;
+    let query = database.runQuery(sql,[req.body.email,req.body.password], (err, results) => {
+        if(err){
+            console.log(err);
+            res.status(500).json({result: "An error occured while attempting to authenticate. Please try again later."})
+            return;
+        };
+        if(results.length > 0){
+            results[0].auth ='true';
+        }
+        else{
+            const result = {auth: 'false'};
+            results.push(result);
+        }
+        
+        res.send(results);
+        return;
+    });
+
+});
 app.post('/api/addDeck', (req, res) => {
     console.log("New Deck Added..."); 
     var body = req.body;
@@ -100,7 +122,7 @@ app.post('/api/addDeck', (req, res) => {
         }
         
 
-        const cardQueryString = 'INSERT INTO Cards(deck_id, prompt, answer) VALUES ?';
+        const cardQueryString = 'INSERT INTO cards(deck_id, prompt, answer) VALUES ?';
         database.runQuery(cardQueryString, [cards], (error) => {
             if(error){
                 console.log(error.message)
@@ -112,6 +134,24 @@ app.post('/api/addDeck', (req, res) => {
         
     })
 })
+
+app.get('/api/viewCards', (req, res) => {
+    console.log("Fetching Cards...");
+    const deck_id = req.query.deck
+    const getFlashData = 'SELECT * FROM cards WHERE deck_id = ?';
+    database.runQuery(getFlashData, deck_id, (error, results, fields) => {
+        if (error) {
+            console.log(`Unable to get courses from the database. Error: ${error.message}`)
+            res.status(500).json({result: "An error occured while attempting to get your courses. Please try again later."})
+        } 
+        var cards = [];
+        results.forEach((card) => {
+            console.log(cards);
+            cards.push(card);
+        })
+        res.status(200).json({result: cards});
+    })
+});
 
 app.listen(port, () => {
     console.log("Server Running on Port " + port)

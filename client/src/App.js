@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.css';
+import LoginPage from './components/LoginPage';
 import Home from './components/Home';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import AllCourses from './components/AllCourses';
@@ -10,12 +11,22 @@ import "shards-ui/dist/css/shards.min.css"
 import AddCourse from './components/AddCourse';
 import CreateDeck from './components/CreateDeck';
 import DeckDisplay from './components/DeckDisplay';
+import ViewCards from './components/ViewCards';
 
 function App() {
     return (
       <Router>
       <div className="App">
           <Switch>
+          <Route 
+              path="/" 
+              exact               
+              render={props => (
+                    <React.Fragment>
+                      <LoginPage/>
+                    </React.Fragment>
+                  )} 
+              />
             <Route 
               path="/home" 
               exact               
@@ -60,6 +71,15 @@ function App() {
                         <AllCourses />
                       </React.Fragment>
                     )} 
+              />
+              <Route
+                path="/viewCards"
+                exact
+                render={props => (
+                  <React.Fragment>
+                    <ViewCards deckId={7}/>
+                  </React.Fragment>
+                )}
               />
           </Switch>
       </div>
