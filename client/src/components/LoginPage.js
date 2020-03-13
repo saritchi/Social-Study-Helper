@@ -50,8 +50,8 @@ import axios from "axios";
             this.state.auth = '';
         }
         return (
-            <div id ='mainbody'>
-                <h1 id = 'header' >Welcome To Social Study Helper</h1>
+            <div>
+                <h1 >Welcome To Social Study Helper</h1>
                 <form  onSubmit = {this.onSubmit}>
                     <label>Username: </label>
                     <input type="text" name="username" onChange = {this.onChange}></input><br></br><br></br>
@@ -60,7 +60,7 @@ import axios from "axios";
                     <input type="submit" value="Sign in" id ='SignIn'></input><br></br>
                 </form> 
                 <br></br>
-                <nav id="nav">
+                <nav>
                     <Link to="/home">SignUp</Link>
                 </nav>
             </div>
