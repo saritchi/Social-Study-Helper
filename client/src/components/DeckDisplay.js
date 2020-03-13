@@ -44,7 +44,7 @@ class DeckDisplay extends Component {
                 </div>
                 <div>
                     <Nav>
-                        <NavItem id="Decklist">
+                        <NavItem id="decklist">
                             <h3>Decklist: </h3>
                         </NavItem>
                     </Nav>
