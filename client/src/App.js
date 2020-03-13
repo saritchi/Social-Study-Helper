@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.css';
+import LoginPage from './components/LoginPage';
 import Home from './components/Home';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import AllCourses from './components/AllCourses';
@@ -16,6 +17,15 @@ function App() {
       <Router>
       <div className="App">
           <Switch>
+          <Route 
+              path="/" 
+              exact               
+              render={props => (
+                    <React.Fragment>
+                      <LoginPage/>
+                    </React.Fragment>
+                  )} 
+              />
             <Route 
               path="/home" 
               exact               

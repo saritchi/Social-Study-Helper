@@ -8,6 +8,7 @@ const fs = require('fs');
 const app = express()
 app.use(morgan('short'))
 app.use(express.static('./public'))
+app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}))
 
@@ -60,6 +61,27 @@ app.post('/api/addCourse', (req, res) => {
 
 });
 
+app.post('/api/auth', (req, res) => {
+    let sql = `SELECT * FROM user WHERE email = ? AND password = ?`;
+    let query = database.runQuery(sql,[req.body.email,req.body.password], (err, results) => {
+        if(err){
+            console.log(err);
+            res.status(500).json({result: "An error occured while attempting to authenticate. Please try again later."})
+            return;
+        };
+        if(results.length > 0){
+            results[0].auth ='true';
+        }
+        else{
+            const result = {auth: 'false'};
+            results.push(result);
+        }
+        
+        res.send(results);
+        return;
+    });
+
+});
 app.post('/api/addDeck', (req, res) => {
     console.log("New Deck Added..."); 
     var body = req.body;
