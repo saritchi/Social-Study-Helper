@@ -34,6 +34,50 @@ try {
 
 ....
 ```
+## Using High Order Components in React
+High order components (HOC) are components that use a have-a relationship to combine multiple components together into a new component. The react [documentation](https://reactjs.org/docs/higher-order-components.html) provides a solid explanation and example. We will be using high order components to avoid duplicating logic needed on multiple pages, such as authentication redirection, or error alerts. Below is an example of a simple HOC and how to use it.
+
+The HOC Component:
+```
+export  const  example = (WrappedComponent) => {
+	class  Example  extends  Component {
+		state = { demo: '' }
+
+		render() {
+			return (
+				<div>
+					<Alert  theme={this.state.theme}  dismissible={this.dismiss}  open={this.state.visible}>
+						{this.state.message}
+					</Alert>
+					<WrappedComponent  showAlert={this.showAlert}  {...this.props}/>
+				</div>
+			);
+		}
+
+	    dismiss = () => this.setState({visible:  false});
+    }
+	
+    return  WithAlert;
+};
+
+
+```
+
+Combing the HOC with another component.
+
+```
+//In AnotherComponent.js
+....
+import example from './ExampleHOC.js'
+class AnotherComponent extends Component {
+	....
+}
+
+//using this component will now have the functionality in example and in AnotherComponent combined into a single new component.
+export default example(AnotherCompontent);
+```
+ 
+ To see an example of this in use look at components/ComponentWithAlert.js and Home.js
 
 # Database Setup
 To set up the database to be used in on a local machine for development we need to first created the database in MySQL and then populate the .env configuration file.

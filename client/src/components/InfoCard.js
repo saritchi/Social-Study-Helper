@@ -1,12 +1,14 @@
 import React from 'react'
 import { Card, CardBody } from 'shards-react'
 
-export default function CardExample(props) {
-    return(
+const InfoCard = (props) => {
+    return (
         <Card>
             <CardBody>
-                {props.value}
+                <p>{props.info}</p>
             </CardBody>
         </Card>
     );
 }
+
+export default InfoCard;
