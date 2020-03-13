@@ -73,19 +73,15 @@ class ViewCards extends React.Component {
   }
 
   renderPrompt = (index) => {
-    const prompts = this.state.cards.map(card => card.prompt);
-    console.log(prompts)
-    return (
-      <p>{prompts[index]}</p>
+    return(
+      this.state.cards.slice(index, index+1).map(card => <p>{card.prompt}</p>)
     );
 
   }
 
   renderAnswer = (index) => {
-    const answers = this.state.cards.map(card => card.answer);
-    console.log(answers)
     return (
-      <p>{answers[index]}</p>
+      this.state.cards.slice(index, index+1).map(card => <p>{card.answer}</p>)
     );
   }
 
