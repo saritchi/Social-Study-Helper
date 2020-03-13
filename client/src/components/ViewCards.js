@@ -17,7 +17,11 @@ class ViewCards extends React.Component {
 
   async componentDidMount() {
     try {
-      const cardResponse = await axios.get('/api/viewCards');
+      const cardResponse = await axios.get('/api/viewCards', {
+        params:{
+          deck: this.props.deckId
+        } 
+      });
       const flashcards = cardResponse.data.result;
       flashcards.forEach((card) => {
         console.log(card);

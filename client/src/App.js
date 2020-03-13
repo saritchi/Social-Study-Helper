@@ -57,7 +57,7 @@ function App() {
                 exact
                 render={props => (
                   <React.Fragment>
-                    <ViewCards />
+                    <ViewCards deckId={6}/>
                   </React.Fragment>
                 )}
               />

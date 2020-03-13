@@ -97,8 +97,9 @@ app.post('/api/addDeck', (req, res) => {
 
 app.get('/api/viewCards', (req, res) => {
     console.log("Fetching Cards...");
-    const getFlashData = 'SELECT * FROM cards WHERE deck_id = 6';
-    database.runQuery(getFlashData, [], (error, results, fields) => {
+    const deck_id = req.query.deck
+    const getFlashData = 'SELECT * FROM cards WHERE deck_id = ?';
+    database.runQuery(getFlashData, deck_id, (error, results, fields) => {
         if (error) {
             console.log(`Unable to get courses from the database. Error: ${error.message}`)
             res.status(500).json({result: "An error occured while attempting to get your courses. Please try again later."})
