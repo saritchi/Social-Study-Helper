@@ -60,10 +60,10 @@ class ViewCards extends React.Component {
     return (
       <div className="flash-container">  
           <ReactCardFlip isFlipped={this.state.isFlipped} flipDirection="vertical">
-            <div className="card" onClick={this.handleClick}>
+            <div className="flashcard" onClick={this.handleClick}>
               {this.renderPrompt(this.state.cardIndex)}
             </div >
-            <div className="card" onClick={this.handleClick}>
+            <div className="flashcard" onClick={this.handleClick}>
               {this.renderAnswer(this.state.cardIndex)}
             </div>
           </ReactCardFlip>

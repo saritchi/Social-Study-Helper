@@ -36,6 +36,10 @@ class DeckDisplay extends Component {
         this.props.history.push("/createDeck");
     }
 
+    cardView = (deckId) => {
+        this.props.history.push("/viewCards", {deckId});
+    }
+
     render() {
         return (
             <div>
@@ -49,7 +53,7 @@ class DeckDisplay extends Component {
                         </NavItem>
                     </Nav>
                 </div>
-                <CardDisplay cardsInfo={this.state.decklist} />
+                <CardDisplay changePage={this.cardView} cardsInfo={this.state.decklist} />
                 <Button id="newDeck" onClick={this.addDeck}>Create New Deck</Button>
             </div>
         )
