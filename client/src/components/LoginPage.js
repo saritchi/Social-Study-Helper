@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
-import { FormGroup } from 'shards-react'
+import { FormGroup, Form,FormInput } from 'shards-react'
 import {Link,Redirect} from 'react-router-dom';
 import * as withAlert from "./ComponentWithAlert";
+import './Loginpage.css';
 import axios from "axios";
  class LoginPage extends Component {
 
@@ -52,18 +53,23 @@ import axios from "axios";
         }
         return (
             <div>
-                <h1 >Welcome To Social Study Helper</h1>
-                <form  onSubmit = {this.onSubmit}>
-                    <label>Username: </label>
-                    <input type="text" name="username" onChange = {this.onChange}></input><br></br><br></br>
-                    <label>Password: </label>
-                    <input type="password" name="password" onChange = {this.onChange}></input><br></br><br></br>
-                    <input type="submit" value="Sign in" id ='SignIn'></input><br></br>
-                </form> 
-                <br></br>
-                <nav>
-                    <Link to="/home">SignUp</Link>
+                <h1>Welcome To Social Study Helper</h1>
+                <nav id="loginnav">
+                    <Link id="link"to="/home">SignUp</Link>
                 </nav>
+                <Form  id="loginform" onSubmit = {this.onSubmit}>
+                    <FormGroup>
+                    <label>Username: </label>
+                    <FormInput type="text" name="username" onChange = {this.onChange}></FormInput>
+                    </FormGroup>
+
+                    <FormGroup>
+                    <label>Password: </label>
+                    <FormInput type="password" name="password" onChange = {this.onChange}></FormInput>
+                    </FormGroup>
+
+                    <FormInput type="submit" value="Sign in" id ='SignIn'></FormInput><br></br>
+                </Form> 
             </div>
         )
     }
