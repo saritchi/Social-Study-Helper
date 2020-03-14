@@ -28,7 +28,8 @@ import axios from "axios";
         const user = {
             email: this.state.email,
             password: this.state.password,
-            name: this.state.fname + ' ' + this.state.lname
+            fname: this.state.fname,
+            lname: this.state.lname,
         };
         try {
             //TODO: get a user object back from the server
