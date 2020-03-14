@@ -7,8 +7,6 @@ const fs = require('fs');
 
 const app = express()
 app.use(morgan('short'))
-app.use(express.static('./public'))
-app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}))
 
@@ -24,7 +22,8 @@ app.get('/api/courses', (req, res) => {
     database.runQuery(addCourseSQL, [], (error, results, fields) => {
         if (error) {
             console.log(`Unable to get courses from the database. Error: ${error.message}`)
-            res.status(500).json({result: "An error occured while attempting to get your courses. Please try again later."})
+            res.status(500).json({result: "An error occurred while attempting to get your courses. Please try again later."})
+            return;
         } 
 
         var courses = [];
@@ -65,12 +64,26 @@ app.post('/api/addCourse', (req, res) => {
     var coursename = body.coursename;
     var chapters = body.chapters;
 
+    const chapterKeys = Object.keys(chapters);
+    var emptyChapters = false;
+    for(var i = 0; i < chapterKeys.length; i++) {
+        const key = chapterKeys[i];
+        if(!chapters[key]) {
+            emptyChapters = true;
+        }
+    }
+
+    if(!coursename || emptyChapters) {
+        res.status(400).json({result: "Error processing request."})
+        return;
+    }
+
     //TODO: when chapters table is set up, insert chapters into that table with FK is the course PK.
     const addCourseSQL = `INSERT INTO Courses(name) VALUES(?)`;
     database.runQuery(addCourseSQL, [coursename], (error) => {
         if (error) {
             console.log(`Unable to add course with name: ${coursename} to database. Error: ${error.message}`)
-            res.status(500).json({result: "An error occured while attempting to add the course to the database. Please try again later."})
+            res.status(500).json({result: "An error occurred while attempting to add the course to the database. Please try again later."})
             return;
         }
 
@@ -80,6 +93,7 @@ app.post('/api/addCourse', (req, res) => {
     return;
 });
 
+//TODO: error check client request
 app.post('/api/auth', (req, res) => {
     let sql = `SELECT * FROM user WHERE email = ? AND password = ?`;
     let query = database.runQuery(sql,[req.body.email,req.body.password], (err, results) => {
@@ -99,21 +113,22 @@ app.post('/api/auth', (req, res) => {
         res.send(results);
         return;
     });
-
+    
 });
+
+//TODO: error check client request
 app.post('/api/addDeck', (req, res) => {
     console.log("New Deck Added..."); 
     var body = req.body;
     var deckname = body.deckname;
     var cards = body.cards;
 
-    
-
     const queryString = 'INSERT INTO Decks(name) VALUES(?)';
     database.runQuery(queryString, [deckname], (error, results, fields) => {
         if(error){
             console.log(`Unable to add card deck with name: ${deckname} to database. Error: ${error.message}`)
             res.status(500).json({result: "An error has occured while attempting to add the deck to the database. Please try again later."})
+            return;
         }
 
         var deckId = results.insertId;
@@ -128,11 +143,11 @@ app.post('/api/addDeck', (req, res) => {
             if(error){
                 console.log(error.message)
                 res.status(500).json({result: "An error has occured while attempting to add the deck to the database. Please try again later."});
+                return;
             }
         })
          
         res.sendStatus(200);
-        
     })
 })
 
@@ -154,6 +169,7 @@ app.get('/api/viewCards', (req, res) => {
     })
 });
 
+//TODO: error check client request
 app.post('/api/register', (req, res) => {
     let post = req.body;
     let sql = `Select * from user where email = '${post.email}'`;
