@@ -122,3 +122,9 @@ We are using Google App Engine (GAE) and Cloud SQL to deploy our application. To
  8. Go to the Cloud SQL dashboard and copy the connection string and past it into the **INSTANCE_CONNECTION_NAME** location in the app.yaml file
  9. Upload a .env file that uses the same credentials that you created for your Cloud SQL user and add DB_SOCKET_PATH=/cloudsql/**INSTANCE_CONNECTION_NAME** using the cloud console and run `mv .env ./social-study-helper` in the console to move the environment file into the project folder
  10. Run gcloud app deploy
+
+ ## Troubleshooting gcloud app deploy
+  1. __The project property is set to the empty string, which is invalid__: If you're getting this error your console became out of snyc with your project id somehow. Do the following to fix it.
+	1. Click the select project drop down
+	2. Copy the id from the project you want to use for running your app
+	3. Run `gcloud config set project <PROJECT_ID>` using your project id from step 2
