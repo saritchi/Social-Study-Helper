@@ -71,12 +71,13 @@ app.post('/api/addCourse', (req, res) => {
         if (error) {
             console.log(`Unable to add course with name: ${coursename} to database. Error: ${error.message}`)
             res.status(500).json({result: "An error occured while attempting to add the course to the database. Please try again later."})
+            return;
         }
 
         console.log("Add course with name: " + coursename);
         res.sendStatus(200);
     })
-
+    return;
 });
 
 app.post('/api/auth', (req, res) => {
