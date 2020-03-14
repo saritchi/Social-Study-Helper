@@ -1,17 +1,18 @@
-#loginform{
+#form{
     width:30%;
     margin-left: 700px;
 }
-#loginnav{
+#nav{
     background-color: black;
     padding: 10px;
     margin-bottom: 40px;
     text-align: right;
 }
 #link{
-   font-size: x-large;
-   color:greenyellow
-}
-#header{
-    margin-bottom: 25px;
-}
+    font-size: x-large;
+    color:greenyellow
+ }
+ #header{
+     margin-bottom: 25px;
+ }
+ 

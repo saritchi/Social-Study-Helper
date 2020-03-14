@@ -154,6 +154,33 @@ app.get('/api/viewCards', (req, res) => {
     })
 });
 
+app.post('/api/register', (req, res) => {
+    let post = req.body;
+    let sql = `Select * from user where email = '${post.email}'`;
+    let query = database.runQuery(sql, (err, result) => {
+        if(err){
+            console.log(err);
+            res.status(500).json({result: "An error occured while attempting to register. Please try again later."});
+            return;
+        }
+        if(result.length > 0){ 
+            res.status('409').json({result: "An error occured while attempting to register since Username already Exists."});
+        }
+        else{
+            sql = 'INSERT INTO user SET ?';
+            query = database.runQuery(sql, post, (err, result) => {
+                if(err){
+                    console.log(err);
+                    res.status(500).json({result: "An error occured while attempting to register. Please try again later."});
+                    return;
+                }
+                res.status(200).json({result: "Registration succesful."});;
+            });
+        }
+    });
+
+});
+
 app.listen(port, () => {
     console.log("Server Running on Port " + port)
 })
