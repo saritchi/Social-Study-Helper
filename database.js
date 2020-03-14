@@ -45,7 +45,7 @@
             console.log("Sucessfully connected to database.");
         });
     }
-
+    
     initializeTablesIfNeeded() {
         const createUsersTableSQL = `create table IF NOT EXISTS user(email varchar(20) not null, 
         password varchar(20) not null, fname varchar(20),lname varchar(20),primary key(email));`

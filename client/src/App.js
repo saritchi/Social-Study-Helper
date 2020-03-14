@@ -1,8 +1,9 @@
 import React from 'react';
 import './App.css';
+import Register from './components/Register';
+import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
 import LoginPage from './components/LoginPage';
 import Home from './components/Home';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import AllCourses from './components/AllCourses';
 
 import './App.css';
@@ -78,6 +79,15 @@ function App() {
                 render={props => (
                   <React.Fragment>
                     <ViewCards />
+                  </React.Fragment>
+                )}
+              />
+              <Route
+                path="/register"
+                exact
+                render={props => (
+                  <React.Fragment>
+                    <Register/>
                   </React.Fragment>
                 )}
               />
