@@ -96,12 +96,8 @@ app.post('/api/addDeck', (req, res) => {
             cards[i] = [deckId, cards[i].prompt, cards[i].answer];
         }
         
-<<<<<<< HEAD
-        const cardQueryString = 'INSERT INTO Cards(deck_id, prompt, answer) VALUES ?';
-=======
 
         const cardQueryString = 'INSERT INTO cards(deck_id, prompt, answer) VALUES ?';
->>>>>>> master
         database.runQuery(cardQueryString, [cards], (error) => {
             if(error){
                 console.log(error.message)
