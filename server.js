@@ -4,6 +4,7 @@ const morgan = require('morgan')
 const bodyParser = require('body-parser')
 const Database = require('./database.js')
 const fs = require('fs');
+const path = require('path');
 
 const app = express()
 app.use(morgan('short'))
@@ -14,6 +15,16 @@ const database = new Database(process.env);
 database.initializeTablesIfNeeded();
 
 var port = 3003
+
+//In production we will be server our javascript and html files from a optimized build folder in client. This sets up the endpoint and exposes
+//the build folder
+if(process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.join(__dirname, '/client/build')));
+
+    app.get('/*', function(req, res) {
+        res.sendFile(path.join(__dirname, 'build', 'index.html'));
+    });
+}
 
 //TODO: endpoint will need a query paremeter for the number of courses.
 app.get('/api/courses', (req, res) => {
