@@ -29,6 +29,10 @@ class AllCourses extends Component {
     addCourse = () => {
         this.props.history.push("/addCourse");
     }
+
+    deckView = () => {
+        this.props.history.push("/deckDisplay");
+    }
     
     render() {
         return (
@@ -36,7 +40,7 @@ class AllCourses extends Component {
                 <div id="user">
                     <h1>All Courses</h1>
                 </div>
-                <CardDisplay cardsInfo={this.state.courses} />
+                <CardDisplay changePage={this.deckView} cardsInfo={this.state.courses} />
                 <Button id="newCourse" onClick={this.addCourse}>Add New Course</Button>
             </div>
             

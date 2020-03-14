@@ -36,6 +36,24 @@ app.get('/api/courses', (req, res) => {
     })
 });
 
+app.get('/api/decklist', (req, res) => {
+    console.log("Getting decklist....");
+    const getDeckSQL = `SELECT * FROM Decks`;
+    database.runQuery(getDeckSQL, [], (error, results, fields) => {
+        if (error) {
+            console.log(`Unable to get decklist from the database. Error: ${error.message}`)
+            res.status(500).json({result: "An error occured while attempting to get your decks. Please try again later."})
+        } 
+
+        var decklist = [];
+        results.forEach((deck) => {
+            console.log(deck);
+            decklist.push(deck);
+        })
+        res.status(200).json({result: decklist});
+    })
+});
+
 //TODO: temporary function - user information should be returned by authentication once that's set up
 app.get('/api/user', (req, res) => {
     console.log("Returning user");
@@ -53,12 +71,13 @@ app.post('/api/addCourse', (req, res) => {
         if (error) {
             console.log(`Unable to add course with name: ${coursename} to database. Error: ${error.message}`)
             res.status(500).json({result: "An error occured while attempting to add the course to the database. Please try again later."})
+            return;
         }
 
         console.log("Add course with name: " + coursename);
         res.sendStatus(200);
     })
-
+    return;
 });
 
 app.post('/api/auth', (req, res) => {
@@ -123,7 +142,7 @@ app.get('/api/viewCards', (req, res) => {
     const getFlashData = 'SELECT * FROM cards WHERE deck_id = ?';
     database.runQuery(getFlashData, deck_id, (error, results, fields) => {
         if (error) {
-            console.log(`Unable to get courses from the database. Error: ${error.message}`)
+            console.log(`Unable to get cards from the database. Error: ${error.message}`)
             res.status(500).json({result: "An error occured while attempting to get your courses. Please try again later."})
         } 
         var cards = [];
