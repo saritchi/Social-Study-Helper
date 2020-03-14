@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {  Link } from 'react-router-dom';
+import {Link,Redirect} from 'react-router-dom';
 import { Form,FormGroup,FormInput} from "shards-react";
 import './Register.css'
 import * as withAlert from "./ComponentWithAlert";
@@ -11,7 +11,8 @@ import axios from "axios";
             email:'',
             password:'',
             fname:'',
-            lname:''
+            lname:'',
+            registered: false
         };
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
@@ -22,22 +23,30 @@ import axios from "axios";
       }
     
    async onSubmit(e) {
-    e.preventDefault();
-    const user = {
-        email: this.state.email,
-        password: this.state.password,
-        fname: this.state.fname,
-        lname: this.state.lname
-    };
-    try {
-        const response = await axios.post('/api/register', user);
-        alert(` Response status ${response.status} Congratulation ${response.data.result}`);
-    } catch (error) {
-        this.props.showAlert(withAlert.errorTheme, error.response.data.result);
-    }
-    
+        e.preventDefault();
+        //TODO: error check contents
+        const user = {
+            email: this.state.email,
+            password: this.state.password,
+            name: this.state.fname + ' ' + this.state.lname
+        };
+        try {
+            //TODO: get a user object back from the server
+            const response = await axios.post('/api/register', user);
+            this.setState({registered: true});
+        } catch (error) {
+            this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+        }
     }
     render() {
+        //TODO: redirect to home after value registration
+        if (this.state.registered) {
+            return(
+                <div>
+                    {<Redirect to='/'/>}
+                </div>
+            )
+        }
         return (
             <div>
                 <br></br>
@@ -48,22 +57,22 @@ import axios from "axios";
                 <Form id='form' onSubmit = {this.onSubmit}>
                     <FormGroup>
                     <label>email: </label>
-                    <FormInput type="email" name="email" onChange = {this.onChange}></FormInput><br></br>
+                    <FormInput type="email" name="email" onChange = {this.onChange}></FormInput>
                     </FormGroup>
 
                     <FormGroup>
                     <label>Password: </label>
-                    <FormInput type="password" name="password" onChange = {this.onChange}></FormInput><br></br>
+                    <FormInput type="password" name="password" onChange = {this.onChange}></FormInput>
                     </FormGroup>
 
                     <FormGroup>
                     <label>First Name: </label>
-                    <FormInput type="text" name="fname" onChange = {this.onChange}></FormInput><br></br>
+                    <FormInput type="text" name="fname" onChange = {this.onChange}></FormInput>
                     </FormGroup>
 
                     <FormGroup>
                     <label>Last name: </label>
-                    <FormInput type="text" name="lname" onChange = {this.onChange}></FormInput><br></br><br></br>
+                    <FormInput type="text" name="lname" onChange = {this.onChange}></FormInput>
                     </FormGroup>
 
                     <FormInput type="submit" value="SignUp"></FormInput>

@@ -24,19 +24,20 @@ import axios from "axios";
       }
     
     async onSubmit(e) {
-    e.preventDefault();
-    try {
-        let user = {
-            email: this.state.email,
-            password: this.state.password
-        };
-        const response = await axios.post('/api/auth', user);
-        user = response.data[0];
-        this.setState(user)
-    } catch(error) {
-        this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+        e.preventDefault();
+        try {
+            //TODO: check values
+            let user = {
+                email: this.state.email,
+                password: this.state.password
+            };
+            const response = await axios.post('/api/auth', user);
+            user = response.data[0];
+            this.setState(user)
+        } catch(error) {
+            this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+        }
     }
-}
     componentDidUpdate() {
         if (this.state.auth === 'false') {
             this.props.showAlert(withAlert.errorTheme, "Invalid email or password. Please try again");
@@ -44,7 +45,7 @@ import axios from "axios";
          this.state.auth = '';        
       }
     render() {
-        if(this.state.auth === 'true'){
+        if(this.state.auth){
             return(
                 <div>
                     {<Redirect to='/home'/>}
