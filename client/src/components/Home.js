@@ -34,6 +34,10 @@ class Home extends Component {
     addCourse = () => {
         this.props.history.push("/addCourse");
     }
+
+    deckView = () => {
+        this.props.history.push("/deckDisplay");
+    }
     
     render() {
         return (
@@ -51,7 +55,7 @@ class Home extends Component {
                         </NavItem>
                     </Nav>
                 </div>
-                <CardDisplay cardsInfo={this.state.courses.slice(0, 9)}/>
+                <CardDisplay changePage={this.deckView} cardsInfo={this.state.courses.slice(0, 9)}/>
                 <Button id="newCourse" onClick={this.addCourse}>Add New Course</Button>
             </div>
             )
