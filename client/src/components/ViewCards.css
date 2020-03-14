@@ -1,0 +1,17 @@
+.card {
+    border: 1px solid rgb(238, 238, 238);
+    border-radius: 3px; 
+    width:800px;
+    height: 400px;  
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+  }
+  
+  .flash-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%)
+  }

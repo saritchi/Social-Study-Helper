@@ -1,0 +1,46 @@
+h6{
+    padding-left: 2%;
+}
+
+#cards{
+    margin-top: 5%;
+    padding-top: 1%;
+    padding-bottom: 1%;
+}
+
+#deck{
+    margin-left: 10%;
+    margin-right: 10%;
+
+    margin-bottom: 3%;
+    padding: 5%;
+    -moz-box-shadow: 0 0 3px #ccc;
+    -webkit-box-shadow: 0 0 3px #ccc;
+    box-shadow: 0 0 3px #ccc;
+}
+
+#addCard{
+    width: 100%;
+    padding-top: 3%;
+    padding-bottom: 3%;
+
+}
+
+#addDeck{
+    margin-top: 3%;
+}
+
+hr{
+    margin-top: 0;
+}
+
+#newDeckHeading{
+    padding-left: 0;
+    margin-left: 10%;
+    margin-top: 3%;
+    text-align: left;
+}
+
+h4{
+    margin-bottom: 0;
+}
