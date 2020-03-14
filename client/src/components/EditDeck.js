@@ -57,13 +57,11 @@ class EditDeck extends React.Component {
                     <Row>
                         <Col>
                             <label htmlFor={index}>Card Prompt:</label>
-                            {/* Value won't change when you type in text area */}
-                            <FormTextarea id={index} onChange={this.onInputChange} value={this.state.cards[index].prompt} name="card_prompt"/>
+                            <FormTextarea id={index} onChange={this.onInputChange} defaultValue={this.state.cards[index].prompt} name="card_prompt"/>
                         </Col>
                         <Col>
                             <label htmlFor={index}>Card Answer:</label>
-                            {/* Value won't change when you type in text area */}
-                            <FormTextarea id={index} onChange={this.onInputChange} value={this.state.cards[index].answer} name="card_answer"/>
+                            <FormTextarea id={index} onChange={this.onInputChange} defaultValue={this.state.cards[index].answer} name="card_answer"/>
                         </Col>
                     </Row>
                 </Container>
@@ -88,7 +86,7 @@ class EditDeck extends React.Component {
         }
 
         try{
-            // query currently does not update/insert new rows
+            // query currently does not insert new rows, it currently only updates
             const response = await axios.post("/api/editDeck", json);
             console.log(response.status);
             this.setState(
@@ -104,13 +102,11 @@ class EditDeck extends React.Component {
         }
     }
 
-    onInputChange = event => {
+    onInputChange = (event) => {
         if(event.target.name === "card_prompt") {
-            const cards = this.state.cards;
-            cards[event.target.id].prompt = event.target.value;
+            this.state.cards[event.target.id].prompt = event.target.value;
         }else if(event.target.name === "card_answer"){
-            const cards = this.state.cards;
-            cards[event.target.id].answer = event.target.value;
+            this.state.cards[event.target.id].answer = event.target.value;
         }else{
             this.setState({[event.target.name]: event.target.value});
         }

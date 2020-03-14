@@ -122,12 +122,11 @@ app.post('/api/editDeck', (req, res) => {
     var body = req.body;
     var deckname = body.deckname;
     var cards = body.cards;
-    var deck_id = body.deck;
-
+    console.log(cards);
 
     const cardQueryString = 'UPDATE cards SET prompt = ?, answer = ? WHERE deck_id = ?';
-    for(var i = 0; i < cards.length; i++){
-        database.runQuery(cardQueryString, [cards[i].prompt, cards[i].answer, deck_id], (error) => {
+    for(var i = 0; i < cards.length - 1; i++){
+        database.runQuery(cardQueryString, [cards[i].prompt, cards[i].answer, cards[i].deck_id], (error) => {
             if(error){
                 console.log(error.message)
                 res.status(500).json({result: "An error has occured while attempting to add the deck to the database. Please try again later."});
