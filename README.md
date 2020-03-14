@@ -109,3 +109,16 @@ Once these items have been added the mysql node package should be able to connec
 	 3. Then run ``flush privileges;``
 
 	More information regarding this error can be found [here](https://stackoverflow.com/questions/50093144/mysql-8-0-client-does-not-support-authentication-protocol-requested-by-server/53382070).
+
+# Deploying on Google App Engine
+We are using Google App Engine (GAE) and Cloud SQL to deploy our application. To deploy the application to GAE the following steps need to be done first.
+
+ 1. Create a Cloud SQL Instance by following the [quickstart](https://cloud.google.com/sql/docs/mysql/quickstart) guide step 1 and 2.
+ 3. Once connected to the Cloud SQL database run CREATE DATABASE StudyHelper
+ 4. Create a user with a password and username of your choice in the cloud SQL console
+ 5. After setting up the database go to App Engine and create a new App Engine instance. Select NodeJs as the runtime and Flexible environment.
+ 6. Open the google cloud console and clone the repo locally into the App Engine instance
+ 7. Run `npm run prod` to install the required packages and build the static react files
+ 8. Go to the Cloud SQL dashboard and copy the connection string and past it into the **INSTANCE_CONNECTION_NAME** location in the app.yaml file
+ 9. Upload a .env file that uses the same credentials that you created for your Cloud SQL user and add DB_SOCKET_PATH=/cloudsql/**INSTANCE_CONNECTION_NAME** using the cloud console and run `mv .env ./social-study-helper` in the console to move the environment file into the project folder
+ 10. Run gcloud app deploy
