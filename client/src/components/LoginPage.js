@@ -53,9 +53,10 @@ import axios from "axios";
         }
         return (
             <div>
-                <h1>Welcome To Social Study Helper</h1>
+                <br></br>
+                <h1 id="header">Welcome To Social Study Helper</h1>
                 <nav id="loginnav">
-                    <Link id="link"to="/home">SignUp</Link>
+                    <Link id="link"to="/register">SignUp</Link>
                 </nav>
                 <Form  id="loginform" onSubmit = {this.onSubmit}>
                     <FormGroup>

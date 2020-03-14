@@ -45,17 +45,7 @@
             console.log("Sucessfully connected to database.");
         });
     }
-    initializeTablesIfNeeded() {
-        const createUsersTableSQL = `create table user(username varchar(20) not null, 
-        password varchar(20) not null, fname varchar(20),lname varchar(20),primary key(username));`
-        this.db.query(createUsersTableSQL, (err) => {
-            if (err) {
-                console.log("Unable to initialize database tables! Aborting server start up with error: " + err.message);
-                throw err;
-            }
-        });
-    }
-
+    
     initializeTablesIfNeeded() {
         const createUsersTableSQL = `create table IF NOT EXISTS user(email varchar(20) not null, 
         password varchar(20) not null, fname varchar(20),lname varchar(20),primary key(email));`

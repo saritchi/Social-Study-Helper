@@ -1,12 +1,14 @@
 import React, { Component } from 'react'
 import {  Link } from 'react-router-dom';
-import {  Form} from "shards-react";
+import { Form,FormGroup,FormInput} from "shards-react";
+import './Register.css'
+import * as withAlert from "./ComponentWithAlert";
 import axios from "axios";
  class Register extends Component {
     constructor(props){
         super(props);
         this.state = {
-            username:'',
+            email:'',
             password:'',
             fname:'',
             lname:''
@@ -22,44 +24,53 @@ import axios from "axios";
    async onSubmit(e) {
     e.preventDefault();
     const user = {
-        username: this.state.username,
+        email: this.state.email,
         password: this.state.password,
         fname: this.state.fname,
         lname: this.state.lname
     };
     try {
         const response = await axios.post('/api/register', user);
-        console.log(response);
-        alert(` Response status ${response.status} Congratulation ${response.data}`);
+        alert(` Response status ${response.status} Congratulation ${response.data.result}`);
     } catch (error) {
-        console.log(error);
-        alert(error);
+        this.props.showAlert(withAlert.errorTheme, error.response.data.result);
     }
     
     }
     render() {
         return (
             <div>
-                <h1 >Registering User</h1>
                 <br></br>
-                <Form onSubmit = {this.onSubmit}>
-                    <label>Username: </label>
-                    <input type="text" name="username" onChange = {this.onChange}></input><br></br>
-                    <label>Password: </label>
-                    <input type="password" name="password" onChange = {this.onChange}></input><br></br>
-                    <label>First Name: </label>
-                    <input type="text" name="fname" onChange = {this.onChange}></input><br></br>
-                    <label>Last name: </label>
-                    <input type="text" name="lname" onChange = {this.onChange}></input><br></br><br></br>
-                    <input type="submit" value="SignUp"></input>
-                </Form> 
-                <br></br>
+                <h1 id="header">Registering User</h1>
                 <nav id="nav">
-                    <Link to ="/" >Go Home Page</Link>
+                    <Link id='link' to ="/" >Go Home Page</Link>
                 </nav>
+                <Form id='form' onSubmit = {this.onSubmit}>
+                    <FormGroup>
+                    <label>email: </label>
+                    <FormInput type="email" name="email" onChange = {this.onChange}></FormInput><br></br>
+                    </FormGroup>
+
+                    <FormGroup>
+                    <label>Password: </label>
+                    <FormInput type="password" name="password" onChange = {this.onChange}></FormInput><br></br>
+                    </FormGroup>
+
+                    <FormGroup>
+                    <label>First Name: </label>
+                    <FormInput type="text" name="fname" onChange = {this.onChange}></FormInput><br></br>
+                    </FormGroup>
+
+                    <FormGroup>
+                    <label>Last name: </label>
+                    <FormInput type="text" name="lname" onChange = {this.onChange}></FormInput><br></br><br></br>
+                    </FormGroup>
+
+                    <FormInput type="submit" value="SignUp"></FormInput>
+                </Form> 
             </div>
         )
     }
 }
 
-export default Register;
+export default withAlert.withAlert(Register);
