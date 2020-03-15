@@ -92,6 +92,12 @@
 
     }
 
+    getUserFromEmail(email, resultsCallback) {
+        console.log("Getting user data for user with email= " + email);
+        const sql = 'SELECT * FROM user WHERE email = ? LIMIT 1';
+        this.runQuery(sql, [email], resultsCallback);
+    }
+
     /**
      * 
      * @param {string} sql sql query statement

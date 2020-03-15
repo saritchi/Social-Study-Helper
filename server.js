@@ -3,7 +3,7 @@ const express = require('express')
 const morgan = require('morgan')
 const bodyParser = require('body-parser')
 const Database = require('./database.js')
-const fs = require('fs');
+const session = require('client-sessions')
 
 const app = express()
 app.use(morgan('short'))
@@ -14,9 +14,50 @@ const database = new Database(process.env);
 database.initializeTablesIfNeeded();
 
 var port = 3003
+const thirty_minutes = 30 * 60 * 1000;
+const five_minutes = 5 * 60 * 1000;
+
+
+app.use(session({
+    cookieName: 'test',
+    secret: 'test_string',
+    duration: thirty_minutes,
+    activeDuration: five_minutes,
+}));
+
+app.use(function(req, res, next) {
+    //TODO: exclude auth and register
+    if(req.session && req.session.user) {
+        database.getUserFromEmail(req.session.user.email, (error, results) => {
+            if (error) {
+                res.status(500).json({result: "An error has occured. Please try again later."});
+                return;
+            }
+            const user = results[0];
+            if(user) {
+                req.user = user;
+                delete req.user.password;
+                req.session.user = user;
+                res.locals.user = user;
+            }
+            next();
+        });
+    } else {
+        next();
+    }
+});
+
+function requireLogin(req, res, next) {
+    if(!req.user) {
+        res.sendStatus(401);
+        return;
+    }
+
+    next();
+}
 
 //TODO: endpoint will need a query paremeter for the number of courses.
-app.get('/api/courses', (req, res) => {
+app.get('/api/courses', requireLogin, (req, res) => {
     console.log("Getting courses....");
     const addCourseSQL = `SELECT * FROM Courses`;
     database.runQuery(addCourseSQL, [], (error, results, fields) => {
@@ -35,7 +76,7 @@ app.get('/api/courses', (req, res) => {
     })
 });
 
-app.get('/api/decklist', (req, res) => {
+app.get('/api/decklist', requireLogin, (req, res) => {
     console.log("Getting decklist....");
     const getDeckSQL = `SELECT * FROM Decks`;
     database.runQuery(getDeckSQL, [], (error, results, fields) => {
@@ -54,12 +95,12 @@ app.get('/api/decklist', (req, res) => {
 });
 
 //TODO: temporary function - user information should be returned by authentication once that's set up
-app.get('/api/user', (req, res) => {
+app.get('/api/user', requireLogin, (req, res) => {
     console.log("Returning user");
     res.json({result: "John Doe"});
 });
 
-app.post('/api/addCourse', (req, res) => {
+app.post('/api/addCourse', requireLogin, (req, res) => {
     var body = req.body;
     var coursename = body.coursename;
     var chapters = body.chapters;
@@ -117,7 +158,7 @@ app.post('/api/auth', (req, res) => {
 });
 
 //TODO: error check client request
-app.post('/api/addDeck', (req, res) => {
+app.post('/api/addDeck', requireLogin, (req, res) => {
     console.log("New Deck Added..."); 
     var body = req.body;
     var deckname = body.deckname;
@@ -151,7 +192,7 @@ app.post('/api/addDeck', (req, res) => {
     })
 })
 
-app.get('/api/viewCards', (req, res) => {
+app.get('/api/viewCards', requireLogin, (req, res) => {
     console.log("Fetching Cards...");
     const deck_id = req.query.deck
     const getFlashData = 'SELECT * FROM cards WHERE deck_id = ?';
