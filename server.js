@@ -218,8 +218,7 @@ app.get('/api/viewCards', requireLogin, (req, res) => {
 //TODO: error check client request
 app.post('/api/register', (req, res) => {
     let post = req.body;
-    let sql = `Select * from user where email = '${post.email}'`;
-    let query = database.runQuery(sql, (err, result) => {
+    database.getUserFromEmail(post.email, (err, result) => {
         if(err){
             console.log(err);
             res.status(500).json({result: "An error occured while attempting to register. Please try again later."});
@@ -239,8 +238,7 @@ app.post('/api/register', (req, res) => {
                 res.status(200).json({result: "Registration succesful."});;
             });
         }
-    });
-
+    })
 });
 
 app.listen(port, () => {
