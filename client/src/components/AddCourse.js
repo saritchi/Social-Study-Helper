@@ -2,8 +2,7 @@ import React, {Component} from "react";
 import { Button, Form, FormInput, FormGroup } from "shards-react";
 import './AddCourse.css';
 import axios from "axios";
-import './ComponentWithAlert';
-import * as withAlert from "./ComponentWithAlert";
+import * as withAlert from "./HOC/ComponentWithAlert";
 import { TiDelete } from 'react-icons/ti';
 
 class AddCourse extends Component {

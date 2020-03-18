@@ -4,7 +4,7 @@ import { Container, Row, Col } from "shards-react";
 import {
     Button
   } from "shards-react";
-import * as withAlert from "./ComponentWithAlert"
+import * as withAlert from "./HOC/ComponentWithAlert";
 import Axios from 'axios';
 import './CreateDeck.css';
 

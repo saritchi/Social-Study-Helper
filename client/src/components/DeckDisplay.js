@@ -3,7 +3,7 @@ import {withRouter} from "react-router-dom"
 import { Button, Nav, NavItem, NavLink } from 'shards-react';
 import axios from "axios";
 import './DeckDisplay.css';
-import * as withAlert from "./ComponentWithAlert"
+import * as withAlert from "./HOC/ComponentWithAlert";
 import CardDisplay from './CardDisplay';
 
 
@@ -26,9 +26,13 @@ class DeckDisplay extends Component {
             })
             this.setState({decklist: decklist})
         } catch(error) {
-            console.error(error);
-            console.error("ERROR");
-            this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+            if(error.response.status === 401) {
+                this.props.history.replace("/");
+            }
+            else {
+                console.error(error);
+                this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+            }
         }
     }
 

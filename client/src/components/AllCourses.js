@@ -4,7 +4,7 @@ import { Button } from 'shards-react'
 import './AllCourses.css'
 import axios from "axios"
 import CardDisplay from './CardDisplay';
-import * as withAlert from "./ComponentWithAlert";
+import * as withAlert from "./HOC/ComponentWithAlert";
 
 class AllCourses extends Component {
     constructor(props) {

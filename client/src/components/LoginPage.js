@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import { FormGroup, Form,FormInput } from 'shards-react'
 import {Link,Redirect} from 'react-router-dom';
-import * as withAlert from "./ComponentWithAlert";
+import * as withAlert from "./HOC/ComponentWithAlert";
 import './Loginpage.css';
 import axios from "axios";
+import Cookies from 'universal-cookie';
  class LoginPage extends Component {
-
+    cookies = new Cookies();
     constructor(props){
         super(props);
         this.state = {
@@ -31,6 +32,7 @@ import axios from "axios";
                 email: this.state.email,
                 password: this.state.password
             };
+
             const response = await axios.post('/api/auth', user);
             user = response.data[0];
             this.setState(user)
@@ -45,7 +47,7 @@ import axios from "axios";
          this.state.auth = '';        
       }
     render() {
-        if(this.state.auth){
+        if(this.state.auth === 'true'){
             return(
                 <div>
                     {<Redirect to='/home'/>}
