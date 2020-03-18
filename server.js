@@ -17,10 +17,9 @@ var port = 3003
 const thirty_minutes = 30 * 60 * 1000;
 const five_minutes = 5 * 60 * 1000;
 
-
 app.use(session({
     cookieName: 'session',
-    secret: 'test_string',
+    secret: process.env.SESSION_SECRET,
     duration: thirty_minutes,
     activeDuration: five_minutes,
 }));
