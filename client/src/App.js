@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { Component } from 'react';
 import './App.css';
 import Register from './components/Register';
-import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import LoginPage from './components/LoginPage';
 import Home from './components/Home';
 import AllCourses from './components/AllCourses';
@@ -14,7 +14,11 @@ import CreateDeck from './components/CreateDeck';
 import DeckDisplay from './components/DeckDisplay';
 import ViewCards from './components/ViewCards';
 
-function App() {
+class App extends Component {
+  state = {
+    isAuthenticated: false
+  }
+  render() {
     return (
       <Router>
       <div className="App">
@@ -24,7 +28,7 @@ function App() {
               exact               
               render={props => (
                     <React.Fragment>
-                      <LoginPage/>
+                      <LoginPage setAuthenticationStatus={this.setAuthenticationStatus}/>
                     </React.Fragment>
                   )} 
               />
@@ -33,7 +37,7 @@ function App() {
               exact               
               render={props => (
                     <React.Fragment>
-                      <Home />
+                      <Home isAuthenticated={this.state.isAuthenticated} />
                     </React.Fragment>
                   )} 
               />
@@ -42,7 +46,7 @@ function App() {
               exact               
               render={props => (
                     <React.Fragment>
-                      <DeckDisplay />
+                      <DeckDisplay isAuthenticated={this.state.isAuthenticated} />
                     </React.Fragment>
                   )} 
               />
@@ -51,7 +55,7 @@ function App() {
                 exact               
                 render={props => (
                       <React.Fragment>
-                        <AddCourse />
+                        <AddCourse isAuthenticated={this.state.isAuthenticated} />
                       </React.Fragment>
                     )} 
               />
@@ -60,7 +64,7 @@ function App() {
                 exact               
                 render={props => (
                       <React.Fragment>
-                        <CreateDeck />
+                        <CreateDeck isAuthenticated={this.state.isAuthenticated} />
                       </React.Fragment>
                     )}
               />
@@ -69,7 +73,7 @@ function App() {
                 exact               
                 render={props => (
                       <React.Fragment>
-                        <AllCourses />
+                        <AllCourses isAuthenticated={this.state.isAuthenticated} />
                       </React.Fragment>
                     )} 
               />
@@ -78,7 +82,7 @@ function App() {
                 exact
                 render={props => (
                   <React.Fragment>
-                    <ViewCards />
+                    <ViewCards isAuthenticated={this.state.isAuthenticated} />
                   </React.Fragment>
                 )}
               />
@@ -95,6 +99,11 @@ function App() {
       </div>
       </Router>
     );
+  }
+
+  setAuthenticationStatus = authStatus => {
+    this.setState({isAuthenticated: authStatus});
+  }
 }
 
 export default App;

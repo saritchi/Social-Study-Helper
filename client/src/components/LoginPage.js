@@ -35,6 +35,7 @@ import Cookies from 'universal-cookie';
 
             const response = await axios.post('/api/auth', user);
             user = response.data[0];
+            this.props.setAuthenticationStatus(user.auth);
             this.setState(user)
         } catch(error) {
             this.props.showAlert(withAlert.errorTheme, error.response.data.result);

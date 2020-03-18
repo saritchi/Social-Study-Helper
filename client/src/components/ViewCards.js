@@ -18,6 +18,11 @@ class ViewCards extends React.Component {
   }
 
   async componentDidMount() {
+    if(!this.props.isAuthenticated) {
+      this.props.history.replace("/");
+      return;
+    }
+
     try {
       const cardResponse = await axios.get('/api/viewCards', {
         params:{

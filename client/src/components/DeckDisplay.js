@@ -18,6 +18,11 @@ class DeckDisplay extends Component {
     }
 
     async componentDidMount() {
+        if(!this.props.isAuthenticated) {
+            this.props.history.replace("/");
+            return;
+        }
+        
         try {
             const deckResponse = await axios.get('/api/decklist');
             const decklist = deckResponse.data.result;

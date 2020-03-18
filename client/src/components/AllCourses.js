@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {withRouter } from "react-router-dom"
+import { withRouter } from "react-router-dom"
 import { Button } from 'shards-react'
 import './AllCourses.css'
 import axios from "axios"
@@ -13,6 +13,11 @@ class AllCourses extends Component {
     }
 
     async componentDidMount() {
+        if(!this.props.isAuthenticated) {
+            this.props.history.replace("/");
+            return;
+        }
+
         try {
             const coursesResponse = await axios.get('/api/courses');
             const courses = coursesResponse.data.result;
@@ -21,8 +26,13 @@ class AllCourses extends Component {
             })
             this.setState({courses: courses})
         } catch(error) {
-            console.error(error);
-            this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+            if(error.response.status === 401) {
+                this.props.history.replace("/");
+            }
+            else {
+                console.error(error);
+                this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+            }
         }
     }
 

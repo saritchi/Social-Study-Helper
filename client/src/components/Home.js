@@ -16,6 +16,10 @@ class Home extends Component {
     }
 
     async componentDidMount() {
+        if(!this.props.isAuthenticated) {
+            this.props.history.replace("/");
+            return;
+        }
         // //TODO: should not need to make a request for this. Should be passed in from login page.
         try {
             const user = (await axios.get('/api/user')).data.result;
@@ -43,6 +47,10 @@ class Home extends Component {
     deckView = () => {
         this.props.history.push("/deckDisplay");
     }
+
+    viewAllCourses = () => {
+        this.props.history.push('/allCourses')
+    }
     
     render() {
         return (
@@ -56,7 +64,7 @@ class Home extends Component {
                             <h3>Recent Courses: </h3>
                         </NavItem>
                         <NavItem id="allCourses">
-                            <NavLink href='/allCourses'>View All Courses</NavLink>
+                            <NavLink href='#' onClick={this.viewAllCourses}>View All Courses</NavLink>
                         </NavItem>
                     </Nav>
                 </div>

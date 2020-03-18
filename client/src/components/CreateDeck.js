@@ -1,4 +1,5 @@
 import React from 'react'
+import { withRouter } from "react-router-dom"
 import { Form, FormGroup, FormTextarea, FormInput} from "shards-react";
 import { Container, Row, Col } from "shards-react";
 import {
@@ -18,6 +19,11 @@ class CreateDeck extends React.Component {
     }
     
     componentDidMount(){
+        if(!this.props.isAuthenticated) {
+            this.props.history.replace("/");
+            return;
+        }
+
         this.addCard();
     }
 
@@ -118,4 +124,4 @@ class CreateDeck extends React.Component {
     }
 }
 
-export default withAlert.withAlert(CreateDeck);
+export default withRouter(withAlert.withAlert(CreateDeck));

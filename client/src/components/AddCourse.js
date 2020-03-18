@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import { withRouter } from "react-router-dom"
 import { Button, Form, FormInput, FormGroup } from "shards-react";
 import './AddCourse.css';
 import axios from "axios";
@@ -22,6 +23,11 @@ class AddCourse extends Component {
   }
   
   componentDidMount() {
+    if(!this.props.isAuthenticated) {
+      this.props.history.replace("/");
+      return;
+    }
+
     this.addChapterInput();
   }
 
@@ -77,8 +83,13 @@ class AddCourse extends Component {
         }, this.addChapterInput);
         this.props.showAlert(withAlert.successTheme, "Added Course");
     } catch (error) {
-      console.error(error);
-      this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+      if(error.response.status === 401) {
+        this.props.history.replace("/");
+      }
+      else {
+          console.error(error);
+          this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+      }
     }
   }
 
@@ -150,4 +161,4 @@ class AddCourse extends Component {
   }
 }
 
-export default withAlert.withAlert(AddCourse);
+export default withRouter(withAlert.withAlert(AddCourse));
