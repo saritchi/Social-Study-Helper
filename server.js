@@ -3,7 +3,6 @@ const express = require('express')
 const morgan = require('morgan')
 const bodyParser = require('body-parser')
 const Database = require('./database.js')
-const fs = require('fs');
 
 const app = express()
 app.use(morgan('short'))
@@ -18,8 +17,9 @@ var port = 3003
 //TODO: endpoint will need a query paremeter for the number of courses.
 app.get('/api/courses', (req, res) => {
     console.log("Getting courses....");
-    const addCourseSQL = `SELECT * FROM Courses`;
-    database.runQuery(addCourseSQL, [], (error, results, fields) => {
+    var userEmail = req.body.email;
+    const addCourseSQL = `SELECT * FROM Courses WHERE userEmail = ?`;
+    database.runQuery(addCourseSQL, [userEmail], (error, results) => {
         if (error) {
             console.log(`Unable to get courses from the database. Error: ${error.message}`)
             res.status(500).json({result: "An error occurred while attempting to get your courses. Please try again later."})
@@ -35,21 +35,21 @@ app.get('/api/courses', (req, res) => {
     })
 });
 
-app.get('/api/decklist', (req, res) => {
-    console.log("Getting decklist....");
-    const getDeckSQL = `SELECT * FROM Decks`;
-    database.runQuery(getDeckSQL, [], (error, results, fields) => {
+app.get('/api/chapters', (req, res) => {
+    console.log("Getting chapters....");
+    const getDeckSQL = `SELECT * FROM Chapters WHERE courseId = ?`;
+    database.runQuery(getDeckSQL, [req.query.courseId], (error, results) => {
         if (error) {
-            console.log(`Unable to get decklist from the database. Error: ${error.message}`)
-            res.status(500).json({result: "An error occured while attempting to get your decks. Please try again later."})
+            console.log(`Unable to get chapters from the database. Error: ${error.message}`)
+            res.status(500).json({result: "An error occured while attempting to get your chapters. Please try again later."})
         } 
 
-        var decklist = [];
-        results.forEach((deck) => {
-            console.log(deck);
-            decklist.push(deck);
+        var chapters = [];
+        results.forEach((chapter) => {
+            console.log(chapter);
+            chapters.push(chapter);
         })
-        res.status(200).json({result: decklist});
+        res.status(200).json({result: chapters});
     })
 });
 
@@ -63,6 +63,8 @@ app.post('/api/addCourse', (req, res) => {
     var body = req.body;
     var coursename = body.coursename;
     var chapters = body.chapters;
+    var userEmail = body.email;
+
 
     const chapterKeys = Object.keys(chapters);
     var emptyChapters = false;
@@ -79,18 +81,36 @@ app.post('/api/addCourse', (req, res) => {
     }
 
     //TODO: when chapters table is set up, insert chapters into that table with FK is the course PK.
-    const addCourseSQL = `INSERT INTO Courses(name) VALUES(?)`;
-    database.runQuery(addCourseSQL, [coursename], (error) => {
+    //TODO: when UI for addCourse is updated use the final and midterm values.
+    var final = false;
+    var midterm = false;
+    const addCourseSQL = `INSERT INTO Courses(name, midterm, final, userEmail) VALUES(?, ?, ?, ?)`;
+    database.runQuery(addCourseSQL, [coursename, midterm, final, userEmail], (error, results) => {
         if (error) {
             console.log(`Unable to add course with name: ${coursename} to database. Error: ${error.message}`)
             res.status(500).json({result: "An error occurred while attempting to add the course to the database. Please try again later."})
             return;
         }
 
-        console.log("Add course with name: " + coursename);
-        res.sendStatus(200);
+        var courseId = results.insertId;
+        var chaptersLength = Object.keys(chapters).length;
+        for(var i = 0; i < chaptersLength; i++){
+            //TODO: replace midterm final values when UI is updated.
+            chapters[i] = [chapters[i], midterm, final, courseId];
+        }
+        
+
+        const chapterSQL = 'INSERT INTO Chapters(name, midterm, final, courseId) VALUES ?';
+        database.runQuery(chapterSQL, [chapters], (error) => {
+            if(error){
+                console.log(error.message)
+                res.status(500).json({result: "An error has occured while attempting to add the deck to the database. Please try again later."});
+                return;
+            }
+            console.log("Add course with name: " + coursename);
+            res.sendStatus(200);
+        })
     })
-    return;
 });
 
 //TODO: error check client request
@@ -117,24 +137,29 @@ app.post('/api/auth', (req, res) => {
 });
 
 //TODO: error check client request
-app.post('/api/addDeck', (req, res) => {
-    console.log("New Deck Added..."); 
+app.post('/api/addChapter', (req, res) => {
+    console.log("New Chapter Added..."); 
     var body = req.body;
-    var deckname = body.deckname;
+    var chaptername = body.chaptername;
     var cards = body.cards;
+    var courseId = req.query.courseId;
 
-    const queryString = 'INSERT INTO Decks(name) VALUES(?)';
-    database.runQuery(queryString, [deckname], (error, results, fields) => {
+    //TODO: update midterm and final values when UI is updated
+    const midterm = false;
+    const final = false;        
+    const addChapterSql = 'INSERT INTO Chapters(name, midterm, final, courseId) VALUES(?, ?, ?, ?)'
+
+    database.runQuery(addChapterSql, [chaptername, midterm, final, courseId],  (error, results) => {
         if(error){
-            console.log(`Unable to add card deck with name: ${deckname} to database. Error: ${error.message}`)
+            console.log(`Unable to add card deck with name: ${chaptername} to database. Error: ${error.message}`)
             res.status(500).json({result: "An error has occured while attempting to add the deck to the database. Please try again later."})
             return;
         }
 
-        var deckId = results.insertId;
+        var chapterId = results.insertId;
         numCards = Object.keys(cards).length;
         for(var i = 0; i < numCards; i++){
-            cards[i] = [deckId, cards[i].prompt, cards[i].answer];
+            cards[i] = [chapterId, cards[i].prompt, cards[i].answer];
         }
         
 
@@ -153,9 +178,9 @@ app.post('/api/addDeck', (req, res) => {
 
 app.get('/api/viewCards', (req, res) => {
     console.log("Fetching Cards...");
-    const deck_id = req.query.deck
-    const getFlashData = 'SELECT * FROM cards WHERE deck_id = ?';
-    database.runQuery(getFlashData, deck_id, (error, results, fields) => {
+    const chapterId = req.query.chapterId
+    const getFlashData = 'SELECT * FROM cards WHERE chapterId = ?';
+    database.runQuery(getFlashData, chapterId, (error, results) => {
         if (error) {
             console.log(`Unable to get cards from the database. Error: ${error.message}`)
             res.status(500).json({result: "An error occured while attempting to get your courses. Please try again later."})
