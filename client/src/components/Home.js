@@ -16,7 +16,11 @@ class Home extends Component {
 
     async componentDidMount() {
         try {
-            const coursesResponse = await axios.get('/api/courses');
+            const coursesResponse = await axios.get('/api/courses', {
+                params: {
+                    email: this.props.user.email
+                }
+            });
             const courses = coursesResponse.data.result;
             courses.forEach((course) => {
                 console.log(course);

@@ -17,7 +17,7 @@ var port = 3003
 //TODO: endpoint will need a query paremeter for the number of courses.
 app.get('/api/courses', (req, res) => {
     console.log("Getting courses....");
-    var userEmail = req.body.email;
+    var userEmail = req.query.email;
     const addCourseSQL = `SELECT * FROM Courses WHERE userEmail = ?`;
     database.runQuery(addCourseSQL, [userEmail], (error, results) => {
         if (error) {
@@ -51,12 +51,6 @@ app.get('/api/chapters', (req, res) => {
         })
         res.status(200).json({result: chapters});
     })
-});
-
-//TODO: temporary function - user information should be returned by authentication once that's set up
-app.get('/api/user', (req, res) => {
-    console.log("Returning user");
-    res.json({result: "John Doe"});
 });
 
 app.post('/api/addCourse', (req, res) => {

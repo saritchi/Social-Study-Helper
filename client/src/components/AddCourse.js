@@ -65,12 +65,12 @@ class AddCourse extends Component {
     const json = {
       coursename: coursename,
       chapters: chapterNames,
+      email: this.props.user.email,
     }
 
     console.log(json);
     try {
       const response = await axios.post("/api/addCourse", json);
-      console.log(response.status);
       this.setState(
         {
           coursename: '', 
