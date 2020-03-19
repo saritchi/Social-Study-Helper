@@ -1,5 +1,6 @@
 import React from 'react'
 import { Form, FormGroup, FormTextarea, FormInput} from "shards-react";
+import { withRouter } from "react-router-dom"
 import { Container, Row, Col } from "shards-react";
 import {
     Button
@@ -70,7 +71,11 @@ class CreateDeck extends React.Component {
         }
 
         try{
-            const response = await Axios.post("/api/addDeck", json);
+            const response = await Axios.post("/api/addDeck", json, {
+                params:{
+                  id: this.props.location.state.courseId
+                } 
+            });
             console.log(response.status);
             this.setState(
                 {
@@ -118,4 +123,4 @@ class CreateDeck extends React.Component {
     }
 }
 
-export default withAlert.withAlert(CreateDeck);
+export default withRouter(withAlert.withAlert(CreateDeck));

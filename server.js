@@ -35,9 +35,9 @@ app.get('/api/courses', (req, res) => {
     })
 });
 
-app.get('/api/chapters', (req, res) => {
+app.get('/api/decks', (req, res) => {
     console.log("Getting chapters....");
-    const getDeckSQL = `SELECT * FROM Chapters WHERE courseId = ?`;
+    const getDeckSQL = `SELECT * FROM Decks WHERE courseId = ?`;
     database.runQuery(getDeckSQL, [req.query.id], (error, results) => {
         if (error) {
             console.log(`Unable to get chapters from the database. Error: ${error.message}`)
@@ -56,20 +56,20 @@ app.get('/api/chapters', (req, res) => {
 app.post('/api/addCourse', (req, res) => {
     var body = req.body;
     var coursename = body.coursename;
-    var chapters = body.chapters;
+    var decks = body.decks;
     var userEmail = body.email;
 
 
-    const chapterKeys = Object.keys(chapters);
-    var emptyChapters = false;
-    for(var i = 0; i < chapterKeys.length; i++) {
-        const key = chapterKeys[i];
-        if(!chapters[key]) {
-            emptyChapters = true;
+    const deckKeys = Object.keys(decks);
+    var emptyDecks = false;
+    for(var i = 0; i < deckKeys.length; i++) {
+        const key = deckKeys[i];
+        if(!decks[key]) {
+            emptyDecks = true;
         }
     }
 
-    if(!coursename || emptyChapters) {
+    if(!coursename || emptyDecks) {
         res.status(400).json({result: "Error processing request."})
         return;
     }
@@ -87,15 +87,15 @@ app.post('/api/addCourse', (req, res) => {
         }
 
         var courseId = results.insertId;
-        var chaptersLength = Object.keys(chapters).length;
-        for(var i = 0; i < chaptersLength; i++){
+        var decksLength = Object.keys(decks).length;
+        for(var i = 0; i < decksLength; i++){
             //TODO: replace midterm final values when UI is updated.
-            chapters[i] = [chapters[i], midterm, final, courseId];
+            decks[i] = [decks[i], midterm, final, courseId];
         }
         
 
-        const chapterSQL = 'INSERT INTO Chapters(name, midterm, final, courseId) VALUES ?';
-        database.runQuery(chapterSQL, [chapters], (error) => {
+        const decksSQL = 'INSERT INTO Decks(name, midterm, final, courseId) VALUES ?';
+        database.runQuery(decksSQL, [decks], (error) => {
             if(error){
                 console.log(error.message)
                 res.status(500).json({result: "An error has occured while attempting to add the deck to the database. Please try again later."});
@@ -132,53 +132,53 @@ app.post('/api/auth', (req, res) => {
 });
 
 //TODO: error check client request
-app.post('/api/addChapter', (req, res) => {
-    console.log("New Chapter Added..."); 
+app.post('/api/addDeck', (req, res) => {
+    console.log("New Deck Added..."); 
     var body = req.body;
-    var chaptername = body.chaptername;
+    var deckname = body.deckname;
     var cards = body.cards;
-    var courseId = req.query.courseId;
+    var courseId = req.query.id;
 
     //TODO: update midterm and final values when UI is updated
     const midterm = false;
     const final = false;        
-    const addChapterSql = 'INSERT INTO Chapters(name, midterm, final, courseId) VALUES(?, ?, ?, ?)'
+    const addDeckSQL = 'INSERT INTO Decks(name, midterm, final, courseId) VALUES(?, ?, ?, ?)'
 
-    database.runQuery(addChapterSql, [chaptername, midterm, final, courseId],  (error, results) => {
+    database.runQuery(addDeckSQL, [deckname, midterm, final, courseId],  (error, results) => {
         if(error){
-            console.log(`Unable to add card deck with name: ${chaptername} to database. Error: ${error.message}`)
+            console.log(`Unable to add card deck with name: ${deckname} to database. Error: ${error.message}`)
             res.status(500).json({result: "An error has occured while attempting to add the deck to the database. Please try again later."})
             return;
         }
 
-        var chapterId = results.insertId;
+        var deckId = results.insertId;
         numCards = Object.keys(cards).length;
         for(var i = 0; i < numCards; i++){
-            cards[i] = [chapterId, cards[i].prompt, cards[i].answer];
+            cards[i] = [cards[i].prompt, cards[i].answer, deckId];
         }
         
 
-        const cardQueryString = 'INSERT INTO cards(deck_id, prompt, answer) VALUES ?';
+        const cardQueryString = 'INSERT INTO Cards(prompt, answer, deckId) VALUES ?';
         database.runQuery(cardQueryString, [cards], (error) => {
             if(error){
                 console.log(error.message)
                 res.status(500).json({result: "An error has occured while attempting to add the deck to the database. Please try again later."});
                 return;
             }
+            res.sendStatus(200);
         })
-         
-        res.sendStatus(200);
     })
 })
 
 app.get('/api/viewCards', (req, res) => {
     console.log("Fetching Cards...");
-    const chapterId = req.query.chapterId
-    const getFlashData = 'SELECT * FROM cards WHERE chapterId = ?';
-    database.runQuery(getFlashData, chapterId, (error, results) => {
+    const deckId = req.query.id
+    const getFlashData = 'SELECT * FROM Cards WHERE deckId = ?';
+    database.runQuery(getFlashData, deckId, (error, results) => {
         if (error) {
             console.log(`Unable to get cards from the database. Error: ${error.message}`)
             res.status(500).json({result: "An error occured while attempting to get your courses. Please try again later."})
+            return;
         } 
         var cards = [];
         results.forEach((card) => {

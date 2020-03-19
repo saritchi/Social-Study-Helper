@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {withRouter} from "react-router-dom"
 import { Button, Nav, NavItem } from 'shards-react';
 import axios from "axios";
-import './ChapterDisplay.css';
+import './DeckDisplay.css';
 import * as withAlert from "./ComponentWithAlert"
 import CardDisplay from './CardDisplay';
 
@@ -11,22 +11,22 @@ class DeckDisplay extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            chapterList: []
+            decklist: []
         };
     }
 
     async componentDidMount() {
         try {
-            const chaptersResponse = await axios.get('/api/chapters',  {
+            const deckResponse = await axios.get('/api/decks',  {
                 params: {
                     id: this.props.location.state.id,
                 }
             });
-            const chapterList = chaptersResponse.data.result;
-            chapterList.forEach((chapter) => {
-                console.log(chapter);
+            const decklist = deckResponse.data.result;
+            decklist.forEach((deck) => {
+                console.log(deck);
             })
-            this.setState({chapterList: chapterList})
+            this.setState({decklist: decklist})
         } catch(error) {
             console.error(error);
             console.error("ERROR");
@@ -35,7 +35,11 @@ class DeckDisplay extends Component {
     }
 
     addDeck = () => {
-        this.props.history.push("/createDeck");
+        this.props.history.push(
+        {
+            pathname: "/createDeck", 
+            state: {courseId: this.props.location.state.id}
+        });
     }
 
     cardView = (deckId) => {
@@ -50,13 +54,13 @@ class DeckDisplay extends Component {
                 </div>
                 <div>
                     <Nav>
-                        <NavItem id="chapterList">
-                            <h3>Chapters: </h3>
+                        <NavItem id="decklist">
+                            <h3>Decks: </h3>
                         </NavItem>
                     </Nav>
                 </div>
-                <CardDisplay changePage={this.cardView} cardsInfo={this.state.chapterList} />
-                <Button id="newChapter" onClick={this.addDeck}>Add New Chapter</Button>
+                <CardDisplay changePage={this.cardView} cardsInfo={this.state.decklist} />
+                <Button id="newDeck" onClick={this.addDeck}>Add New Deck</Button>
             </div>
         )
     }

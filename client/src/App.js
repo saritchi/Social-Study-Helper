@@ -11,7 +11,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "shards-ui/dist/css/shards.min.css"
 import AddCourse from './components/AddCourse';
 import CreateDeck from './components/CreateDeck';
-import ChapterDisplay from './components/ChapterDisplay';
+import DeckDisplay from './components/DeckDisplay';
 import ViewCards from './components/ViewCards';
 
 const userStorageKey = 'user';
@@ -44,11 +44,11 @@ class App extends Component {
                   )} 
               />
             <Route 
-              path="/chapters" 
+              path="/decks" 
               exact               
               render={props => (
                     <React.Fragment>
-                      <ChapterDisplay />
+                      <DeckDisplay />
                     </React.Fragment>
                   )} 
               />

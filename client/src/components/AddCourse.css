@@ -41,7 +41,7 @@ svg {
     cursor: pointer;
 }
 
-#addChapter {
+#addDeck {
     grid-column: 1/2;
 }
 

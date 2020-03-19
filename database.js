@@ -79,7 +79,7 @@
             }
         });
 
-        const createChapterTableSQL = `CREATE TABLE IF NOT EXISTS Chapters(
+        const createChapterTableSQL = `CREATE TABLE IF NOT EXISTS Decks(
             id INT PRIMARY KEY AUTO_INCREMENT,
             name VARCHAR(255) NOT NULL,
             lastAccess DATETIME,
@@ -103,9 +103,9 @@
             prompt VARCHAR(2000) NULL DEFAULT 'This card is blank',
             answer VARCHAR(2000) NULL DEFAULT 'This card is blank',
             nextStudyTime DATETIME,
-            chapterId INT NOT NULL,
-            FOREIGN KEY (chapterId)
-                REFERENCES Chapters(id),    
+            deckId INT NOT NULL,
+            FOREIGN KEY (deckId)
+                REFERENCES Decks(id),    
             PRIMARY KEY (id)
         );`;
  

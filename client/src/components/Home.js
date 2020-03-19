@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {withRouter } from "react-router-dom"
+import { withRouter } from "react-router-dom"
 import { Button, Nav, NavItem, NavLink } from 'shards-react'
 import './Home.css'
 import axios from "axios"
@@ -36,9 +36,9 @@ class Home extends Component {
         this.props.history.push("/addCourse");
     }
 
-    chaptersView = (deckId, deckName) => {
+    deckView = (deckId, deckName) => {
         this.props.history.push({
-            pathname: '/chapters',
+            pathname: '/decks',
             state: {
                 id: deckId,
                 name: deckName
@@ -70,7 +70,7 @@ class Home extends Component {
                         </NavItem>
                     </Nav>
                 </div>
-                <CardDisplay changePage={this.chaptersView} cardsInfo={this.state.courses.slice(0, 9)}/>
+                <CardDisplay changePage={this.deckView} cardsInfo={this.state.courses.slice(0, 9)}/>
                 <Button id="newCourse" onClick={this.addCourse}>Add New Course</Button>
             </div>
             )
