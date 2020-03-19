@@ -36,8 +36,21 @@ class Home extends Component {
         this.props.history.push("/addCourse");
     }
 
-    deckView = () => {
-        this.props.history.push("/deckDisplay");
+    chaptersView = (deckId, deckName) => {
+        this.props.history.push({
+            pathname: '/chapters',
+            state: {
+                id: deckId,
+                name: deckName
+            }
+        });
+    }
+
+    allCourseView = () => {
+        this.props.history.push({
+            pathname: '/allCourses',
+            state: { email: this.props.user.email }
+        });
     }
     
     render() {
@@ -53,11 +66,11 @@ class Home extends Component {
                             <h3>Recent Courses: </h3>
                         </NavItem>
                         <NavItem id="allCourses">
-                            <NavLink href='/allCourses'>View All Courses</NavLink>
+                            <NavLink onClick={this.allCourseView} href='#'>View All Courses</NavLink>
                         </NavItem>
                     </Nav>
                 </div>
-                <CardDisplay changePage={this.deckView} cardsInfo={this.state.courses.slice(0, 9)}/>
+                <CardDisplay changePage={this.chaptersView} cardsInfo={this.state.courses.slice(0, 9)}/>
                 <Button id="newCourse" onClick={this.addCourse}>Add New Course</Button>
             </div>
             )

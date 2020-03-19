@@ -38,7 +38,7 @@ app.get('/api/courses', (req, res) => {
 app.get('/api/chapters', (req, res) => {
     console.log("Getting chapters....");
     const getDeckSQL = `SELECT * FROM Chapters WHERE courseId = ?`;
-    database.runQuery(getDeckSQL, [req.query.courseId], (error, results) => {
+    database.runQuery(getDeckSQL, [req.query.id], (error, results) => {
         if (error) {
             console.log(`Unable to get chapters from the database. Error: ${error.message}`)
             res.status(500).json({result: "An error occured while attempting to get your chapters. Please try again later."})
