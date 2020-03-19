@@ -118,6 +118,7 @@ app.post('/api/auth', (req, res) => {
         };
         if(results.length > 0){
             results[0].isAuthenticated = true;
+            results[0].password = '';
         }
         else{
             const result = {isAuthenticated: 'false'};

@@ -14,9 +14,10 @@ import CreateDeck from './components/CreateDeck';
 import ChapterDisplay from './components/ChapterDisplay';
 import ViewCards from './components/ViewCards';
 
+const userStorageKey = 'user';
 class App extends Component {
   state = {
-    user: null,
+    user: JSON.parse(localStorage.getItem(userStorageKey)),
   }
 
   render() {
@@ -103,7 +104,9 @@ class App extends Component {
   }
 
   setUser = (currentUser) => {
-    this.setState({user: currentUser});
+    this.setState({user: currentUser}, () => {
+      localStorage.setItem('user', JSON.stringify(this.state.user));
+    });
   }
 }
 
