@@ -116,17 +116,17 @@ app.post('/api/addCourse', (req, res) => {
 //TODO: error check client request
 app.post('/api/auth', (req, res) => {
     let sql = `SELECT * FROM user WHERE email = ? AND password = ?`;
-    let query = database.runQuery(sql,[req.body.email,req.body.password], (err, results) => {
+    database.runQuery(sql,[req.body.email,req.body.password], (err, results) => {
         if(err){
             console.log(err);
             res.status(500).json({result: "An error occured while attempting to authenticate. Please try again later."})
             return;
         };
         if(results.length > 0){
-            results[0].auth ='true';
+            results[0].isAuthenticated = true;
         }
         else{
-            const result = {auth: 'false'};
+            const result = {isAuthenticated: 'false'};
             results.push(result);
         }
         

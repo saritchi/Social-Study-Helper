@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { Component } from 'react';
 import './App.css';
 import Register from './components/Register';
-import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import LoginPage from './components/LoginPage';
 import Home from './components/Home';
 import AllCourses from './components/AllCourses';
@@ -14,7 +14,12 @@ import CreateDeck from './components/CreateDeck';
 import DeckDisplay from './components/DeckDisplay';
 import ViewCards from './components/ViewCards';
 
-function App() {
+class App extends Component {
+  state = {
+    user: null,
+  }
+
+  render() {
     return (
       <Router>
       <div className="App">
@@ -24,7 +29,7 @@ function App() {
               exact               
               render={props => (
                     <React.Fragment>
-                      <LoginPage/>
+                      <LoginPage setUser={this.setUser} />
                     </React.Fragment>
                   )} 
               />
@@ -33,7 +38,7 @@ function App() {
               exact               
               render={props => (
                     <React.Fragment>
-                      <Home />
+                      <Home user={this.state.user} />
                     </React.Fragment>
                   )} 
               />
@@ -51,7 +56,7 @@ function App() {
                 exact               
                 render={props => (
                       <React.Fragment>
-                        <AddCourse />
+                        <AddCourse user={this.state.user} />
                       </React.Fragment>
                     )} 
               />
@@ -69,7 +74,7 @@ function App() {
                 exact               
                 render={props => (
                       <React.Fragment>
-                        <AllCourses />
+                        <AllCourses user={this.state.user} />
                       </React.Fragment>
                     )} 
               />
@@ -95,6 +100,11 @@ function App() {
       </div>
       </Router>
     );
+  }
+
+  setUser = (currentUser) => {
+    this.setState({user: currentUser});
+  }
 }
 
 export default App;
