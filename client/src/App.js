@@ -16,6 +16,7 @@ import ViewCards from './components/ViewCards';
 
 const userStorageKey = 'user';
 class App extends Component {
+  //read the user object out of the browser sotrage to allow the page to be refreshed and not lose the user information
   state = {
     user: JSON.parse(localStorage.getItem(userStorageKey)),
   }
