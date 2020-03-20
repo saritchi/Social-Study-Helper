@@ -4,6 +4,8 @@ const morgan = require('morgan')
 const bodyParser = require('body-parser')
 const Database = require('./database.js')
 const session = require('client-sessions')
+const fs = require('fs');
+const path = require('path');
 
 const app = express()
 app.use(morgan('short'))
@@ -13,7 +15,7 @@ app.use(bodyParser.urlencoded({extended: true}))
 const database = new Database(process.env);
 database.initializeTablesIfNeeded();
 
-var port = 3003
+var port = 8080;
 const thirty_minutes = 30 * 60 * 1000;
 const five_minutes = 5 * 60 * 1000;
 
@@ -57,6 +59,7 @@ function requireLogin(req, res, next) {
     next();
 }
 
+
 //TODO: endpoint will need a query paremeter for the number of courses.
 app.get('/api/courses', requireLogin, (req, res) => {
     console.log("Getting courses....");
@@ -67,7 +70,7 @@ app.get('/api/courses', requireLogin, (req, res) => {
             res.status(500).json({result: "An error occurred while attempting to get your courses. Please try again later."})
             return;
         } 
-
+        
         var courses = [];
         results.forEach((course) => {
             console.log(course);
@@ -85,7 +88,7 @@ app.get('/api/decklist', requireLogin, (req, res) => {
             console.log(`Unable to get decklist from the database. Error: ${error.message}`)
             res.status(500).json({result: "An error occured while attempting to get your decks. Please try again later."})
         } 
-
+        
         var decklist = [];
         results.forEach((deck) => {
             console.log(deck);
@@ -114,7 +117,7 @@ app.post('/api/addCourse', requireLogin, (req, res) => {
             emptyChapters = true;
         }
     }
-
+    
     if(!coursename || emptyChapters) {
         res.status(400).json({result: "Error processing request."})
         return;
@@ -128,7 +131,7 @@ app.post('/api/addCourse', requireLogin, (req, res) => {
             res.status(500).json({result: "An error occurred while attempting to add the course to the database. Please try again later."})
             return;
         }
-
+        
         console.log("Add course with name: " + coursename);
         res.sendStatus(200);
     })
@@ -167,7 +170,7 @@ app.post('/api/addDeck', requireLogin, (req, res) => {
     var body = req.body;
     var deckname = body.deckname;
     var cards = body.cards;
-
+    
     const queryString = 'INSERT INTO Decks(name) VALUES(?)';
     database.runQuery(queryString, [deckname], (error, results, fields) => {
         if(error){
@@ -175,14 +178,14 @@ app.post('/api/addDeck', requireLogin, (req, res) => {
             res.status(500).json({result: "An error has occured while attempting to add the deck to the database. Please try again later."})
             return;
         }
-
+        
         var deckId = results.insertId;
         numCards = Object.keys(cards).length;
         for(var i = 0; i < numCards; i++){
             cards[i] = [deckId, cards[i].prompt, cards[i].answer];
         }
         
-
+        
         const cardQueryString = 'INSERT INTO cards(deck_id, prompt, answer) VALUES ?';
         database.runQuery(cardQueryString, [cards], (error) => {
             if(error){
@@ -237,8 +240,24 @@ app.post('/api/register', (req, res) => {
                 res.status(200).json({result: "Registration succesful."});;
             });
         }
-    })
+    });
+    
 });
+
+/***
+ * END of API end points. Do not put API endpoint routes below this 
+ */
+
+ 
+//In production we will be servering our javascript and html files from a optimized build folder in client. This sets up the endpoint and exposes
+//the build folder to the browser
+if(process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.join(__dirname, '/client/build')));
+
+    app.get('/*', function(req, res) {
+        res.sendFile(path.join(__dirname, '/client/build', 'index.html'));
+    });
+}
 
 app.listen(port, () => {
     console.log("Server Running on Port " + port)
