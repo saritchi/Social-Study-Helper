@@ -5,9 +5,11 @@
   "main": "new_card.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "start": "node server.js",
     "server": "nodemon server.js",
     "client": "node start-client.js",
+    "prod": "npm install && cd client && npm install && npm run build",
     "debug": "concurrently \"npm run server\" \"npm run client\"",
     "debug-server": "nodemon --inspect index.js"
   },
@@ -25,6 +27,9 @@
     "eslint": "^6.8.0",
     "eslint-plugin-react": "^7.18.3",
     "nodemon": "^2.0.2"
+  },
+  "engines": {
+    "node": "10.x.x"
   },
   "nodemonConfig": {
     "ignore": [
