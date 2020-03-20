@@ -105,6 +105,7 @@ class App extends Component {
   }
 
   setUser = (currentUser) => {
+    //store the user object into browser storage so we can refresh the page and not lose the user information
     this.setState({user: currentUser}, () => {
       localStorage.setItem('user', JSON.stringify(this.state.user));
     });
