@@ -29,10 +29,14 @@
      */
     constructor(enviroment) {
         var connectionObject = {
-            host : enviroment.DB_HOST,
             user : enviroment.DB_USER,
             password : enviroment.DB_PASS,
             database : enviroment.DB_NAME
+        }
+        if (enviroment.NODE_ENV === 'production') {
+            connectionObject['socketPath'] = enviroment.DB_SOCKET_PATH;
+        } else {
+            connectionObject['host'] == enviroment.DB_HOST;
         }
 
         this.db = mysql.createConnection(connectionObject);
