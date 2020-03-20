@@ -19,6 +19,8 @@ var port = 8080;
 const thirty_minutes = 30 * 60 * 1000;
 const five_minutes = 5 * 60 * 1000;
 
+//The authentication and session function is based on code from this tutorial
+//https://stormpath.com/blog/everything-you-ever-wanted-to-know-about-node-dot-js-sessions
 app.use(session({
     cookieName: 'session',
     secret: process.env.SESSION_SECRET,
