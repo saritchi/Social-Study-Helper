@@ -27,7 +27,6 @@ app.use(session({
 }));
 
 app.use(function(req, res, next) {
-    //TODO: exclude auth and register
     const session = req.session;
     if(session && session.user) {
         database.getUserFromEmail(req.session.user.email, (error, results) => {
