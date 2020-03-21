@@ -196,7 +196,6 @@ app.post('/api/register', (req, res) => {
             });
         }
     });
-    
 });
 
 /***
@@ -217,3 +216,5 @@ if(process.env.NODE_ENV === 'production') {
 app.listen(port, () => {
     console.log("Server Running on Port " + port)
 })
+
+module.exports = app;

@@ -31,7 +31,9 @@
         var connectionObject = {
             user : enviroment.DB_USER,
             password : enviroment.DB_PASS,
-            database : enviroment.DB_NAME
+            database : enviroment.DB_NAME,
+            //this is only used for cleaning up the test database, so it's only needed when the enviroment.NODE_ENV === 'test'
+            multipleStatements: enviroment.NODE_ENV === 'test'
         }
         if (enviroment.NODE_ENV === 'production') {
             connectionObject['socketPath'] = enviroment.DB_SOCKET_PATH;
