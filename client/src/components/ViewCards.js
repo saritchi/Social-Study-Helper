@@ -12,7 +12,6 @@ class ViewCards extends React.Component {
       isFlipped: false,
       cardIndex: 0,
       cards: [],
-      deckId: 0
     };
     this.handleClick = this.handleClick.bind(this);
   }
@@ -21,7 +20,7 @@ class ViewCards extends React.Component {
     try {
       const cardResponse = await axios.get('/api/viewCards', {
         params:{
-          deck: this.props.location.state.deckId
+          id: this.props.location.state.deckId
         } 
       });
       const flashcards = cardResponse.data.result;
