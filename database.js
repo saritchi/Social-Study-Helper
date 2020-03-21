@@ -137,14 +137,9 @@
 
     /**
      * Closes the database connection
+     * @param {(error, results, fields)} resultsCallback callback to process the data or errors from the query. 
      */
-    close() {
-        this.db.end((err) => {
-            if (err) {
-                console.error(err.message);
-            }
-
-            console.log("Closed connection to dev database")
-        })
+    close(resultsCallback) {
+        this.db.end(resultsCallback);
     }
  }

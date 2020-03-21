@@ -7,7 +7,7 @@ const dropTablesSQL = `
     drop table if exists user;
     drop table if exists Decks;
     drop table if exists Courses;
-    drop table if exists cards;
+    drop table if exists Cards;
     SET FOREIGN_KEY_CHECKS = 1
 `
 database.runQuery(dropTablesSQL, [], (error) => {
