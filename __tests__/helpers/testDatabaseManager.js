@@ -4,7 +4,7 @@ const database = new Database(process.env);
 
 const dropTablesSQL = `
     SET FOREIGN_KEY_CHECKS = 0;
-    drop table if exists User;
+    drop table if exists user;
     drop table if exists Decks;
     drop table if exists Courses;
     drop table if exists cards;

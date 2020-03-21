@@ -1,5 +1,5 @@
 const request = require('supertest');
-const app = require('../server');
+const app = require('../app');
 
 describe('authentication tests', () => {
     test('valid user authentication', async () => {
@@ -13,5 +13,5 @@ describe('authentication tests', () => {
             })
             .expect(200);
     })
-  })
+})
   
