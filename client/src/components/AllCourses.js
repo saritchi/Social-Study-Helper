@@ -14,7 +14,11 @@ class AllCourses extends Component {
 
     async componentDidMount() {
         try {
-            const coursesResponse = await axios.get('/api/courses');
+            const coursesResponse = await axios.get('/api/courses', {
+                params: {
+                    email: this.props.location.state.email
+                }
+            });
             const courses = coursesResponse.data.result;
             courses.forEach((course) => {
                 console.log(course);
@@ -30,8 +34,14 @@ class AllCourses extends Component {
         this.props.history.push("/addCourse");
     }
 
-    deckView = () => {
-        this.props.history.push("/deckDisplay");
+    deckView = (deckId, deckName) => {
+        this.props.history.push({
+            pathname: '/chapters',
+            state: {
+                id: deckId,
+                name: deckName
+            }
+        });
     }
     
     render() {

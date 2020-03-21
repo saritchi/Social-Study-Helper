@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {withRouter} from "react-router-dom"
-import { Button, Nav, NavItem, NavLink } from 'shards-react';
+import { Button, Nav, NavItem } from 'shards-react';
 import axios from "axios";
 import './DeckDisplay.css';
 import * as withAlert from "./ComponentWithAlert"
@@ -11,15 +11,17 @@ class DeckDisplay extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            coursename: 'TestCourse',
-            courseId: 0,
             decklist: []
         };
     }
 
     async componentDidMount() {
         try {
-            const deckResponse = await axios.get('/api/decklist');
+            const deckResponse = await axios.get('/api/decks',  {
+                params: {
+                    id: this.props.location.state.id,
+                }
+            });
             const decklist = deckResponse.data.result;
             decklist.forEach((deck) => {
                 console.log(deck);
@@ -33,7 +35,11 @@ class DeckDisplay extends Component {
     }
 
     addDeck = () => {
-        this.props.history.push("/createDeck");
+        this.props.history.push(
+        {
+            pathname: "/createDeck", 
+            state: {courseId: this.props.location.state.id}
+        });
     }
 
     cardView = (deckId) => {
@@ -44,17 +50,17 @@ class DeckDisplay extends Component {
         return (
             <div>
                 <div id="courseName">
-                    <h1>{this.state.coursename}</h1>
+                    <h1>{this.props.location.state.name}</h1>
                 </div>
                 <div>
                     <Nav>
                         <NavItem id="decklist">
-                            <h3>Decklist: </h3>
+                            <h3>Decks: </h3>
                         </NavItem>
                     </Nav>
                 </div>
                 <CardDisplay changePage={this.cardView} cardsInfo={this.state.decklist} />
-                <Button id="newDeck" onClick={this.addDeck}>Create New Deck</Button>
+                <Button id="newDeck" onClick={this.addDeck}>Add New Deck</Button>
             </div>
         )
     }
