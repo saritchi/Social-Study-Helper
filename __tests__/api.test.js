@@ -1,7 +1,7 @@
 require('dotenv').config();
 const request = require('supertest');
-const App = require('../app');
-const Database = require('../database.js')
+const App = require('../app/app');
+const Database = require('../app/database.js')
 var database;
 var app;
 
@@ -163,7 +163,7 @@ describe('add course tests', () => {
 
 
 describe('add card tests', () => {
-    test('should be able to add deck', async () => {
+    test('should be able to add card', async () => {
         return request(app)
             .post("/api/addDeck")
             .query({id: '1'})
@@ -184,15 +184,17 @@ describe('view cards tests', () => {
     test('should be able to add deck', async () => {
         return request(app)
             .get("/api/viewCards")
-            .query({id: '1'})
+            .query({id: '3'})
             .expect(200)
-            .expect([{
-                id: 1,
-                prompt: 'Test Prompt',
-                answer: 'Test Answer',
-                nextStudyTime: null,
-                deckId, 1
-            }])
+            .expect({
+                result: [{
+                    id: 1,
+                    prompt: 'Test Prompt',
+                    answer: 'Test Answer',
+                    nextStudyTime: null,
+                    deckId: 3
+                }]
+            })
     })
 })
 

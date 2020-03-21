@@ -1,5 +1,5 @@
 require('dotenv').config();
-const Database = require('../../database.js');
+const Database = require('../../app/database');
 const database = new Database(process.env);
 
 const dropTablesSQL = `

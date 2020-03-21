@@ -7,12 +7,12 @@
     "test": "cross-env NODE_ENV=test DB_NAME=testdb jest --detectOpenHandles",
     "pretest": "cross-env NODE_ENV=test DB_NAME=testdb node ./__tests__/helpers/testDatabaseManager.js",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "start": "node server.js",
-    "server": "nodemon server.js",
+    "start": "node ./app/server",
+    "server": "nodemon ./app/server",
     "client": "node start-client.js",
     "prod": "npm install && cd client && npm install && npm run build",
     "debug": "concurrently \"npm run server\" \"npm run client\"",
-    "debug-server": "nodemon --inspect index.js"
+    "debug-server": "nodemon --inspect ./app/server.js"
   },
   "author": "",
   "license": "ISC",
