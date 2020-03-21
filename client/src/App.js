@@ -77,7 +77,7 @@ function App() {
                 exact
                 render={props => (
                   <React.Fragment>
-                    <EditDeck deckId={6}/>
+                    <EditDeck deckId={7}/>
                   </React.Fragment>
                 )}
               />

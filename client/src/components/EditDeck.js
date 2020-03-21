@@ -25,13 +25,19 @@ class EditDeck extends React.Component {
                 deck: this.props.deckId
               } 
             });
-            const cardSet = response.data.result;
+  
+            const deckName = response.data.result_names;
+            this.setState({deckname: deckName[0].name});
+            console.log(this.state.deckname)
+
+            const cardSet = response.data.result_cards;
             cardSet.forEach((card) => {
               console.log(card);
             })
             this.setState({cards: cardSet});
             this.addCard();
-          } catch(error) {
+
+        } catch(error) {
             console.error(error);
             this.props.showAlert(withAlert.errorTheme, error.response.data.result);
         }

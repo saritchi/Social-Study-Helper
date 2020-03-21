@@ -141,22 +141,40 @@ app.post('/api/editDeck', (req, res) => {
 app.get('/api/editDeck', (req, res) => {
     console.log("Fetching Deck Data..."); 
     const deck_id = req.query.deck
-    const queryString = 'SELECT * FROM cards WHERE deck_id = ?';
-    database.runQuery(queryString, deck_id, (error, results, fields) => {
+    const query_cards = 'SELECT * FROM cards WHERE deck_id = ?';
+    console.log("Extracting Card List...");
+    database.runQuery(query_cards, deck_id, (error, results_cards, fields) => {
         if(error){
             console.log(`Unable to get card deck with deck_id: ${deck_id} to database. Error: ${error.message}`)
             res.status(500).json({result: "An error has occured while attempting to find the deck in the database. Please try again later."})
         }
 
         var cards = [];
-        results.forEach((card) => {
+        results_cards.forEach((card) => {
             console.log(cards);
             cards.push(card);
         })
-         
-        res.status(200).json({result: cards});
         
+        var names = []
+        console.log("Extracting Deck Name...");
+        const query_deck_name = 'SELECT name FROM Decks WHERE id = ?';
+        database.runQuery(query_deck_name, deck_id, (error, results_name, fields) => {
+            if(error){
+                console.log(`Unable to get deck name with deck_id: ${deck_id} to database. Error: ${error.message}`)
+                res.status(500).json({result: "An error has occured while attempting to find the deck in the database. Please try again later."})
+            }
+
+            results_name.forEach((name) => {
+                names.push(name)
+                console.log(names)
+            })
+            res.status(200).json({result_cards: cards, result_names: names});
+        })
+        
+  
     })
+
+
 })
 
 app.get('/api/viewCards', (req, res) => {
