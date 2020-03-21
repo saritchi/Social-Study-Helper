@@ -19,7 +19,7 @@ class CreateDeck extends React.Component {
     }
     
     componentDidMount(){
-        if(!this.props.isAuthenticated) {
+        if(!this.props.user.isAuthenticated) {
             this.props.history.replace("/");
             return;
         }
@@ -76,7 +76,11 @@ class CreateDeck extends React.Component {
         }
 
         try{
-            const response = await Axios.post("/api/addDeck", json);
+            const response = await Axios.post("/api/addDeck", json, {
+                params:{
+                  id: this.props.location.state.courseId
+                } 
+            });
             console.log(response.status);
             this.setState(
                 {

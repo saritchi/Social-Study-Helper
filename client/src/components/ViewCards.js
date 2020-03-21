@@ -12,13 +12,12 @@ class ViewCards extends React.Component {
       isFlipped: false,
       cardIndex: 0,
       cards: [],
-      deckId: 0
     };
     this.handleClick = this.handleClick.bind(this);
   }
 
   async componentDidMount() {
-    if(!this.props.isAuthenticated) {
+    if(!this.props.user.isAuthenticated) {
       this.props.history.replace("/");
       return;
     }
@@ -26,7 +25,7 @@ class ViewCards extends React.Component {
     try {
       const cardResponse = await axios.get('/api/viewCards', {
         params:{
-          deck: this.props.location?.state?.deckId
+          id: this.props.location.state.deckId
         } 
       });
       const flashcards = cardResponse.data.result;

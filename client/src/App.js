@@ -13,11 +13,15 @@ import AddCourse from './components/AddCourse';
 import CreateDeck from './components/CreateDeck';
 import DeckDisplay from './components/DeckDisplay';
 import ViewCards from './components/ViewCards';
+import User from './User';
 
+const userStorageKey = 'user';
 class App extends Component {
+  //read the user object out of the browser sotrage to allow the page to be refreshed and not lose the user information
   state = {
-    isAuthenticated: false
+    user: JSON.parse(localStorage.getItem(userStorageKey)) || new User(),
   }
+
   render() {
     return (
       <Router>
@@ -28,7 +32,7 @@ class App extends Component {
               exact               
               render={props => (
                     <React.Fragment>
-                      <LoginPage setAuthenticationStatus={this.setAuthenticationStatus}/>
+                      <LoginPage setUser={this.setUser} />
                     </React.Fragment>
                   )} 
               />
@@ -37,16 +41,16 @@ class App extends Component {
               exact               
               render={props => (
                     <React.Fragment>
-                      <Home isAuthenticated={this.state.isAuthenticated} />
+                      <Home user={this.state.user} />
                     </React.Fragment>
                   )} 
               />
             <Route 
-              path="/deckDisplay" 
+              path="/decks" 
               exact               
               render={props => (
                     <React.Fragment>
-                      <DeckDisplay isAuthenticated={this.state.isAuthenticated} />
+                      <DeckDisplay user={this.state.user} />
                     </React.Fragment>
                   )} 
               />
@@ -55,7 +59,7 @@ class App extends Component {
                 exact               
                 render={props => (
                       <React.Fragment>
-                        <AddCourse isAuthenticated={this.state.isAuthenticated} />
+                        <AddCourse user={this.state.user} />
                       </React.Fragment>
                     )} 
               />
@@ -64,7 +68,7 @@ class App extends Component {
                 exact               
                 render={props => (
                       <React.Fragment>
-                        <CreateDeck isAuthenticated={this.state.isAuthenticated} />
+                        <CreateDeck user={this.state.user} />
                       </React.Fragment>
                     )}
               />
@@ -73,7 +77,7 @@ class App extends Component {
                 exact               
                 render={props => (
                       <React.Fragment>
-                        <AllCourses isAuthenticated={this.state.isAuthenticated} />
+                        <AllCourses user={this.state.user} />
                       </React.Fragment>
                     )} 
               />
@@ -82,7 +86,7 @@ class App extends Component {
                 exact
                 render={props => (
                   <React.Fragment>
-                    <ViewCards isAuthenticated={this.state.isAuthenticated} />
+                    <ViewCards user={this.state.user} />
                   </React.Fragment>
                 )}
               />
@@ -101,8 +105,11 @@ class App extends Component {
     );
   }
 
-  setAuthenticationStatus = authStatus => {
-    this.setState({isAuthenticated: authStatus});
+  setUser = (currentUser) => {
+    //store the user object into browser storage so we can refresh the page and not lose the user information
+    this.setState({user: currentUser}, () => {
+      localStorage.setItem('user', JSON.stringify(this.state.user));
+    });
   }
 }
 
