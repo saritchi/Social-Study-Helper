@@ -4,6 +4,7 @@ import { Container, Row, Col } from "shards-react";
 import {
     Button
   } from "shards-react";
+  import { TiDelete } from 'react-icons/ti';
 import * as withAlert from "./ComponentWithAlert"
 import axios from 'axios';
 import './CreateDeck.css';
@@ -56,6 +57,7 @@ class EditDeck extends React.Component {
     }
 
     deleteCard = async (event, index) => {
+        console.log("Event Target ID: " + event.target.id);
         console.log("deleting: " + index)
         event.preventDefault();
         const newCards = [...this.state.cards]
@@ -70,7 +72,6 @@ class EditDeck extends React.Component {
             return (
                 <FormGroup key={cardId}>
                 <Container id="cards">
-                    <button id={index} onClick={(e) => this.deleteCard(e, index)} theme="danger">Delete</button>
                     <Row>
                         <h6>{index+1}</h6>
                         
@@ -85,9 +86,13 @@ class EditDeck extends React.Component {
                         <Col>
                             <label htmlFor={index}>Card Answer:</label>
                             <FormTextarea id={index} onChange={this.onInputChange} defaultValue={this.state.cards[index].answer} name="card_answer"/>
+                            
                         </Col>
+                        <TiDelete id={index} onClick={(e) => this.deleteCard(e, index) }size={"2em"} />
                     </Row>
+                    
                 </Container>
+                
 
                 </FormGroup>
             )
@@ -97,6 +102,7 @@ class EditDeck extends React.Component {
 
     onSubmit = async event => {
         event.preventDefault();
+        event.stopPropagation();
         const deckname = this.state.deckname;
         const cardsObject = this.state.cards;
         const deckId = this.state.deckId;
@@ -117,12 +123,6 @@ class EditDeck extends React.Component {
             // query currently does not insert new rows, it currently only updates
             const response = await axios.post("/api/editDeck", json);
             console.log(response.status);
-            this.setState(
-                {
-                    deckname: '',
-                    cards: [],
-                }, this.addCard
-            );
             this.props.showAlert(withAlert.successTheme, "Deck Updated!");
         } catch (error){
             console.log(error);
@@ -154,7 +154,7 @@ class EditDeck extends React.Component {
                     {this.renderCardInputs()}
                     <Button id="addCard" onClick={this.addCard}>Add Card</Button>
                     <br></br>
-                    <Button id="addDeck" theme="danger" onClick={this.onSubmit}>Finished</Button>
+                    <Button id="saveDeck" theme="danger" onClick={this.onSubmit}>Save</Button>
                 </Form>
             </div>
         );
