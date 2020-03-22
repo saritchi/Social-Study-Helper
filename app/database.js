@@ -35,7 +35,16 @@ class Database {
             password : enviroment.DB_PASS,
             database : enviroment.DB_NAME,
             //this is only used for cleaning up the test database, so it's only needed when the enviroment.NODE_ENV === 'test'
-            multipleStatements: enviroment.NODE_ENV === 'test'
+            multipleStatements: enviroment.NODE_ENV === 'test',
+            //the idea for convert BIT fields to boolean values was adapted from here: https://www.bennadel.com/blog/3188-casting-bit-fields-to-booleans-using-the-node-js-mysql-driver.htm
+            typeCast: (field, defaultCast) => {
+                if ((field.type === 'BIT') && (field.length === 1)) {
+                    const bytes = field.buffer();
+                    return bytes[0] === 1;
+                } 
+
+                return defaultCast();
+            }
         }
         if (enviroment.NODE_ENV === 'production') {
             connectionObject['socketPath'] = enviroment.DB_SOCKET_PATH;

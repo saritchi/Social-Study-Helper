@@ -15,7 +15,7 @@ async function authenticateUser(req, res) {
     }
 }
 
-function registerUser(req, res) {
+async function registerUser(req, res) {
     let post = req.body;
     let email = post.email;
     let password = post.password;
@@ -25,14 +25,15 @@ function registerUser(req, res) {
 
     const newUser = new User(email, password, firstname, lastname);
     try {
-        if (!newUser.exists()) {
+        const userExists = await newUser.exists();
+        if (userExists) {
             res.status('409').json({result: "An error occured while attempting to register since Username already Exists."});
             return;
         }
-        newUser.register();
-        res.status(200).json({result: "Registration succesful."});;
+        await newUser.register();
+        res.status(200).json({result: "Registration succesful."});
      } catch (error) {
-        console.log(err);
+        console.log(error);
         res.status(500).json({result: "An error occured while attempting to register. Please try again later."});
     }
 }

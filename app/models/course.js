@@ -22,6 +22,6 @@ module.exports.getAllForUser = async function getAllForUser(email) {
     const addCourseSQL = `SELECT * FROM Courses WHERE userEmail = ?`;
     const results = await database.runQuery(addCourseSQL, email);
     return results.map((result) => {
-        return new Course(result.name, result.midterm, result.final, email, result.id, result.lastAccess);
+        return new Course(result.name, result.midterm, result.final, result.userEmail, result.id, result.lastAccess);
     })
 }

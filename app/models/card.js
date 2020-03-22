@@ -22,6 +22,6 @@ module.exports.getAllFromDeckId = async function getAllFromDeckId(deckId) {
     const results = await database.runQuery(getFlashData, deckId);
 
     return results.map((result) => {
-        return new Card(result.prompt, result.answer, deckId, result.id, result.nextStudyTime);
+        return new Card(result.prompt, result.answer, result.deckId, result.id, result.nextStudyTime);
     })
 }

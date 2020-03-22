@@ -1,9 +1,8 @@
 require('dotenv').config();
 const request = require('supertest');
-const App = require('../app/app');
+const app = require('../app/app');
 const Database = require('../app/database.js')
 var database;
-var app;
 
 
 
@@ -11,7 +10,6 @@ beforeAll(async () => {
     database = Database(process.env);
     await database.connect();
     database.initializeTablesIfNeeded();
-    app = App(database);
 });
 
 describe('registration tests', () => {
@@ -48,13 +46,13 @@ describe('auth tests', () => {
                 password: "test",
             })
             .expect(200)
-            .expect([{
+            .expect({
                 email: "test@test.com",
                 password: '',
                 fname: "super",
                 lname: "test",
                 isAuthenticated: true
-            }]);
+            });
     })
     test('invalid user should not authenticate', async () => {
         return request(app)
@@ -63,9 +61,13 @@ describe('auth tests', () => {
                 email: "test@test.com",
                 password: "badpassword",
             })
-            .expect([{
+            .expect({
+                email: "test@test.com",
+                password: '',
+                fname: '',
+                lname: '',
                 isAuthenticated: false
-            }])
+            })
     })
 })
 
@@ -112,50 +114,57 @@ describe('add course tests', () => {
     })
 })
 
-// describe('get courses tests', () => {
-//     test('should be able to get courses', async () => {
-//         return request(app)
-//             .get("/api/courses")
-//             .query({email: "test@test.com"})
-//             .expect(200)
-//             .expect([{
-//                 id: 1,
-//                 name: "test course",
-//                 lastAccess: null,
-//                 midterm: false,
-//                 final: false,
-//                 userEmail: "test@test.com"
-//             }])
-//     })
-// })
+describe('get courses tests', () => {
+    test('should be able to get courses', async () => {
+        return request(app)
+            .get("/api/courses")
+            .query({email: "test@test.com"})
+            .expect(200)
+            .expect({
+                result: [
+                    {
+                        id: 1,
+                        name: "test course",
+                        lastAccess: null,
+                        midterm: false,
+                        final: false,
+                        userEmail: "test@test.com"
+                    }
+                ]
+            })
+    })
+})
 
-// describe('get decks tests', () => {
-//     test('should be able to get decks', async () => {
-//         return request(app)
-//             .get("/api/decks")
-//             .query({id: 1})
-//             .expect(200)
-//             .expect([{
-//                     id: 1,
-//                     name: "test deck 1",
-//                     lastAccess: null,
-//                     lastStudy: null,
-//                     midterm: Object,
-//                     final: Object,
-//                     courseId: 1
-//                 },
-//                 {
-//                     id: 2,
-//                     name: "test deck 2",
-//                     lastAccess: null,
-//                     lastStudy: null,
-//                     midterm: false,
-//                     final: false,
-//                     courseId: 1
-//                 }
-//             ])
-//     })
-// })
+describe('get decks tests', () => {
+    test('should be able to get decks', async () => {
+        return request(app)
+            .get("/api/decks")
+            .query({id: 1})
+            .expect(200)
+            .expect({
+                result: [
+                    {
+                        id: 1,
+                        name: "test deck 1",
+                        lastAccess: null,
+                        lastStudy: null,
+                        midterm: false,
+                        final: false,
+                        courseId: 1
+                    },
+                    {
+                        id: 2,
+                        name: "test deck 2",
+                        lastAccess: null,
+                        lastStudy: null,
+                        midterm: false,
+                        final: false,
+                        courseId: 1
+                    }
+                ]
+            })
+    })
+})
 
 
 describe('add card tests', () => {
@@ -177,18 +186,18 @@ describe('add card tests', () => {
 })
 
 describe('view cards tests', () => {
-    test('should be able to add deck', async () => {
+    test('should be get cards', async () => {
         return request(app)
             .get("/api/viewCards")
             .query({id: '3'})
             .expect(200)
             .expect({
                 result: [{
-                    id: 1,
                     prompt: 'Test Prompt',
                     answer: 'Test Answer',
+                    deckId: 3,
+                    id: 1,
                     nextStudyTime: null,
-                    deckId: 3
                 }]
             })
     })

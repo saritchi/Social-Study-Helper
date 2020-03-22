@@ -16,7 +16,6 @@ async function getDecks(req, res) {
 }
 
 async function addDeck(req, res) {
-    //TODO: error check client request
     console.log("New Deck Added..."); 
     var body = req.body;
     var deckname = body.deckname;
