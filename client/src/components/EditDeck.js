@@ -14,6 +14,8 @@ class EditDeck extends React.Component {
         this.state = {
             deckname: '',
             cards: [],
+            card_count: 0,
+            deckId: 0
         }
     }
     
@@ -30,11 +32,15 @@ class EditDeck extends React.Component {
             this.setState({deckname: deckName[0].name});
             console.log(this.state.deckname)
 
+            var count = 0;
             const cardSet = response.data.result_cards;
             cardSet.forEach((card) => {
               console.log(card);
+              
+              count += 1;
             })
-            this.setState({cards: cardSet});
+            console.log("Deck ID is " + cardSet[0].deck_id)
+            this.setState({cards: cardSet, card_count: count, deckId: cardSet[0].deck_id});
             this.addCard();
 
         } catch(error) {
@@ -49,14 +55,25 @@ class EditDeck extends React.Component {
         this.setState({cards: newCards});
     }
 
+    deleteCard = async (event, index) => {
+        console.log("deleting: " + index)
+        event.preventDefault();
+        const newCards = [...this.state.cards]
+        const total_cards = this.state.card_count - 1
+        newCards.splice(index, 1)
+        this.setState({cards: newCards, card_count: total_cards})
+    }
+
     renderCardInputs = () => {
         return this.state.cards.map((cardInput, index) => {
             const cardId = "card" + index;
             return (
                 <FormGroup key={cardId}>
                 <Container id="cards">
+                    <button id={index} onClick={(e) => this.deleteCard(e, index)} theme="danger">Delete</button>
                     <Row>
                         <h6>{index+1}</h6>
+                        
                     </Row>
                     <hr></hr>
                     
@@ -82,13 +99,18 @@ class EditDeck extends React.Component {
         event.preventDefault();
         const deckname = this.state.deckname;
         const cardsObject = this.state.cards;
+        const deckId = this.state.deckId;
+        const card_count = this.state.card_count;
+
         const card = Object.keys(cardsObject).map((key) => {
             return cardsObject[key];
         });
-        
+        console.log(card)
         const json = {
             deckname: deckname,
-            cards: card
+            cards: card, 
+            deckId: deckId,
+            card_count: card_count
         }
 
         try{

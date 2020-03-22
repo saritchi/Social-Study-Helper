@@ -88,7 +88,6 @@ app.post('/api/addDeck', (req, res) => {
     var deckname = body.deckname;
     var cards = body.cards;
 
-    
 
     const queryString = 'INSERT INTO Decks(name) VALUES(?)';
     database.runQuery(queryString, [deckname], (error, results, fields) => {
@@ -122,19 +121,40 @@ app.post('/api/editDeck', (req, res) => {
     var body = req.body;
     var deckname = body.deckname;
     var cards = body.cards;
-    console.log(cards);
+    var deckId = body.deckId;
+    var card_count = body.card_count;
 
-    const cardQueryString = 'UPDATE cards SET prompt = ?, answer = ? WHERE deck_id = ?';
-    for(var i = 0; i < cards.length - 1; i++){
-        database.runQuery(cardQueryString, [cards[i].prompt, cards[i].answer, cards[i].deck_id], (error) => {
+    console.log(cards);
+        const deleteQueryString = 'DELETE FROM cards WHERE deck_id = ?';
+        database.runQuery(deleteQueryString, [cards[0].deck_id], (error) => {
             if(error){
                 console.log(error.message)
-                res.status(500).json({result: "An error has occured while attempting to add the deck to the database. Please try again later."});
+                res.status(500).json({result: "An error has occured while attempting to delete the deck to the database. Please try again later."});
             }
-    
-            res.sendStatus(200);
+
+            numCards = Object.keys(cards).length;
+            for(var i = 0; i < numCards; i++){
+                cards[i] = [deckId, cards[i].prompt, cards[i].answer];
+            }
+            
+            const insertQueryString = 'INSERT INTO cards(deck_id, prompt, answer) VALUES ?';
+            database.runQuery(insertQueryString, [cards], (error) => {
+                if(error){
+                    console.log(error.message)
+                    res.status(500).json({result: "An error has occured while attempting to insert the new deck to the database. Please try again later."});
+                }
+
+                const deleteNullString = 'DELETE FROM cards WHERE prompt IS NULL OR answer IS NULL OR deck_id IS NULL'
+                database.runQuery(deleteNullString, [cards], (error) => {
+                    if(error){
+                        console.log(error.message)
+                        res.status(500).json({result: "An error has occured while attempting to insert the new deck to the database. Please try again later."});
+                    } 
+                })
+                res.sendStatus(200);
+                
+            })
         })
-    }
 
 })
 
