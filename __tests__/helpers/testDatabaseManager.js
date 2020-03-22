@@ -1,5 +1,5 @@
 require('dotenv').config();
-const Database = require('../../app/database');
+const Database = require('../../app/database/database');
 const database = Database(process.env);
 
 

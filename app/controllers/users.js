@@ -24,7 +24,7 @@ async function registerUser(req, res) {
 
 
     const newUser = new User(email, password, firstname, lastname);
-    try {
+    try { 
         const userExists = await newUser.exists();
         if (userExists) {
             res.status('409').json({result: "An error occured while attempting to register since Username already Exists."});

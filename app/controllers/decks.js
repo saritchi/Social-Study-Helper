@@ -1,6 +1,7 @@
 var router = require('express').Router();
 var Deck = require('../models/deck');
 var Card = require('../models/card');
+var runTransaction = require('../database/helper');
 
 async function getDecks(req, res) {
     console.log("Getting decks....");
@@ -28,12 +29,14 @@ async function addDeck(req, res) {
     
     const deck = new Deck(deckname, midterm, final, courseId);
     try {
-        const deckId = await deck.create();
-        cards.map((card) => {
-            const newCard = new Card(card.prompt, card.answer, deckId);
-            return newCard.create();
+        await runTransaction(async () => {
+            const deckId = await deck.create();
+            cards.map((card) => {
+                const newCard = new Card(card.prompt, card.answer, deckId);
+                return newCard.create();
+            })
+            await Promise.all(cards);
         })
-        await Promise.all(cards);
         res.sendStatus(200);
     } catch (error) {
         console.log(`Unable to add card deck with name: ${deckname} to database. Error: ${error.message}`)

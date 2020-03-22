@@ -1,7 +1,7 @@
 require('dotenv').config();
 const request = require('supertest');
 const app = require('../app/app');
-const Database = require('../app/database.js')
+const Database = require('../app/database/database.js')
 var database;
 
 
@@ -203,6 +203,8 @@ describe('view cards tests', () => {
     })
 })
 
+// //Currently using --forceExit to fix a open handle warning from jest. This warning occurs
+// //despite the fact that the database closes
 afterAll(() => {
     return database.close();
 });

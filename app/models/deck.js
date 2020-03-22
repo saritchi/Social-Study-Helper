@@ -1,4 +1,4 @@
-const database = require('../database')(process.env);
+const database = require('../database/database')(process.env);
 
 class Deck {
     constructor(name, midterm, final, courseId, id = '', lastAccess = '', lastStudy = '') {

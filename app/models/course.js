@@ -1,4 +1,4 @@
-const database = require('../database')(process.env);
+const database = require('../database/database')(process.env);
 
 class Course {
     constructor(name, midterm, final, userEmail, id = '', lastAccess = null) {

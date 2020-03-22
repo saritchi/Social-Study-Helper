@@ -1,5 +1,5 @@
 require('dotenv').config();
-const Database = require('./database.js')
+const Database = require('./database/database')
 const database = Database(process.env);
 database.connect();
 database.initializeTablesIfNeeded();

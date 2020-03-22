@@ -1,6 +1,7 @@
 var router = require('express').Router();
 var Course = require('../models/course');
 var Deck = require('../models/deck');
+var runTransaction = require('../database/helper');
 
 async function getCourses(req, res) {
       //TODO: endpoint will need a query paremeter for the number of courses.
@@ -37,13 +38,15 @@ async function addCourse(req, res) {
 
     const course = new Course(coursename, midterm, final, userEmail);
     try {
-        const courseId = await course.create();
-        decks.map((deckname) => {
-            const newDeck = new Deck(deckname, midterm, final, courseId);
-            return newDeck.create();
+        await runTransaction(async () => {
+            const courseId = await course.create();
+            decks.map((deckname) => {
+                const newDeck = new Deck(deckname, midterm, final, courseId);
+                return newDeck.create();
+            })
+            
+            await Promise.all(decks);
         })
-        
-        await Promise.all(decks);
         console.log("Add course with name: " + coursename);
         res.sendStatus(200);
     } catch (error) {

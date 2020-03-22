@@ -1,4 +1,4 @@
-const database = require('../database')(process.env);
+const database = require('../database/database')(process.env);
 
 module.exports = class User {
     constructor(email, password, fname = '', lname = '') {

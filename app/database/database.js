@@ -118,6 +118,18 @@ class Database {
                     throw error;
                 })
     }
+    
+    beginTransaction() {
+        return util.promisify(this.db.beginTransaction).call(this.db);
+    }
+
+    commit() {
+        return util.promisify(this.db.commit).call(this.db);
+    }
+
+    rollback() {
+        return util.promisify(this.db.rollback).call(this.db);
+    }
 
     /**
      * 
@@ -127,6 +139,7 @@ class Database {
     runQuery(sql, values) {
         return util.promisify(this.db.query).call(this.db, sql, values);
     }
+
 
     close() {
         console.log("Closing database connection");
