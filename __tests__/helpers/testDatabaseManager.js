@@ -2,21 +2,28 @@ require('dotenv').config();
 const Database = require('../../app/database');
 const database = new Database(process.env);
 
-const dropTablesSQL = `
-    SET FOREIGN_KEY_CHECKS = 0;
-    drop table if exists user;
-    drop table if exists Decks;
-    drop table if exists Courses;
-    drop table if exists Cards;
-    SET FOREIGN_KEY_CHECKS = 1
-`
-database.runQuery(dropTablesSQL, [], (error) => {
-    if (error) {
-        console.log("Unable to clean up databases! Error: " + error.message);
-    } else {
+
+async function dropTables() {
+    const dropTablesSQL = `
+        SET FOREIGN_KEY_CHECKS = 0;
+        drop table if exists user;
+        drop table if exists Decks;
+        drop table if exists Courses;
+        drop table if exists Cards;
+        SET FOREIGN_KEY_CHECKS = 1
+    `
+    
+    try {
+        await database.connect();
+        await database.runQuery(dropTablesSQL, [])
         console.log("Database clean up successful");
     }
+    catch (error) {
+        console.log("Unable to clean up databases! Error: " + error.message);
+    } finally {
+        await database.close();
+    }
 
-    console.log("Closing database connection")
-    database.close();
-});
+}
+
+dropTables();

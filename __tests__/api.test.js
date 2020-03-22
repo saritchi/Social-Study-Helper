@@ -7,15 +7,11 @@ var app;
 
 
 
-beforeAll(done => {
+beforeAll(async () => {
     database = new Database(process.env);
-    try {
-        database.initializeTablesIfNeeded();
-        app = App(database);
-        done();
-    } catch (error) {
-        done(error);
-    }
+    await database.connect();
+    database.initializeTablesIfNeeded();
+    app = App(database);
 });
 
 describe('registration tests', () => {
@@ -198,15 +194,7 @@ describe('view cards tests', () => {
     })
 })
 
-afterAll(done => {
-   database.close((error) => {
-       if (error) {
-           console.log("Unable to close database connection! Error: " + error.message);
-           done(error);
-       }
-
-       console.log("Database connection closed.");
-       done();
-   });
+afterAll(() => {
+    return database.close();
 });
   

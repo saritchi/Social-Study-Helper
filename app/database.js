@@ -21,6 +21,8 @@
  */
 
  const mysql = require('mysql');
+ //The idea for promisifying the mysql interface was adapted from here: https://codeburst.io/node-js-mysql-and-async-await-6fb25b01b628
+ const util = require('util');
 
  module.exports = class Database {
     /**
@@ -42,14 +44,10 @@
         }
 
         this.db = mysql.createConnection(connectionObject);
-        this.db.connect((err) => {
-            if (err) {
-                console.log("Unable to initialize database connection! Aborting server start up with error: " + err.message);
-                throw err;
-            }
+    }
 
-            console.log("Sucessfully connected to database.");
-        });
+    connect() {
+        return util.promisify(this.db.connect).call(this.db);
     }
     
     initializeTablesIfNeeded() {
@@ -60,13 +58,6 @@
             lname VARCHAR(20),
             PRIMARY KEY(email)
         );`
-        this.db.query(createUsersTableSQL, (err) => {
-            if (err) {
-                console.log("Unable to initialize database tables! Aborting server start up with error: " + err.message);
-                throw err;
-            }
-        });
-
         const createCoursesTableSQL = `CREATE TABLE IF NOT EXISTS Courses(
             id INT PRIMARY KEY AUTO_INCREMENT,
             name VARCHAR(255) NOT NULL,
@@ -78,14 +69,8 @@
                 REFERENCES user(email)
                 ON DELETE CASCADE
         );`;
-        this.db.query(createCoursesTableSQL, (err) => {
-            if (err) {
-                console.log("Unable to initialize database tables! Aborting server start up with error: " + err.message);
-                throw err;
-            }
-        });
 
-        const createChapterTableSQL = `CREATE TABLE IF NOT EXISTS Decks(
+        const createDeckTableSQL = `CREATE TABLE IF NOT EXISTS Decks(
             id INT PRIMARY KEY AUTO_INCREMENT,
             name VARCHAR(255) NOT NULL,
             lastAccess DATETIME,
@@ -97,12 +82,6 @@
                 REFERENCES Courses(id)
                 ON DELETE CASCADE
         );`;
-        this.db.query(createChapterTableSQL, (err) => {
-            if (err) {
-                console.log("Unable to initialize database tables! Aborting server start up with error: " + err.message);
-                throw err;
-            }
-        });
 
         const createCardTableSQL = `CREATE TABLE  IF NOT EXISTS Cards(
             id INT NOT NULL AUTO_INCREMENT,
@@ -114,32 +93,34 @@
                 REFERENCES Decks(id),    
             PRIMARY KEY (id)
         );`;
- 
-        this.db.query(createCardTableSQL, (err) => {
-            if (err) {
-                console.log("Unable to initialize database tables! Aborting server start up with error: " + err.message);
-                throw err;
-            }
-        });
 
+        const createUserTablePromise = util.promisify(this.db.query).call(this.db, createUsersTableSQL); 
+        const createCourseTablePromise = util.promisify(this.db.query).call(this.db, createCoursesTableSQL); 
+        const createDeckTablePromise = util.promisify(this.db.query).call(this.db, createDeckTableSQL); 
+        const createCardTablePromise = util.promisify(this.db.query).call(this.db, createCardTableSQL); 
+
+
+        return createUserTablePromise
+                .then(createCourseTablePromise)
+                .then(createDeckTablePromise)
+                .then(createCardTablePromise)
+                .catch(() => {
+                    console.log("Unable to initialize database tables! Aborting server start up with error: " + error.message);
+                    throw error;
+                })
     }
 
     /**
      * 
      * @param {string} sql sql query statement
      * @param {[]} values array of values for the query. The types in the array depend on the columns of the table.
-     * @param {(error, results, fields)} resultsCallback callback to process the data or errors from the query. 
-     * Can be of form (error) => {}, or (error, results, fields) => {}
      */
-    runQuery(sql, values, resultsCallback) {
-        this.db.query(sql, values, resultsCallback);
+    runQuery(sql, values) {
+        return util.promisify(this.db.query).call(this.db, sql, values);
     }
 
-    /**
-     * Closes the database connection
-     * @param {(error, results, fields)} resultsCallback callback to process the data or errors from the query. 
-     */
-    close(resultsCallback) {
-        this.db.end(resultsCallback);
+    close() {
+        console.log("Closing database connection");
+        return util.promisify(this.db.end).call(this.db);
     }
  }
