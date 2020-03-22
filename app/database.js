@@ -24,7 +24,7 @@
  //The idea for promisifying the mysql interface was adapted from here: https://codeburst.io/node-js-mysql-and-async-await-6fb25b01b628
  const util = require('util');
 
- module.exports = class Database {
+class Database {
     /**
      * 
      * @param {*} enviroment the current enviroment object containing the database connection info
@@ -123,4 +123,13 @@
         console.log("Closing database connection");
         return util.promisify(this.db.end).call(this.db);
     }
- }
+}
+
+var database = null;
+module.exports = (enviroment) => {
+    if (database) {
+        return database;
+    }
+
+    return new Database(enviroment);
+}

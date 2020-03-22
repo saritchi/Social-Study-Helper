@@ -1,6 +1,6 @@
 require('dotenv').config();
 const Database = require('../../app/database');
-const database = new Database(process.env);
+const database = Database(process.env);
 
 
 async function dropTables() {

@@ -25,7 +25,7 @@ import axios from "axios";
         try {
             //TODO: check values
             const response = await axios.post('/api/auth', this.state.user);
-            let currentUser = new User().copy(response.data[0]);
+            let currentUser = new User().copy(response.data);
             this.props.setUser(currentUser);
             this.setState({user: currentUser}, () => {
                 if (!this.state.user.isAuthenticated) {

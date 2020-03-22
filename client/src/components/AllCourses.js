@@ -36,7 +36,7 @@ class AllCourses extends Component {
 
     deckView = (deckId, deckName) => {
         this.props.history.push({
-            pathname: '/chapters',
+            pathname: '/decks',
             state: {
                 id: deckId,
                 name: deckName

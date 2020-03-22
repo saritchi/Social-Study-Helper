@@ -8,7 +8,7 @@ var app;
 
 
 beforeAll(async () => {
-    database = new Database(process.env);
+    database = Database(process.env);
     await database.connect();
     database.initializeTablesIfNeeded();
     app = App(database);
