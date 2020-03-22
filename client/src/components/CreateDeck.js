@@ -1,11 +1,11 @@
 import React from 'react'
-import { Form, FormGroup, FormTextarea, FormInput} from "shards-react";
 import { withRouter } from "react-router-dom"
+import { Form, FormGroup, FormTextarea, FormInput} from "shards-react";
 import { Container, Row, Col } from "shards-react";
 import {
     Button
   } from "shards-react";
-import * as withAlert from "./ComponentWithAlert"
+import * as withAlert from "./HOC/ComponentWithAlert";
 import Axios from 'axios';
 import './CreateDeck.css';
 
@@ -19,6 +19,11 @@ class CreateDeck extends React.Component {
     }
     
     componentDidMount(){
+        if(!this.props.user.isAuthenticated) {
+            this.props.history.replace("/");
+            return;
+        }
+
         this.addCard();
     }
 

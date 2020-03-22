@@ -3,8 +3,9 @@ To set up your development environment you must do the following
 
  1. Run npm install to locally install all the correct packages
  2. See the  [Database-Setup Section](#Database-Setup)
- 3. Navigate to the root project directory (the directory with server.js)
- 4. Run npm start to build and run both the client and the server
+ 3. With the .env file set up from the previous step SESSION_SECRET to the .env file and generate a random string for it. See [here](https://unix.stackexchange.com/questions/230673/how-to-generate-a-random-string) for how to do that on linux
+ 4. Navigate to the root project directory (the directory with server.js)
+ 5. Run npm start to build and run both the client and the server
  
  Currently the project has been set up to run the client through a webpack development server that sends the bundle.js to the client through port 3000. At the same time any API request to the server is proxy'd through the webpack development server to the server side application running on port 3003. Any changes to the client side or server side code with refresh that section of the app upon file save.
 
