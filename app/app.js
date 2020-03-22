@@ -9,10 +9,10 @@ app.use(morgan('short'))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}))
 
-app.use('/api', require('./cards/routes'))
-app.use('/api', require('./decks/routes'))
-app.use('/api', require('./courses/routes'))
-app.use('/api', require('./users/routes'))
+app.use('/api', require('./controllers/cards'))
+app.use('/api', require('./controllers/decks'))
+app.use('/api', require('./controllers/courses'))
+app.use('/api', require('./controllers/users'))
 
 
 /***

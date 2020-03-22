@@ -1,6 +1,6 @@
 var router = require('express').Router();
-var Course = require('./course');
-var Deck = require('../decks/deck');
+var Course = require('../models/course');
+var Deck = require('../models/deck');
 
 async function getCourses(req, res) {
       //TODO: endpoint will need a query paremeter for the number of courses.
@@ -53,14 +53,12 @@ async function addCourse(req, res) {
 }
 
 function isValidCourseRequest(coursename, decks) {
-    const deckKeys = Object.keys(decks);
     var emptyDecks = false;
-    for(var i = 0; i < deckKeys.length; i++) {
-        const key = deckKeys[i];
-        if(!decks[key]) {
+    decks.forEach((deck) => {
+        if (!deck) {
             emptyDecks = true;
         }
-    }
+    });
 
     return coursename && !emptyDecks;
 }

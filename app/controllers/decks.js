@@ -1,6 +1,6 @@
 var router = require('express').Router();
-var Deck = require('./deck');
-var Card = require('../cards/card');
+var Deck = require('../models/deck');
+var Card = require('../models/card');
 
 async function getDecks(req, res) {
     console.log("Getting decks....");
@@ -32,7 +32,7 @@ async function addDeck(req, res) {
         const deckId = await deck.create();
         cards.map((card) => {
             const newCard = new Card(card.prompt, card.answer, deckId);
-            newCard.create();
+            return newCard.create();
         })
         await Promise.all(cards);
         res.sendStatus(200);

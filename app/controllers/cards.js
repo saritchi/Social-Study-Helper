@@ -1,5 +1,5 @@
 var router = require('express').Router();
-var Card = require('./card');
+var Card = require('../models/card');
 
 async function viewCards(req, res) {
     console.log("Fetching Cards...");

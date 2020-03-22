@@ -1,5 +1,5 @@
 var router = require('express').Router();
-var User = require('./user');
+var User = require('../models/user');
 
 async function authenticateUser(req, res) {
     let email = req.body.email;
