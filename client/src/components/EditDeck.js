@@ -12,7 +12,6 @@ class EditDeck extends React.Component {
         this.state = {
             deckname: '',
             cards: [],
-            card_count: 0,
             deckId: 0
         }
     }
@@ -27,18 +26,13 @@ class EditDeck extends React.Component {
             });
   
             const deckName = response.data.result_names;
-            this.setState({deckname: deckName[0].name});
-            console.log(this.state.deckname)
-
-            var count = 0;
             const cardSet = response.data.result_cards;
             cardSet.forEach((card) => {
               console.log(card);
-              
-              count += 1;
             })
-            console.log("Deck ID is " + cardSet[0].deckId)
-            this.setState({cards: cardSet, card_count: count, deckId: cardSet[0].deckId});
+
+            // From GET, copy the contents to the state
+            this.setState({cards: cardSet, deckId: cardSet[0].deckId, deckname: deckName[0].name});
             this.addCard();
 
         } catch(error) {
@@ -54,17 +48,10 @@ class EditDeck extends React.Component {
     }
 
     deleteCard = async (event, index) => {
-        console.log("Event Target ID: " + event.target.id);
-        console.log("deleting: " + index)
         event.preventDefault();
         const newCards = this.state.cards
-        const total_cards = this.state.card_count - 1
         delete newCards[index]
-
-        this.setState({cards: newCards, card_count: total_cards})
-        
-        console.log("New Cards are: " + newCards)
-        console.log(newCards.length)
+        this.setState({cards: newCards})
     }
 
     renderCardInputs = () => {
@@ -107,17 +94,15 @@ class EditDeck extends React.Component {
         const deckname = this.state.deckname;
         const cardsObject = this.state.cards;
         const deckId = this.state.deckId;
-        const card_count = this.state.card_count;
 
         const card = Object.keys(cardsObject).map((key) => {
             return cardsObject[key];
         });
-        console.log(card)
+
         const json = {
             deckname: deckname,
             cards: card, 
             deckId: deckId,
-            card_count: card_count
         }
 
         try{
