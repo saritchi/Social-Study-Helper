@@ -2,6 +2,7 @@ var router = require('express').Router();
 var Course = require('../models/course');
 var Deck = require('../models/deck');
 var runTransaction = require('../database/helper');
+var requireLogin = require('../middleware/authentication');
 
 async function getCourses(req, res) {
       //TODO: endpoint will need a query paremeter for the number of courses.
@@ -66,7 +67,7 @@ function isValidCourseRequest(coursename, decks) {
     return coursename && !emptyDecks;
 }
 
-router.get('/courses', getCourses)
-router.post('/addCourse', addCourse)
+router.get('/courses', requireLogin, getCourses)
+router.post('/addCourse', requireLogin, addCourse)
 
 module.exports = router;

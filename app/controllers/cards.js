@@ -1,5 +1,6 @@
 var router = require('express').Router();
 var Card = require('../models/card');
+var requireLogin = require('../middleware/authentication');
 
 async function viewCards(req, res) {
     console.log("Fetching Cards...");
@@ -15,6 +16,6 @@ async function viewCards(req, res) {
     }
 }
 
-router.get('/viewCards', viewCards)
+router.get('/viewCards', requireLogin, viewCards)
 
 module.exports = router;

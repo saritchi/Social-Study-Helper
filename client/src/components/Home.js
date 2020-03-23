@@ -2,9 +2,9 @@ import React, {Component} from 'react'
 import { withRouter } from "react-router-dom"
 import { Button, Nav, NavItem, NavLink } from 'shards-react'
 import './Home.css'
-import axios from "axios"
+import axios from 'axios';
 import CardDisplay from './CardDisplay';
-import * as withAlert from "./ComponentWithAlert";
+import * as withAlert from "./HOC/ComponentWithAlert";
 
 class Home extends Component {
     constructor(props) {
@@ -15,6 +15,10 @@ class Home extends Component {
     }
 
     async componentDidMount() {
+        if(!this.props.user.isAuthenticated) {
+            this.props.history.replace("/");
+            return;
+        }
         try {
             const coursesResponse = await axios.get('/api/courses', {
                 params: {
@@ -27,8 +31,13 @@ class Home extends Component {
             })
             this.setState({courses: courses});
         } catch(error) {
-            console.error(error);
-            this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+            if(error.response.status === 401) {
+                this.props.history.replace("/");
+            }
+            else {
+                console.error(error);
+                this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+            }
         }
     }
 
@@ -46,7 +55,7 @@ class Home extends Component {
         });
     }
 
-    allCourseView = () => {
+    allCoursesView = () => {
         this.props.history.push({
             pathname: '/allCourses',
             state: { email: this.props.user.email }
@@ -66,7 +75,7 @@ class Home extends Component {
                             <h3>Recent Courses: </h3>
                         </NavItem>
                         <NavItem id="allCourses">
-                            <NavLink onClick={this.allCourseView} href='#'>View All Courses</NavLink>
+                            <NavLink href='#' onClick={this.allCoursesView}>View All Courses</NavLink>
                         </NavItem>
                     </Nav>
                 </div>
@@ -77,4 +86,4 @@ class Home extends Component {
         }
 };
 
-export default withRouter(withAlert.withAlert(Home))
+export default withRouter(withAlert.withAlert(Home));

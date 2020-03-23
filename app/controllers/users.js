@@ -8,6 +8,8 @@ async function authenticateUser(req, res) {
     const user = new User(email, password);
     try {
         await user.authenticate();
+        delete user.password;
+        req.session.user = user;
         res.send(user);
     } catch (error) {
         console.log(error);

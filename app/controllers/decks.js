@@ -2,6 +2,7 @@ var router = require('express').Router();
 var Deck = require('../models/deck');
 var Card = require('../models/card');
 var runTransaction = require('../database/helper');
+var requireLogin = require('../middleware/authentication');
 
 async function getDecks(req, res) {
     console.log("Getting decks....");
@@ -44,7 +45,7 @@ async function addDeck(req, res) {
     }
 }
 
-router.get('/decks', getDecks)
-router.post('/addDeck', addDeck)
+router.get('/decks', requireLogin, getDecks)
+router.post('/addDeck', requireLogin, addDeck)
 
 module.exports = router;

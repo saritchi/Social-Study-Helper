@@ -1,12 +1,11 @@
 import React, { Component } from 'react'
 import { FormGroup, Form,FormInput } from 'shards-react'
 import {Link,Redirect} from 'react-router-dom';
-import * as withAlert from "./ComponentWithAlert";
+import * as withAlert from "./HOC/ComponentWithAlert";
 import User from '../User.js';
 import './Loginpage.css';
 import axios from "axios";
  class LoginPage extends Component {
-
     constructor(props){
         super(props);
         this.state = {user: new User()};
@@ -23,7 +22,6 @@ import axios from "axios";
     async onSubmit(e) {
         e.preventDefault();
         try {
-            //TODO: check values
             const response = await axios.post('/api/auth', this.state.user);
             let currentUser = new User().copy(response.data);
             this.props.setUser(currentUser);

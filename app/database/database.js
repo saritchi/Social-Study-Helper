@@ -49,9 +49,9 @@ class Database {
         if (enviroment.NODE_ENV === 'production') {
             connectionObject['socketPath'] = enviroment.DB_SOCKET_PATH;
         } else {
-            connectionObject['host'] == enviroment.DB_HOST;
+            connectionObject['host'] = enviroment.DB_HOST;
         }
-
+        
         this.db = mysql.createConnection(connectionObject);
     }
 

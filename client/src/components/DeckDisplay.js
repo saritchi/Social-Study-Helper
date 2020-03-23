@@ -3,7 +3,7 @@ import {withRouter} from "react-router-dom"
 import { Button, Nav, NavItem } from 'shards-react';
 import axios from "axios";
 import './DeckDisplay.css';
-import * as withAlert from "./ComponentWithAlert"
+import * as withAlert from "./HOC/ComponentWithAlert";
 import CardDisplay from './CardDisplay';
 
 
@@ -16,6 +16,11 @@ class DeckDisplay extends Component {
     }
 
     async componentDidMount() {
+        if(!this.props.user.isAuthenticated) {
+            this.props.history.replace("/");
+            return;
+        }
+        
         try {
             const deckResponse = await axios.get('/api/decks',  {
                 params: {
@@ -28,9 +33,13 @@ class DeckDisplay extends Component {
             })
             this.setState({decklist: decklist})
         } catch(error) {
-            console.error(error);
-            console.error("ERROR");
-            this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+            if(error.response.status === 401) {
+                this.props.history.replace("/");
+            }
+            else {
+                console.error(error);
+                this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+            }
         }
     }
 
@@ -47,10 +56,11 @@ class DeckDisplay extends Component {
     }
 
     render() {
+        const coursename = this.props.location?.state?.name || '';
         return (
             <div>
                 <div id="courseName">
-                    <h1>{this.props.location.state.name}</h1>
+                    <h1>{coursename}</h1>
                 </div>
                 <div>
                     <Nav>

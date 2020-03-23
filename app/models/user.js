@@ -1,6 +1,6 @@
 const database = require('../database/database')(process.env);
 
-module.exports = class User {
+class User {
     constructor(email, password, fname = '', lname = '') {
         this.email = email;
         this.password = password;
@@ -39,4 +39,12 @@ module.exports = class User {
         }
         
     }
+}
+
+module.exports = User;
+module.exports.getUserFromEmail = async function getUserFromEmail(email) {
+    const query = 'SELECT FROM user WHERE email = ?';
+    const result = await database.runQuery(query, email);
+
+    return new User(result.email, result.password, result.fname, result.lname);
 }
