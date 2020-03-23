@@ -173,6 +173,27 @@ app.post('/api/addDeck', (req, res) => {
     })
 })
 
+app.post('/api/timestampCard', (req, res) => {
+    console.log("Adding Timestamp to a card...")
+    var body = req.body;
+    var card_id = body.card_id;
+    var deck_id = body.deck_id;
+    var datetime = body.datetime;
+    var difficulty = body.difficulty;
+    console.log(card_id + deck_id + datetime + difficulty)
+    const updateNextStudy = 'UPDATE Cards SET nextStudyTime = ? WHERE id = ? AND deckId = ?'
+    database.runQuery(updateNextStudy, [datetime, card_id, deck_id], (error, results) => {
+        if(error){
+            console.log(`Unable to update card with difficulty ${difficulty} to database. Error: ${error.message}`)
+            res.status(500).json({result: "An error has occured while attempting to add the deck to the database. Please try again later."})
+            return;
+        }
+        res.sendStatus(200)
+    })
+    
+
+})
+
 app.get('/api/viewCards', (req, res) => {
     console.log("Fetching Cards...");
     const deckId = req.query.id

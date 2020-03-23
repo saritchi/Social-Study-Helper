@@ -1,4 +1,4 @@
-.flashcard {
+#flashcard {
     border: 1px solid rgb(238, 238, 238);
     border-radius: 3px; 
     width:800px;
@@ -8,10 +8,24 @@
     margin: auto;
   }
   
-  .flash-container {
+.flash-container {
     position: absolute;
     top: 50%;
     left: 50%;
     margin-right: -50%;
     transform: translate(-50%, -50%)
-  }
+}
+
+.button-container {
+  margin-top: 10px;
+}
+
+.difficulty-button {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+#progress-bar {
+  margin: auto;
+  width: 90%;
+}
