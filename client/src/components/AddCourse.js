@@ -4,40 +4,48 @@ import './AddCourse.css';
 import axios from "axios";
 import './ComponentWithAlert';
 import * as withAlert from "./ComponentWithAlert";
+import { TiDelete } from 'react-icons/ti';
 
 class AddCourse extends Component {
-  chpaterInputTitle = "Chapter Name";
-  chapterInputToolTip = "Introduction to HTML";
+  deckInputTitle = "Deck Name";
+  deckInputToolTip = "Introduction to HTML";
+  courseNameId = "courseName";
+  invalidInputClassName = "is-invalid";
 
   constructor(props) {
     super(props);
     this.state = {
       coursename: '',
-      chapternames: {},
-      chapterInputs: [],
+      //object of inputFormId : inputFormData
+      //This stores data that the user types into the input fields
+      //TODO: need to update when UI can select an midterm/final/test day.
+      deckInfo: {},
     }
   }
   
   componentDidMount() {
-    this.addChapterInput();
+    this.addDeckInput();
   }
 
-  addChapterInput = () => {
-    const newChapterInputs = [...this.state.chapterInputs, {name: this.chpaterInputTitle, toolTip: this.chapterInputToolTip}];
-    this.setState({chapterInputs: newChapterInputs});
+  addDeckInput = () => {
+    const currentKey = "deck" + Object.keys(this.state.deckInfo).length;
+    const newDeckInfo = this.state.deckInfo;
+    newDeckInfo[currentKey] = '';
+    this.setState({deckInfo: newDeckInfo});
   }
 
-  renderAllChapterInputs = () => {
-    return this.state.chapterInputs.map((chapterInput, index) => {
-      const chapterId = "chapter" + index;
+  renderAllDeckInputs = () => {
+    const deckInfoArray = Object.keys(this.state.deckInfo);
+    return deckInfoArray.map((deckInputKey, index) => {
       return (
-        <FormGroup key={chapterId}>
-          <label htmlFor={chapterId}>{chapterInput.name}</label>
-          <FormInput id={chapterId} 
-                     name="chapternames" 
-                     onChange={this.onInputChange} 
-                     placeholder={chapterInput.toolTip}
-            />
+        <FormGroup key={deckInputKey}>
+          <label htmlFor={deckInputKey}>{this.deckInputTitle}</label>
+          <FormInput id={deckInputKey} 
+                     name="deckInfo" 
+                     onChange={this.onInputChange}
+                     placeholder={this.deckInputToolTip}
+          />
+          {index >= 1 && <TiDelete className="deleteDeck" id={index} onClick={(evt) => this.deleteChapter(evt, deckInputKey)} size={"2em"}/>}
         </FormGroup>
       )
     });
@@ -45,27 +53,31 @@ class AddCourse extends Component {
 
   onSubmit = async e => {
     e.preventDefault();
-    //TODO: check for empty values and change validation state 
-    const coursename =  this.state.coursename;    
-    const chapterNamesObjects = this.state.chapternames;
-    const chapterNames = Object.keys(chapterNamesObjects).map((key) => {
-      return chapterNamesObjects[key];
-    });
+
+    if (!this.isValidInput()) {
+      this.props.showAlert(withAlert.errorTheme, "Error some inputs are empty. Please remove or fill empty forms.")
+      return;
+    }
+    
+    const coursename =  this.state.coursename;
+    const deckInfo = this.state.deckInfo;
+    //TODO: need to update when UI can select an midterm/final/test day.
+    const decknames = Object.keys(deckInfo).map((key) => deckInfo[key]);
+
     const json = {
       coursename: coursename,
-      chapters: chapterNames,
+      decks: decknames,
+      email: this.props.user.email,
     }
 
     console.log(json);
     try {
-      const response = await axios.post("/api/addCourse", json);
-      console.log(response.status);
+      await axios.post("/api/addCourse", json);
       this.setState(
         {
           coursename: '', 
-          chapternames: {}, 
-          chapterInputs: [],
-        }, this.addChapterInput);
+          deckInfo: {}, 
+        }, this.addDeckInput);
         this.props.showAlert(withAlert.successTheme, "Added Course");
     } catch (error) {
       console.error(error);
@@ -73,14 +85,52 @@ class AddCourse extends Component {
     }
   }
 
+  isValidInput() {
+    var validInput = true;
+    const coursename =  this.state.coursename;
+    
+    var courseNameInput = document.getElementById(this.courseNameId);
+    if (!coursename) {
+      courseNameInput.className += ' ' + this.invalidInputClassName;
+      validInput = false;
+    }
+    else {
+      courseNameInput.classList.remove(this.invalidInputClassName);
+    }
+    
+    const deckInfo = this.state.deckInfo;
+    const deckInfoArray = Object.keys(deckInfo)
+    for(var i = 0; i < deckInfoArray.length; i++)  {
+      const key = deckInfoArray[i];
+      var courseNameInput = document.getElementById(key);
+      if(!deckInfo[key]) {
+        courseNameInput.className += ' ' + this.invalidInputClassName;
+        validInput = false;
+      }
+      else {
+        courseNameInput.classList.remove(this.invalidInputClassName);
+      }
+    }
+    
+    return validInput;
+  }
+
   onInputChange = e => {
-    if(e.target.name === "chapternames") {
-      const chapterNames = this.state.chapternames;
-      chapterNames[e.target.id] = e.target.value;
-      this.setState({[e.target.name]: chapterNames});
+    if(e.target.name === "deckInfo") {
+      const deckInfo = this.state.deckInfo;
+      deckInfo[e.target.id] = e.target.value;
+      this.setState({[e.target.name]: deckInfo});
     } else {
       this.setState({[e.target.name]: e.target.value});
     }
+  }
+
+  deleteChapter = (e, id) => {
+    console.log(e.target.id);
+    const updatedDeckNames = this.state.deckInfo;
+    //delete property for that chapter name
+    delete updatedDeckNames[id];
+    this.setState({[e.target.name]: updatedDeckNames});
   }
 
   render() {
@@ -88,14 +138,14 @@ class AddCourse extends Component {
       <div>
         <Form id="courseInfo">
         <h1>Course Information</h1>
-          <FormGroup>
-            <label htmlFor="courseName">Course Name:</label>
-            <FormInput id="courseName" name="coursename" onChange={this.onInputChange} value={this.state.coursename} placeholder="CMPT 470" />
+          <FormGroup id="courseNameGroup">
+            <label htmlFor={this.courseNameId}>Course Name:</label>
+            <FormInput id={this.courseNameId} name="coursename" onChange={this.onInputChange} value={this.state.coursename} placeholder="CMPT 470" />
           </FormGroup>
 
-          <h2>Chapters:</h2>
-          {this.renderAllChapterInputs()}
-          <Button id="addChapter" onClick={this.addChapterInput}>Add Chapter</Button>
+          <h2>Decks:</h2>
+          {this.renderAllDeckInputs()}
+          <Button id="addDeck" onClick={this.addDeckInput}>Add Deck</Button>
           <Button id="addCourse" onClick={this.onSubmit}>Add Course</Button>
         </Form>
       </div>

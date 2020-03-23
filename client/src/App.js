@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { Component } from 'react';
 import './App.css';
+import Register from './components/Register';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import LoginPage from './components/LoginPage';
 import Home from './components/Home';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import AllCourses from './components/AllCourses';
 
 import './App.css';
@@ -11,9 +12,17 @@ import "shards-ui/dist/css/shards.min.css"
 import AddCourse from './components/AddCourse';
 import CreateDeck from './components/CreateDeck';
 import EditDeck from './components/EditDeck';
+import DeckDisplay from './components/DeckDisplay';
 import ViewCards from './components/ViewCards';
 
-function App() {
+const userStorageKey = 'user';
+class App extends Component {
+  //read the user object out of the browser sotrage to allow the page to be refreshed and not lose the user information
+  state = {
+    user: JSON.parse(localStorage.getItem(userStorageKey)),
+  }
+
+  render() {
     return (
       <Router>
       <div className="App">
@@ -23,7 +32,7 @@ function App() {
               exact               
               render={props => (
                     <React.Fragment>
-                      <LoginPage/>
+                      <LoginPage setUser={this.setUser} />
                     </React.Fragment>
                   )} 
               />
@@ -32,7 +41,16 @@ function App() {
               exact               
               render={props => (
                     <React.Fragment>
-                      <Home />
+                      <Home user={this.state.user} />
+                    </React.Fragment>
+                  )} 
+              />
+            <Route 
+              path="/decks" 
+              exact               
+              render={props => (
+                    <React.Fragment>
+                      <DeckDisplay />
                     </React.Fragment>
                   )} 
               />
@@ -41,7 +59,7 @@ function App() {
                 exact               
                 render={props => (
                       <React.Fragment>
-                        <AddCourse />
+                        <AddCourse user={this.state.user} />
                       </React.Fragment>
                     )} 
               />
@@ -59,7 +77,7 @@ function App() {
                 exact               
                 render={props => (
                       <React.Fragment>
-                        <AllCourses />
+                        <AllCourses user={this.state.user} />
                       </React.Fragment>
                     )} 
               />
@@ -68,7 +86,16 @@ function App() {
                 exact
                 render={props => (
                   <React.Fragment>
-                    <ViewCards deckId={7}/>
+                    <ViewCards />
+                  </React.Fragment>
+                )}
+              />
+              <Route
+                path="/register"
+                exact
+                render={props => (
+                  <React.Fragment>
+                    <Register/>
                   </React.Fragment>
                 )}
               />
@@ -85,6 +112,14 @@ function App() {
       </div>
       </Router>
     );
+  }
+
+  setUser = (currentUser) => {
+    //store the user object into browser storage so we can refresh the page and not lose the user information
+    this.setState({user: currentUser}, () => {
+      localStorage.setItem('user', JSON.stringify(this.state.user));
+    });
+  }
 }
 
 export default App;

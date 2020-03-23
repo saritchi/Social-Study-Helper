@@ -2,49 +2,43 @@ import React, { Component } from 'react'
 import { FormGroup, Form,FormInput } from 'shards-react'
 import {Link,Redirect} from 'react-router-dom';
 import * as withAlert from "./ComponentWithAlert";
+import User from '../User.js';
 import './Loginpage.css';
 import axios from "axios";
  class LoginPage extends Component {
 
     constructor(props){
         super(props);
-        this.state = {
-            email:'',
-            password:'',
-            fname:'',
-            lname:'',
-            auth:''
-        };
+        this.state = {user: new User()};
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);       
     }
 
     onChange(e) {
-        this.setState({ [e.target.name]: e.target.value });
+        const newUser = new User().copy(this.state.user);
+        newUser[e.target.name] = e.target.value;
+        this.setState({user: newUser});
       }
     
     async onSubmit(e) {
-    e.preventDefault();
-    try {
-        let user = {
-            email: this.state.email,
-            password: this.state.password
-        };
-        const response = await axios.post('/api/auth', user);
-        user = response.data[0];
-        this.setState(user)
-    } catch(error) {
-        this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+        e.preventDefault();
+        try {
+            //TODO: check values
+            const response = await axios.post('/api/auth', this.state.user);
+            let currentUser = new User().copy(response.data[0]);
+            this.props.setUser(currentUser);
+            this.setState({user: currentUser}, () => {
+                if (!this.state.user.isAuthenticated) {
+                    this.props.showAlert(withAlert.errorTheme, "Invalid email or password. Please try again");
+                 }
+            })
+        } catch(error) {
+            this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+        }
     }
-}
-    componentDidUpdate() {
-        if (this.state.auth === 'false') {
-            this.props.showAlert(withAlert.errorTheme, "Invalid email or password. Please try again");
-         }
-         this.state.auth = '';        
-      }
+    
     render() {
-        if(this.state.auth === 'true'){
+        if(this.state.user.isAuthenticated){
             return(
                 <div>
                     {<Redirect to='/home'/>}
@@ -53,9 +47,10 @@ import axios from "axios";
         }
         return (
             <div>
-                <h1>Welcome To Social Study Helper</h1>
+                <br></br>
+                <h1 id="header">Welcome To Social Study Helper</h1>
                 <nav id="loginnav">
-                    <Link id="link"to="/home">SignUp</Link>
+                    <Link id="link"to="/register">SignUp</Link>
                 </nav>
                 <Form  id="loginform" onSubmit = {this.onSubmit}>
                     <FormGroup>

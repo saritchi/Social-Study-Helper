@@ -4,29 +4,31 @@ const morgan = require('morgan')
 const bodyParser = require('body-parser')
 const Database = require('./database.js')
 const fs = require('fs');
+const path = require('path');
 
 const app = express()
 app.use(morgan('short'))
-app.use(express.static('./public'))
-app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}))
 
 const database = new Database(process.env);
 database.initializeTablesIfNeeded();
 
-var port = 3003
+var port = 8080;
+
 
 //TODO: endpoint will need a query paremeter for the number of courses.
 app.get('/api/courses', (req, res) => {
     console.log("Getting courses....");
-    const addCourseSQL = `SELECT * FROM Courses`;
-    database.runQuery(addCourseSQL, [], (error, results, fields) => {
+    var userEmail = req.query.email;
+    const addCourseSQL = `SELECT * FROM Courses WHERE userEmail = ?`;
+    database.runQuery(addCourseSQL, [userEmail], (error, results) => {
         if (error) {
             console.log(`Unable to get courses from the database. Error: ${error.message}`)
-            res.status(500).json({result: "An error occured while attempting to get your courses. Please try again later."})
+            res.status(500).json({result: "An error occurred while attempting to get your courses. Please try again later."})
+            return;
         } 
-
+        
         var courses = [];
         results.forEach((course) => {
             console.log(course);
@@ -36,83 +38,138 @@ app.get('/api/courses', (req, res) => {
     })
 });
 
-//TODO: temporary function - user information should be returned by authentication once that's set up
-app.get('/api/user', (req, res) => {
-    console.log("Returning user");
-    res.json({result: "John Doe"});
+app.get('/api/decks', (req, res) => {
+    console.log("Getting decks....");
+    const getDeckSQL = `SELECT * FROM Decks WHERE courseId = ?`;
+    database.runQuery(getDeckSQL, [req.query.id], (error, results) => {
+        if (error) {
+            console.log(`Unable to get decks from the database. Error: ${error.message}`)
+            res.status(500).json({result: "An error occured while attempting to get your chapters. Please try again later."})
+        } 
+        
+        var decklist = [];
+        results.forEach((deck) => {
+            console.log(deck);
+            decklist.push(deck);
+        })
+        res.status(200).json({result: decklist});
+    })
 });
 
 app.post('/api/addCourse', (req, res) => {
     var body = req.body;
     var coursename = body.coursename;
-    var chapters = body.chapters;
+    var decks = body.decks;
+    var userEmail = body.email;
+
+
+    const deckKeys = Object.keys(decks);
+    var emptyDecks = false;
+    for(var i = 0; i < deckKeys.length; i++) {
+        const key = deckKeys[i];
+        if(!decks[key]) {
+            emptyDecks = true;
+        }
+    }
+
+    if(!coursename || emptyDecks) {
+        res.status(400).json({result: "Error processing request."})
+        return;
+    }
 
     //TODO: when chapters table is set up, insert chapters into that table with FK is the course PK.
-    const addCourseSQL = `INSERT INTO Courses(name) VALUES(?)`;
-    database.runQuery(addCourseSQL, [coursename], (error) => {
+    //TODO: when UI for addCourse is updated use the final and midterm values.
+    var final = false;
+    var midterm = false;
+    const addCourseSQL = `INSERT INTO Courses(name, midterm, final, userEmail) VALUES(?, ?, ?, ?)`;
+    database.runQuery(addCourseSQL, [coursename, midterm, final, userEmail], (error, results) => {
         if (error) {
             console.log(`Unable to add course with name: ${coursename} to database. Error: ${error.message}`)
-            res.status(500).json({result: "An error occured while attempting to add the course to the database. Please try again later."})
+            res.status(500).json({result: "An error occurred while attempting to add the course to the database. Please try again later."})
+            return;
         }
 
-        console.log("Add course with name: " + coursename);
-        res.sendStatus(200);
-    })
+        var courseId = results.insertId;
+        var decksLength = Object.keys(decks).length;
+        for(var i = 0; i < decksLength; i++){
+            //TODO: replace midterm final values when UI is updated.
+            decks[i] = [decks[i], midterm, final, courseId];
+        }
+        
 
+        const decksSQL = 'INSERT INTO Decks(name, midterm, final, courseId) VALUES ?';
+        database.runQuery(decksSQL, [decks], (error) => {
+            if(error){
+                console.log(error.message)
+                res.status(500).json({result: "An error has occured while attempting to add the deck to the database. Please try again later."});
+                return;
+            }
+            console.log("Add course with name: " + coursename);
+            res.sendStatus(200);
+        })
+    })
 });
 
+//TODO: error check client request
 app.post('/api/auth', (req, res) => {
     let sql = `SELECT * FROM user WHERE email = ? AND password = ?`;
-    let query = database.runQuery(sql,[req.body.email,req.body.password], (err, results) => {
+    database.runQuery(sql,[req.body.email,req.body.password], (err, results) => {
         if(err){
             console.log(err);
             res.status(500).json({result: "An error occured while attempting to authenticate. Please try again later."})
             return;
         };
         if(results.length > 0){
-            results[0].auth ='true';
+            results[0].isAuthenticated = true;
+            results[0].password = '';
         }
         else{
-            const result = {auth: 'false'};
+            const result = {isAuthenticated: 'false'};
             results.push(result);
         }
         
         res.send(results);
         return;
     });
-
+    
 });
+
+//TODO: error check client request
 app.post('/api/addDeck', (req, res) => {
     console.log("New Deck Added..."); 
     var body = req.body;
     var deckname = body.deckname;
     var cards = body.cards;
+    var courseId = req.query.id;
 
+    //TODO: update midterm and final values when UI is updated
+    const midterm = false;
+    const final = false;        
+    const addDeckSQL = 'INSERT INTO Decks(name, midterm, final, courseId) VALUES(?, ?, ?, ?)'
 
-    const queryString = 'INSERT INTO Decks(name) VALUES(?)';
-    database.runQuery(queryString, [deckname], (error, results, fields) => {
+    database.runQuery(addDeckSQL, [deckname, midterm, final, courseId],  (error, results) => {
         if(error){
             console.log(`Unable to add card deck with name: ${deckname} to database. Error: ${error.message}`)
             res.status(500).json({result: "An error has occured while attempting to add the deck to the database. Please try again later."})
+            return;
         }
-
+        
         var deckId = results.insertId;
         numCards = Object.keys(cards).length;
         for(var i = 0; i < numCards; i++){
-            cards[i] = [deckId, cards[i].prompt, cards[i].answer];
+            cards[i] = [cards[i].prompt, cards[i].answer, deckId];
         }
         
 
-        const cardQueryString = 'INSERT INTO cards(deck_id, prompt, answer) VALUES ?';
+        const cardQueryString = 'INSERT INTO Cards(prompt, answer, deckId) VALUES ?';
         database.runQuery(cardQueryString, [cards], (error) => {
             if(error){
                 console.log(error.message)
                 res.status(500).json({result: "An error has occured while attempting to add the deck to the database. Please try again later."});
+                return;
             }
+            res.sendStatus(200);
         })
-         
-        res.sendStatus(200);
-        
     })
 })
 
@@ -122,11 +179,10 @@ app.post('/api/editDeck', (req, res) => {
     var deckname = body.deckname;
     var cards = body.cards;
     var deckId = body.deckId;
-    var card_count = body.card_count;
 
     console.log(cards);
-        const deleteQueryString = 'DELETE FROM cards WHERE deck_id = ?';
-        database.runQuery(deleteQueryString, [cards[0].deck_id], (error) => {
+        const deleteQueryString = 'DELETE FROM Cards WHERE deckId = ?';
+        database.runQuery(deleteQueryString, [cards[0].deckId], (error) => {
             if(error){
                 console.log(error.message)
                 res.status(500).json({result: "An error has occured while attempting to delete the deck to the database. Please try again later."});
@@ -137,14 +193,14 @@ app.post('/api/editDeck', (req, res) => {
                 cards[i] = [deckId, cards[i].prompt, cards[i].answer];
             }
             
-            const insertQueryString = 'INSERT INTO cards(deck_id, prompt, answer) VALUES ?';
+            const insertQueryString = 'INSERT INTO Cards(deckId, prompt, answer) VALUES ?';
             database.runQuery(insertQueryString, [cards], (error) => {
                 if(error){
                     console.log(error.message)
                     res.status(500).json({result: "An error has occured while attempting to insert the new deck to the database. Please try again later."});
                 }
 
-                const deleteNullString = 'DELETE FROM cards WHERE prompt IS NULL OR answer IS NULL OR deck_id IS NULL'
+                const deleteNullString = 'DELETE FROM Cards WHERE prompt IS NULL OR answer IS NULL OR deckId IS NULL'
                 database.runQuery(deleteNullString, [cards], (error) => {
                     if(error){
                         console.log(error.message)
@@ -161,7 +217,7 @@ app.post('/api/editDeck', (req, res) => {
 app.get('/api/editDeck', (req, res) => {
     console.log("Fetching Deck Data..."); 
     const deck_id = req.query.deck
-    const query_cards = 'SELECT * FROM cards WHERE deck_id = ?';
+    const query_cards = 'SELECT * FROM Cards WHERE deckId = ?';
     console.log("Extracting Card List...");
     database.runQuery(query_cards, deck_id, (error, results_cards, fields) => {
         if(error){
@@ -199,12 +255,13 @@ app.get('/api/editDeck', (req, res) => {
 
 app.get('/api/viewCards', (req, res) => {
     console.log("Fetching Cards...");
-    const deck_id = req.query.deck
-    const getFlashData = 'SELECT * FROM cards WHERE deck_id = ?';
-    database.runQuery(getFlashData, deck_id, (error, results, fields) => {
+    const deckId = req.query.id
+    const getFlashData = 'SELECT * FROM Cards WHERE deckId = ?';
+    database.runQuery(getFlashData, deckId, (error, results) => {
         if (error) {
-            console.log(`Unable to get courses from the database. Error: ${error.message}`)
+            console.log(`Unable to get cards from the database. Error: ${error.message}`)
             res.status(500).json({result: "An error occured while attempting to get your courses. Please try again later."})
+            return;
         } 
         var cards = [];
         results.forEach((card) => {
@@ -214,6 +271,49 @@ app.get('/api/viewCards', (req, res) => {
         res.status(200).json({result: cards});
     })
 });
+
+//TODO: error check client request
+app.post('/api/register', (req, res) => {
+    let post = req.body;
+    let sql = `Select * from user where email = '${post.email}'`;
+    let query = database.runQuery(sql, (err, result) => {
+        if(err){
+            console.log(err);
+            res.status(500).json({result: "An error occured while attempting to register. Please try again later."});
+            return;
+        }
+        if(result.length > 0){ 
+            res.status('409').json({result: "An error occured while attempting to register since Username already Exists."});
+        }
+        else{
+            sql = 'INSERT INTO user SET ?';
+            query = database.runQuery(sql, post, (err, result) => {
+                if(err){
+                    console.log(err);
+                    res.status(500).json({result: "An error occured while attempting to register. Please try again later."});
+                    return;
+                }
+                res.status(200).json({result: "Registration succesful."});;
+            });
+        }
+    });
+    
+});
+
+/***
+ * END of API end points. Do not put API endpoint routes below this 
+ */
+
+ 
+//In production we will be servering our javascript and html files from a optimized build folder in client. This sets up the endpoint and exposes
+//the build folder to the browser
+if(process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.join(__dirname, '/client/build')));
+
+    app.get('/*', function(req, res) {
+        res.sendFile(path.join(__dirname, '/client/build', 'index.html'));
+    });
+}
 
 app.listen(port, () => {
     console.log("Server Running on Port " + port)

@@ -1,10 +1,7 @@
 import React from 'react'
-import { Form, FormGroup, FormTextarea, FormInput} from "shards-react";
+import { Button, Form, FormGroup, FormTextarea, FormInput} from "shards-react";
 import { Container, Row, Col } from "shards-react";
-import {
-    Button
-  } from "shards-react";
-  import { TiDelete } from 'react-icons/ti';
+import { TiDelete } from 'react-icons/ti';
 import * as withAlert from "./ComponentWithAlert"
 import axios from 'axios';
 import './CreateDeck.css';
@@ -40,8 +37,8 @@ class EditDeck extends React.Component {
               
               count += 1;
             })
-            console.log("Deck ID is " + cardSet[0].deck_id)
-            this.setState({cards: cardSet, card_count: count, deckId: cardSet[0].deck_id});
+            console.log("Deck ID is " + cardSet[0].deckId)
+            this.setState({cards: cardSet, card_count: count, deckId: cardSet[0].deckId});
             this.addCard();
 
         } catch(error) {
@@ -60,10 +57,14 @@ class EditDeck extends React.Component {
         console.log("Event Target ID: " + event.target.id);
         console.log("deleting: " + index)
         event.preventDefault();
-        const newCards = [...this.state.cards]
+        const newCards = this.state.cards
         const total_cards = this.state.card_count - 1
-        newCards.splice(index, 1)
+        delete newCards[index]
+
         this.setState({cards: newCards, card_count: total_cards})
+        
+        console.log("New Cards are: " + newCards)
+        console.log(newCards.length)
     }
 
     renderCardInputs = () => {

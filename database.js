@@ -29,10 +29,14 @@
      */
     constructor(enviroment) {
         var connectionObject = {
-            host : enviroment.DB_HOST,
             user : enviroment.DB_USER,
             password : enviroment.DB_PASS,
             database : enviroment.DB_NAME
+        }
+        if (enviroment.NODE_ENV === 'production') {
+            connectionObject['socketPath'] = enviroment.DB_SOCKET_PATH;
+        } else {
+            connectionObject['host'] == enviroment.DB_HOST;
         }
 
         this.db = mysql.createConnection(connectionObject);
@@ -45,10 +49,15 @@
             console.log("Sucessfully connected to database.");
         });
     }
-
+    
     initializeTablesIfNeeded() {
-        const createUsersTableSQL = `create table IF NOT EXISTS user(email varchar(20) not null, 
-        password varchar(20) not null, fname varchar(20),lname varchar(20),primary key(email));`
+        const createUsersTableSQL = `create table IF NOT EXISTS user(
+            email VARCHAR(20) NOT NULL,
+            password VARCHAR(20) NOT NULL, 
+            fname VARCHAR(20) NOT NULL,
+            lname VARCHAR(20),
+            PRIMARY KEY(email)
+        );`
         this.db.query(createUsersTableSQL, (err) => {
             if (err) {
                 console.log("Unable to initialize database tables! Aborting server start up with error: " + err.message);
@@ -58,7 +67,15 @@
 
         const createCoursesTableSQL = `CREATE TABLE IF NOT EXISTS Courses(
             id INT PRIMARY KEY AUTO_INCREMENT,
-            name varchar(255) not null)`
+            name VARCHAR(255) NOT NULL,
+            lastAccess DATETIME,
+            midterm bit NOT NULL,
+            final bit NOT NULL,
+            userEmail VARCHAR(255),
+            FOREIGN KEY (userEmail)
+                REFERENCES user(email)
+                ON DELETE CASCADE
+        );`;
         this.db.query(createCoursesTableSQL, (err) => {
             if (err) {
                 console.log("Unable to initialize database tables! Aborting server start up with error: " + err.message);
@@ -66,22 +83,35 @@
             }
         });
 
-        const createDeckTableSQL = `CREATE TABLE IF NOT EXISTS Decks(
+        const createChapterTableSQL = `CREATE TABLE IF NOT EXISTS Decks(
             id INT PRIMARY KEY AUTO_INCREMENT,
-            name varchar(255) not null)`
-        this.db.query(createDeckTableSQL, (err) => {
+            name VARCHAR(255) NOT NULL,
+            lastAccess DATETIME,
+            lastStudy DATETIME,
+            midterm bit NOT NULL,
+            final bit NOT NULL,
+            courseId INT NOT NULL,
+            FOREIGN KEY (courseId)
+                REFERENCES Courses(id)
+                ON DELETE CASCADE
+        );`;
+        this.db.query(createChapterTableSQL, (err) => {
             if (err) {
                 console.log("Unable to initialize database tables! Aborting server start up with error: " + err.message);
                 throw err;
             }
         });
 
-        const createCardTableSQL = `CREATE TABLE  IF NOT EXISTS cards(
+        const createCardTableSQL = `CREATE TABLE  IF NOT EXISTS Cards(
             id INT NOT NULL AUTO_INCREMENT,
-            deck_id INT NULL,
             prompt VARCHAR(2000) NULL DEFAULT 'This card is blank',
             answer VARCHAR(2000) NULL DEFAULT 'This card is blank',
-            PRIMARY KEY (id));`
+            nextStudyTime DATETIME,
+            deckId INT NOT NULL,
+            FOREIGN KEY (deckId)
+                REFERENCES Decks(id),    
+            PRIMARY KEY (id)
+        );`;
  
         this.db.query(createCardTableSQL, (err) => {
             if (err) {

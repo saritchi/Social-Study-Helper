@@ -1,4 +1,5 @@
 import React from 'react';
+import {withRouter} from "react-router-dom"
 import ReactCardFlip from 'react-card-flip';
 import './ViewCards.css';
 import * as withAlert from "./ComponentWithAlert";
@@ -10,7 +11,7 @@ class ViewCards extends React.Component {
       this.state = {
       isFlipped: false,
       cardIndex: 0,
-      cards: []
+      cards: [],
     };
     this.handleClick = this.handleClick.bind(this);
   }
@@ -19,7 +20,7 @@ class ViewCards extends React.Component {
     try {
       const cardResponse = await axios.get('/api/viewCards', {
         params:{
-          deck: this.props.deckId
+          id: this.props.location.state.deckId
         } 
       });
       const flashcards = cardResponse.data.result;
@@ -87,4 +88,4 @@ class ViewCards extends React.Component {
 
 }
 
-export default withAlert.withAlert(ViewCards);
+export default withRouter(withAlert.withAlert(ViewCards));

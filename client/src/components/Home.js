@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {withRouter } from "react-router-dom"
+import { withRouter } from "react-router-dom"
 import { Button, Nav, NavItem, NavLink } from 'shards-react'
 import './Home.css'
 import axios from "axios"
@@ -11,20 +11,21 @@ class Home extends Component {
         super(props);
         this.state = {
             courses: [],
-            username: null,
         };
     }
 
     async componentDidMount() {
-        //TODO: should not need to make a request for this. Should be passed in from login page.
-        const user = (await axios.get('/api/user')).data.result ?? "";
         try {
-            const coursesResponse = await axios.get('/api/courses');
+            const coursesResponse = await axios.get('/api/courses', {
+                params: {
+                    email: this.props.user.email
+                }
+            });
             const courses = coursesResponse.data.result;
             courses.forEach((course) => {
                 console.log(course);
             })
-            this.setState({username: user, courses: courses});
+            this.setState({courses: courses});
         } catch(error) {
             console.error(error);
             this.props.showAlert(withAlert.errorTheme, error.response.data.result);
@@ -34,12 +35,30 @@ class Home extends Component {
     addCourse = () => {
         this.props.history.push("/addCourse");
     }
+
+    deckView = (deckId, deckName) => {
+        this.props.history.push({
+            pathname: '/decks',
+            state: {
+                id: deckId,
+                name: deckName
+            }
+        });
+    }
+
+    allCourseView = () => {
+        this.props.history.push({
+            pathname: '/allCourses',
+            state: { email: this.props.user.email }
+        });
+    }
     
     render() {
+        const username = this.props.user.fname + ' ' + this.props.user.lname;
         return (
             <div>
                 <div id="user">
-                    <h1>Welcome {this.state.username}!</h1>
+                    <h1>Welcome {username}!</h1>
                 </div>
                 <div>
                     <Nav>
@@ -47,11 +66,11 @@ class Home extends Component {
                             <h3>Recent Courses: </h3>
                         </NavItem>
                         <NavItem id="allCourses">
-                            <NavLink href='/allCourses'>View All Courses</NavLink>
+                            <NavLink onClick={this.allCourseView} href='#'>View All Courses</NavLink>
                         </NavItem>
                     </Nav>
                 </div>
-                <CardDisplay cardsInfo={this.state.courses.slice(0, 9)}/>
+                <CardDisplay changePage={this.deckView} cardsInfo={this.state.courses.slice(0, 9)}/>
                 <Button id="newCourse" onClick={this.addCourse}>Add New Course</Button>
             </div>
             )
