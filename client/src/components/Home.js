@@ -5,6 +5,7 @@ import './Home.css'
 import axios from 'axios';
 import CardDisplay from './CardDisplay';
 import * as withAlert from "./HOC/ComponentWithAlert";
+import withMenu from './HOC/ComponentWithMenu';
 
 class Home extends Component {
     constructor(props) {
@@ -86,4 +87,4 @@ class Home extends Component {
         }
 };
 
-export default withRouter(withAlert.withAlert(Home));
+export default withMenu(withRouter(withAlert.withAlert(Home)));

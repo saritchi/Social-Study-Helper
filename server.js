@@ -265,6 +265,12 @@ app.post('/api/register', (req, res) => {
     
 });
 
+app.get('/api/logout', requireLogin, (req, res) => {
+    console.log("Resetting user session")
+    req.session.reset();
+    res.sendStatus(200);
+})
+
 /***
  * END of API end points. Do not put API endpoint routes below this 
  */
