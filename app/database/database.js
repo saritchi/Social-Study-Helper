@@ -148,7 +148,9 @@ class Database {
         return util.promisify(this.db.end).call(this.db);
     }
 }
-
+/**
+ * Singleton to share database connections
+ */
 var database = null;
 module.exports = (enviroment) => {
     if (database) {

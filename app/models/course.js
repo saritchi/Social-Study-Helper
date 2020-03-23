@@ -1,5 +1,8 @@
 const database = require('../database/database')(process.env);
 
+/**
+ * Course model that communicates with the database
+ */
 class Course {
     constructor(name, midterm, final, userEmail, id = '', lastAccess = null) {
         this.name = name;
@@ -18,6 +21,11 @@ class Course {
 }
 
 module.exports = Course;
+/**
+ * Get all courses associated with a given user's email 
+ * @argument email
+ * @returns An array of Course objects
+ */
 module.exports.getAllForUser = async function getAllForUser(email) {
     const addCourseSQL = `SELECT * FROM Courses WHERE userEmail = ?`;
     const results = await database.runQuery(addCourseSQL, email);

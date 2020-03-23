@@ -1,5 +1,9 @@
 var User = require('../models/user');
-
+//The authentication and session function is based on code from this tutorial
+//https://stormpath.com/blog/everything-you-ever-wanted-to-know-about-node-dot-js-sessions
+/**
+ * middleware function that attaches the user to the session object on each request. This allows for each request to be authenticated
+ */
 module.exports = async function(req, res, next) {
     const session = req.session;
     if(session && session.user) {

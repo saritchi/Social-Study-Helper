@@ -1,5 +1,8 @@
 const database = require('../database/database')(process.env);
 
+/**
+ * Deck model that communicates with the database
+ */
 class Deck {
     constructor(name, midterm, final, courseId, id = '', lastAccess = '', lastStudy = '') {
         this.name = name;
@@ -20,6 +23,11 @@ class Deck {
 }
 
 module.exports = Deck;
+/**
+ * Get all decks associated with a given courseId
+ * @argument courseId
+ * @returns An array of Course objects
+ */
 module.exports.getAllFromCourseId = async function getAllFromCourseId(courseId) {
     const getDeckSQL = `SELECT * FROM Decks WHERE courseId = ?`;
     const results = await database.runQuery(getDeckSQL, courseId);

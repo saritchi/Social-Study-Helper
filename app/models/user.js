@@ -1,5 +1,8 @@
 const database = require('../database/database')(process.env);
 
+/**
+ * User model that communicates with the database
+ */
 class User {
     constructor(email, password, fname = '', lname = '') {
         this.email = email;
@@ -19,7 +22,7 @@ class User {
         return true;
     }
 
-    async register() {
+    async create() {
         const query = 'INSERT INTO user SET ?';
         await database.runQuery(query, {email: this.email, password: this.password, fname: this.fname, lname: this.lname});
     }
@@ -42,6 +45,11 @@ class User {
 }
 
 module.exports = User;
+/**
+ * Get a user associated with the given email
+ * @argument email
+ * @returns A User object
+ */
 module.exports.getUserFromEmail = async function getUserFromEmail(email) {
     const query = 'SELECT FROM user WHERE email = ?';
     const result = await database.runQuery(query, email);
