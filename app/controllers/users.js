@@ -32,7 +32,7 @@ async function registerUser(req, res) {
             res.status('409').json({result: "An error occured while attempting to register since Username already Exists."});
             return;
         }
-        await newUser.register();
+        await newUser.create();
         res.status(200).json({result: "Registration succesful."});
      } catch (error) {
         console.log(error);

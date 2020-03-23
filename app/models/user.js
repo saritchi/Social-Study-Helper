@@ -27,6 +27,9 @@ class User {
         await database.runQuery(query, {email: this.email, password: this.password, fname: this.fname, lname: this.lname});
     }
 
+    /**
+     * Checks if the user exists, and then sets up  the class members with the correct information based on the if the user exists or not
+     */
     async authenticate() {
         const query = `SELECT * FROM user WHERE email = ? AND password = ?`;
         const results = await database.runQuery(query, [this.email, this.password]);
@@ -47,7 +50,7 @@ class User {
 module.exports = User;
 /**
  * Get a user associated with the given email
- * @argument email
+ * @param {*} email a user's email
  * @returns A User object
  */
 module.exports.getUserFromEmail = async function getUserFromEmail(email) {

@@ -23,7 +23,7 @@ class Course {
 module.exports = Course;
 /**
  * Get all courses associated with a given user's email 
- * @argument email
+ * @param {*} email a user's email
  * @returns An array of Course objects
  */
 module.exports.getAllForUser = async function getAllForUser(email) {

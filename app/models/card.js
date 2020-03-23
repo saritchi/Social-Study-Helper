@@ -22,7 +22,7 @@ class Card {
 module.exports = Card;
 /**
  * Get all cards associated with a given deckId
- * @argument deckId
+ * @param {*} deckId
  * @returns An array of Card objects
  */
 module.exports.getAllFromDeckId = async function getAllFromDeckId(deckId) {

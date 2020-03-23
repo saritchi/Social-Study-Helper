@@ -25,7 +25,7 @@ class Deck {
 module.exports = Deck;
 /**
  * Get all decks associated with a given courseId
- * @argument courseId
+ * @param {*} courseId
  * @returns An array of Course objects
  */
 module.exports.getAllFromCourseId = async function getAllFromCourseId(courseId) {
