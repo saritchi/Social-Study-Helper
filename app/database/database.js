@@ -52,10 +52,12 @@ class Database {
             connectionObject['host'] = enviroment.DB_HOST;
         }
         
-        this.db = mysql.createConnection(connectionObject);
+        this.connectionObject = connectionObject;
+        this.db = null;
     }
-
+    
     connect() {
+        this.db = mysql.createConnection(this.connectionObject);
         return util.promisify(this.db.connect).call(this.db);
     }
     
@@ -153,5 +155,6 @@ module.exports = (enviroment) => {
         return database;
     }
 
-    return new Database(enviroment);
+    database = new Database(enviroment);
+    return database;
 }

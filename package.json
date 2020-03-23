@@ -4,7 +4,7 @@
   "description": "",
   "main": "new_card.js",
   "scripts": {
-    "test": "cross-env NODE_ENV=test DB_NAME=testdb jest --forceExit",
+    "test": "cross-env NODE_ENV=test DB_NAME=testdb jest",
     "pretest": "cross-env NODE_ENV=test DB_NAME=testdb node ./__tests__/helpers/testDatabaseManager.js",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "start": "node ./app/server",
@@ -38,7 +38,8 @@
   },
   "nodemonConfig": {
     "ignore": [
-      "client/*"
+      "client/*",
+      "__test__/*"
     ]
   },
   "jest": {
