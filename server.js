@@ -3,6 +3,7 @@ const express = require('express')
 const morgan = require('morgan')
 const bodyParser = require('body-parser')
 const Database = require('./database.js')
+const session = require('client-sessions')
 const fs = require('fs');
 const path = require('path');
 
@@ -15,10 +16,53 @@ const database = new Database(process.env);
 database.initializeTablesIfNeeded();
 
 var port = 8080;
+const thirty_minutes = 30 * 60 * 1000;
+const five_minutes = 5 * 60 * 1000;
+
+//The authentication and session function is based on code from this tutorial
+//https://stormpath.com/blog/everything-you-ever-wanted-to-know-about-node-dot-js-sessions
+app.use(session({
+    cookieName: 'session',
+    secret: process.env.SESSION_SECRET,
+    duration: thirty_minutes,
+    activeDuration: five_minutes,
+}));
+
+app.use(function(req, res, next) {
+    const session = req.session;
+    if(session && session.user) {
+        database.getUserFromEmail(req.session.user.email, (error, results) => {
+            if (error) {
+                res.status(500).json({result: "An error has occured. Please try again later."});
+                return;
+            }
+            const user = results[0];
+            if(user) {
+                req.user = user;
+                delete req.user.password;
+                req.session.user = user;
+                res.locals.user = user;
+            }
+            next();
+        });
+    } else {
+        next();
+    }
+});
+
+function requireLogin(req, res, next) {
+    if(!req.user) {
+        console.log("Unauthenticated api access. Returning 401 status code");
+        res.sendStatus(401);
+        return;
+    }
+
+    next();
+}
 
 
 //TODO: endpoint will need a query paremeter for the number of courses.
-app.get('/api/courses', (req, res) => {
+app.get('/api/courses', requireLogin, (req, res) => {
     console.log("Getting courses....");
     var userEmail = req.query.email;
     const addCourseSQL = `SELECT * FROM Courses WHERE userEmail = ?`;
@@ -114,14 +158,16 @@ app.post('/api/addCourse', (req, res) => {
 app.post('/api/auth', (req, res) => {
     let sql = `SELECT * FROM user WHERE email = ? AND password = ?`;
     database.runQuery(sql,[req.body.email,req.body.password], (err, results) => {
+        const user = results[0];
         if(err){
             console.log(err);
             res.status(500).json({result: "An error occured while attempting to authenticate. Please try again later."})
             return;
         };
         if(results.length > 0){
-            results[0].isAuthenticated = true;
-            results[0].password = '';
+            user.isAuthenticated = true;
+            user.password = '';
+            req.session.user = user;
         }
         else{
             const result = {isAuthenticated: 'false'};
@@ -135,7 +181,7 @@ app.post('/api/auth', (req, res) => {
 });
 
 //TODO: error check client request
-app.post('/api/addDeck', (req, res) => {
+app.post('/api/addDeck', requireLogin, (req, res) => {
     console.log("New Deck Added..."); 
     var body = req.body;
     var deckname = body.deckname;
@@ -275,8 +321,7 @@ app.get('/api/viewCards', (req, res) => {
 //TODO: error check client request
 app.post('/api/register', (req, res) => {
     let post = req.body;
-    let sql = `Select * from user where email = '${post.email}'`;
-    let query = database.runQuery(sql, (err, result) => {
+    database.getUserFromEmail(post.email, (err, result) => {
         if(err){
             console.log(err);
             res.status(500).json({result: "An error occured while attempting to register. Please try again later."});
