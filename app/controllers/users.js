@@ -1,4 +1,5 @@
 var router = require('express').Router();
+var requireLogin = require('../middleware/authentication');
 var User = require('../models/user');
 
 async function authenticateUser(req, res) {
@@ -40,7 +41,14 @@ async function registerUser(req, res) {
     }
 }
 
+function logoutUser(req, res) {
+    console.log("Resetting user session")
+    req.session.reset();
+    res.sendStatus(200);    
+}
+
 router.post('/auth', authenticateUser)
 router.post('/register', registerUser)
+router.get('/logout', requireLogin, logoutUser);
 
 module.exports = router;
