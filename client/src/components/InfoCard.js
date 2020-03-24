@@ -1,14 +1,17 @@
 import React from 'react'
-import { Card, CardBody } from 'shards-react'
+import './InfoCard.css';
+import { Card, CardBody, CardHeader } from 'shards-react'
+import OptionsDropdown from './OptionsDropdown'
 
 const InfoCard = (props) => {
     return (
-        <Card onClick={() => props.changePage(props.id, props.info)}>
-            <CardBody>
+        <Card>
+            <CardHeader><OptionsDropdown/></CardHeader>
+            <CardBody onClick={() => props.changePage(props.id, props.info)}>
                 <p>{props.info}</p>
             </CardBody>
         </Card>
-    );
+    ); 
 }
 
 export default InfoCard;
