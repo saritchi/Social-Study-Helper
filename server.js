@@ -170,7 +170,7 @@ app.post('/api/auth', (req, res) => {
             req.session.user = user;
         }
         else{
-            const result = {isAuthenticated: 'false'};
+            const result = {isAuthenticated: false};
             results.push(result);
         }
         
