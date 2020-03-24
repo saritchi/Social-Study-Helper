@@ -36,9 +36,10 @@
         if (enviroment.NODE_ENV === 'production') {
             connectionObject['socketPath'] = enviroment.DB_SOCKET_PATH;
         } else {
-            connectionObject['host'] == enviroment.DB_HOST;
+            connectionObject['host'] = enviroment.DB_HOST;
         }
-
+        
+        console.log("object:" + connectionObject['password']);
         this.db = mysql.createConnection(connectionObject);
         this.db.connect((err) => {
             if (err) {
@@ -120,6 +121,12 @@
             }
         });
 
+    }
+
+    getUserFromEmail(email, resultsCallback) {
+        console.log("Getting user data for user with email= " + email);
+        const sql = 'SELECT * FROM user WHERE email = ? LIMIT 1';
+        this.runQuery(sql, [email], resultsCallback);
     }
 
     /**

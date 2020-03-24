@@ -14,12 +14,13 @@ import CreateDeck from './components/CreateDeck';
 import EditDeck from './components/EditDeck';
 import DeckDisplay from './components/DeckDisplay';
 import ViewCards from './components/ViewCards';
+import User from './User';
 
 const userStorageKey = 'user';
 class App extends Component {
   //read the user object out of the browser sotrage to allow the page to be refreshed and not lose the user information
   state = {
-    user: JSON.parse(localStorage.getItem(userStorageKey)),
+    user: JSON.parse(localStorage.getItem(userStorageKey)) || new User(),
   }
 
   render() {
@@ -50,7 +51,7 @@ class App extends Component {
               exact               
               render={props => (
                     <React.Fragment>
-                      <DeckDisplay />
+                      <DeckDisplay user={this.state.user} />
                     </React.Fragment>
                   )} 
               />
@@ -68,7 +69,7 @@ class App extends Component {
                 exact               
                 render={props => (
                       <React.Fragment>
-                        <CreateDeck />
+                        <CreateDeck user={this.state.user} />
                       </React.Fragment>
                     )}
               />
@@ -86,7 +87,7 @@ class App extends Component {
                 exact
                 render={props => (
                   <React.Fragment>
-                    <ViewCards />
+                    <ViewCards user={this.state.user} />
                   </React.Fragment>
                 )}
               />
