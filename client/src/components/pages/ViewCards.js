@@ -2,7 +2,7 @@ import React from 'react';
 import {withRouter} from "react-router-dom"
 import ReactCardFlip from 'react-card-flip';
 import './ViewCards.css';
-import * as withAlert from "./HOC/ComponentWithAlert";
+import * as withAlert from "../HOC/ComponentWithAlert";
 import axios from 'axios';
 
 class ViewCards extends React.Component {

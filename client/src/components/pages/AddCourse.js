@@ -3,7 +3,7 @@ import { withRouter } from "react-router-dom"
 import { Button, Form, FormInput, FormGroup } from "shards-react";
 import './AddCourse.css';
 import axios from "axios";
-import * as withAlert from "./HOC/ComponentWithAlert";
+import * as withAlert from "../HOC/ComponentWithAlert";
 import { TiDelete } from 'react-icons/ti';
 
 class AddCourse extends Component {

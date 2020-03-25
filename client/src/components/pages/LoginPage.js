@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { FormGroup, Form,FormInput } from 'shards-react'
 import {Link,Redirect} from 'react-router-dom';
-import * as withAlert from "./HOC/ComponentWithAlert";
-import User from '../User.js';
+import * as withAlert from "../HOC/ComponentWithAlert";
+import User from '../../User.js';
 import './Loginpage.css';
 import axios from "axios";
  class LoginPage extends Component {

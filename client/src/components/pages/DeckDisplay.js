@@ -3,8 +3,8 @@ import {withRouter} from "react-router-dom"
 import { Button, Nav, NavItem } from 'shards-react';
 import axios from "axios";
 import './DeckDisplay.css';
-import * as withAlert from "./HOC/ComponentWithAlert";
-import CardDisplay from './CardDisplay';
+import * as withAlert from "../HOC/ComponentWithAlert";
+import CardDisplay from '../subcomponents/CardDisplay';
 
 
 class DeckDisplay extends Component {

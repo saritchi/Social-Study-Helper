@@ -1,17 +1,15 @@
 import React, {Component} from 'react'
 import { withRouter } from "react-router-dom"
-import { Button, Nav, NavItem, NavLink } from 'shards-react'
-import './Home.css'
-import axios from 'axios';
-import CardDisplay from './CardDisplay';
-import * as withAlert from "./HOC/ComponentWithAlert";
+import { Button } from 'shards-react'
+import './AllCourses.css'
+import axios from "axios"
+import CardDisplay from '../subcomponents/CardDisplay';
+import * as withAlert from "../HOC/ComponentWithAlert";
 
-class Home extends Component {
+class AllCourses extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            courses: [],
-        };
+        this.state = { courses: [] };
     }
 
     async componentDidMount() {
@@ -19,6 +17,7 @@ class Home extends Component {
             this.props.history.replace("/");
             return;
         }
+
         try {
             const coursesResponse = await axios.get('/api/courses', {
                 params: {
@@ -29,7 +28,7 @@ class Home extends Component {
             courses.forEach((course) => {
                 console.log(course);
             })
-            this.setState({courses: courses});
+            this.setState({courses: courses})
         } catch(error) {
             if(error.response.status === 401) {
                 this.props.history.replace("/");
@@ -47,43 +46,26 @@ class Home extends Component {
 
     deckView = (deckId, deckName) => {
         this.props.history.push({
-            pathname: '/decks',
+            pathname: '/chapters',
             state: {
                 id: deckId,
                 name: deckName
             }
         });
     }
-
-    allCoursesView = () => {
-        this.props.history.push({
-            pathname: '/allCourses',
-            state: { email: this.props.user.email }
-        });
-    }
     
     render() {
-        const username = this.props.user.fname + ' ' + this.props.user.lname;
         return (
             <div>
                 <div id="user">
-                    <h1>Welcome {username}!</h1>
+                    <h1>All Courses</h1>
                 </div>
-                <div>
-                    <Nav>
-                        <NavItem id="recentCourses">
-                            <h3>Recent Courses: </h3>
-                        </NavItem>
-                        <NavItem id="allCourses">
-                            <NavLink href='#' onClick={this.allCoursesView}>View All Courses</NavLink>
-                        </NavItem>
-                    </Nav>
-                </div>
-                <CardDisplay changePage={this.deckView} cardsInfo={this.state.courses.slice(0, 9)}/>
+                <CardDisplay changePage={this.deckView} cardsInfo={this.state.courses} />
                 <Button id="newCourse" onClick={this.addCourse}>Add New Course</Button>
             </div>
+            
             )
         }
 };
 
-export default withRouter(withAlert.withAlert(Home));
+export default withRouter(withAlert.withAlert(AllCourses));

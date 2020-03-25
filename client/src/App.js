@@ -1,18 +1,19 @@
 import React, { Component } from 'react';
 import './App.css';
-import Register from './components/Register';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import LoginPage from './components/LoginPage';
-import Home from './components/Home';
-import AllCourses from './components/AllCourses';
 
 import './App.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "shards-ui/dist/css/shards.min.css"
-import AddCourse from './components/AddCourse';
-import CreateDeck from './components/CreateDeck';
-import DeckDisplay from './components/DeckDisplay';
-import ViewCards from './components/ViewCards';
+
+import Register from './components/pages/Register';
+import LoginPage from './components/pages/LoginPage';
+import Home from './components/pages/Home';
+import AllCourses from './components/pages/AllCourses';
+import AddCourse from './components/pages/AddCourse';
+import CreateDeck from './components/pages/CreateDeck';
+import DeckDisplay from './components/pages/DeckDisplay';
+import ViewCards from './components/pages/ViewCards';
 import User from './User';
 
 const userStorageKey = 'user';
