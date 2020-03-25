@@ -1,26 +1,32 @@
 import React from "react";
 import { Dropdown,DropdownMenu,DropdownItem } from "shards-react";
 import { FiMoreVertical } from 'react-icons/fi'
+import ShareModal from './ShareModal'
 
 
 export default class OptionsDropdown extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { open: false };
+    this.state = { openMenu: false, openShareMenu: false};
   }
 
-  toggle = () => this.setState({open: !this.state.open});
+  toggle = () => this.setState({openMenu: !this.state.openMenu});
+
+  toggleShareMenu = () => this.setState({openShareMenu: !this.state.openShareMenu})
 
   render() {
     return (
-      <Dropdown open={this.state.open} toggle={this.toggle}>
+      <div>
+      <ShareModal open={this.state.openShareMenu} name={this.props.name} toggle={this.toggleShareMenu}/>
+      <Dropdown open={this.state.openMenu} toggle={this.toggle}>
         <FiMoreVertical onClick={this.toggle}/>
         <DropdownMenu>
           <DropdownItem>Edit</DropdownItem>
           <DropdownItem>Delete</DropdownItem>
-          <DropdownItem>Share</DropdownItem>
+          <DropdownItem onClick={this.toggleShareMenu}>Share</DropdownItem>
         </DropdownMenu>
       </Dropdown>
+      </div>
     );
   }
 }

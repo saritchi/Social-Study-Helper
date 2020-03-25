@@ -6,7 +6,7 @@ import OptionsDropdown from './OptionsDropdown'
 const InfoCard = (props) => {
     return (
         <Card>
-            <CardHeader><OptionsDropdown/></CardHeader>
+            <CardHeader><OptionsDropdown name={props.info} /></CardHeader>
             <CardBody onClick={() => props.changePage(props.id, props.info)}>
                 <p>{props.info}</p>
             </CardBody>

@@ -1,0 +1,13 @@
+.modal-header {
+    text-align: center;
+}
+
+.modal-body h4 {
+    text-align: left;
+    margin-bottom: 3%;
+}
+
+.shareContent {
+    margin-top: 3%;
+    float: right;
+}
