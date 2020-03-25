@@ -4,6 +4,7 @@ import { ReactMultiEmail, isEmail } from 'react-multi-email';
 import 'react-multi-email/style.css';
 import './ShareModal.css'
 
+//The code for the this was adapted from herer: https://www.npmjs.com/package/react-multi-email
 export default class ShareModal extends Component {
     state = { 
         emails: []
@@ -25,6 +26,11 @@ export default class ShareModal extends Component {
         );
     }
 
+    shareContent = () => {
+        this.props.callback(this.props.id, this.state.emails)
+        this.props.toggle();
+    }
+
     render() {
         return (
             <Modal size="lg" open={this.props.open} toggle={this.props.toggle}>
@@ -33,12 +39,13 @@ export default class ShareModal extends Component {
                 <p>Add all the emails you want to share {this.props.name} with.</p>
                 <h4>Emails:</h4>
                     <ReactMultiEmail
-                        placeholder="Enter emal addresses...."
+                        placeholder="Enter email addresses...."
                         emails={this.state.emails}
+                        onChange={(enteredEmails) => this.setState({emails: enteredEmails})}
                         validateEmail={email => isEmail(email)}
                         getLabel={this.renderEmailItem}
                     />
-                    <Button className='shareContent'>Share</Button>
+                    <Button className='shareContent' onClick={this.shareContent}>Share</Button>
             </ModalBody>
             </Modal>
         );

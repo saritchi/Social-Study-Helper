@@ -17,7 +17,7 @@ export default class OptionsDropdown extends React.Component {
   render() {
     return (
       <div>
-      <ShareModal open={this.state.openShareMenu} name={this.props.name} toggle={this.toggleShareMenu}/>
+      <ShareModal open={this.state.openShareMenu} name={this.props.name} id={this.props.id} callback={this.props.shareContentCallback} toggle={this.toggleShareMenu}/>
       <Dropdown open={this.state.openMenu} toggle={this.toggle}>
         <FiMoreVertical onClick={this.toggle}/>
         <DropdownMenu>

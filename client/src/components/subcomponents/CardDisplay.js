@@ -10,6 +10,7 @@ const CardDisplay = (props) => {
                                                        info={cardInfo.name} 
                                                        changePage={props.changePage}
                                                        options={props.options}
+                                                       shareContentCallback={props.shareContentCallback}
                                             />)}
         </div>
     )

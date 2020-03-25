@@ -33,3 +33,10 @@ module.exports.getAllForUser = async function getAllForUser(email) {
         return new Course(result.name, result.midterm, result.final, result.userEmail, result.id, result.lastAccess);
     })
 }
+
+module.exports.getFromId = async function getDeckFromId(courseId) {
+    const getDeckSQL = `SELECT * FROM Courses WHERE id = ?`;
+    const results = await database.runQuery(getDeckSQL, courseId);
+    const result = results[0]
+    return new Course(result.name, result.midterm, result.final, result.userEmail, result.id, result.lastAccess);
+}

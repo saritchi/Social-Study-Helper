@@ -11,6 +11,7 @@ class Home extends Component {
         super(props);
         this.state = {
             courses: [],
+            sharedContents: []
         };
     }
 
@@ -25,11 +26,19 @@ class Home extends Component {
                     email: this.props.user.email
                 }
             });
-            const courses = coursesResponse.data.result;
-            courses.forEach((course) => {
-                console.log(course);
+            const sharedCOntentsResponse = await axios.get('/api/sharedContent', {
+                params: {
+                    email: this.props.user.email
+                }
             })
-            this.setState({courses: courses});
+            const courses = coursesResponse.data.result;
+            console.log("Courses: ")
+            console.log(courses);
+
+            const sharedContents = sharedCOntentsResponse.data.result;
+            console.log("Shared Contents:")
+            console.log(sharedContents);
+            this.setState({courses: courses, sharedContents: sharedContents});
         } catch(error) {
             if(error.response.status === 401) {
                 this.props.history.replace("/");
@@ -41,15 +50,28 @@ class Home extends Component {
         }
     }
 
+    shareContentCallback = async (courseId, toEmails) => {
+        try {
+            await axios.post('api/share', {
+                fromEmail: this.props.user.email,
+                toEmails: toEmails,
+                courseId: courseId
+            })
+        } catch (error) {
+            console.error(error);
+            this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+        }
+    }
+
     addCourse = () => {
         this.props.history.push("/addCourse");
     }
 
-    deckView = (deckId, deckName) => {
+    deckView = (courseId, deckName) => {
         this.props.history.push({
             pathname: '/decks',
             state: {
-                id: deckId,
+                id: courseId,
                 name: deckName
             }
         });
@@ -76,7 +98,7 @@ class Home extends Component {
                         </NavItem>
                     </Nav>
                 </div>
-                <CardDisplay changePage={this.deckView} options={true} cardsInfo={this.state.courses.slice(0, 9)}/>
+                <CardDisplay changePage={this.deckView} options={true} shareContentCallback={this.shareContentCallback} cardsInfo={this.state.courses.slice(0, 9)}/>
                 <Button id="newCourse" onClick={this.addCourse}>Add New Course</Button>
                 <div id="sharedContent">
                     <Nav>
@@ -87,7 +109,7 @@ class Home extends Component {
                             <NavLink href='#' onClick={this.allCoursesView}>View All Shared Content</NavLink>
                         </NavItem>
                     </Nav>
-                    <CardDisplay changePage={this.deckView} cardsInfo={this.state.courses.slice(0, 9)}/>
+                    <CardDisplay changePage={this.deckView} cardsInfo={this.state.sharedContents.slice(0, 9)}/>
                 </div>
             </div>
             )

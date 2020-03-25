@@ -26,6 +26,8 @@ app.use('/api', require('./controllers/cards'))
 app.use('/api', require('./controllers/decks'))
 app.use('/api', require('./controllers/courses'))
 app.use('/api', require('./controllers/users'))
+app.use('/api', require('./controllers/shared-contents'))
+
 
 //TODO: error handle pages/404 pages
 /***

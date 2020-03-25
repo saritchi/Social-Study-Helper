@@ -67,6 +67,7 @@ function isValidCourseRequest(coursename, decks) {
     return coursename && !emptyDecks;
 }
 
+
 router.get('/courses', requireLogin, getCourses)
 router.post('/addCourse', requireLogin, addCourse)
 

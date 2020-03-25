@@ -105,16 +105,29 @@ class Database {
             PRIMARY KEY (id)
         );`;
 
+        const createSharedContentSQL = `CREATE TABLE  IF NOT EXISTS SharedContent(
+            id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+            fromUser VARCHAR(2000) NOT NULL,
+            toUser VARCHAR(2000) NOT NULL,
+            courseId INT NULL,
+            deckId INT NULL,
+            FOREIGN KEY (courseId)
+                REFERENCES Courses(id), 
+            FOREIGN KEY (deckId)
+                REFERENCES Decks(id)   
+        );`;
+
         const createUserTablePromise = util.promisify(this.db.query).call(this.db, createUsersTableSQL); 
         const createCourseTablePromise = util.promisify(this.db.query).call(this.db, createCoursesTableSQL); 
         const createDeckTablePromise = util.promisify(this.db.query).call(this.db, createDeckTableSQL); 
         const createCardTablePromise = util.promisify(this.db.query).call(this.db, createCardTableSQL); 
-
+        const createSharedContentTablePromise = util.promisify(this.db.query).call(this.db, createSharedContentSQL);
 
         return createUserTablePromise
                 .then(createCourseTablePromise)
                 .then(createDeckTablePromise)
                 .then(createCardTablePromise)
+                .then(createSharedContentTablePromise)
                 .catch(() => {
                     console.log("Unable to initialize database tables! Aborting server start up with error: " + error.message);
                     throw error;
