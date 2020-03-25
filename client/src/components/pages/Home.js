@@ -76,8 +76,19 @@ class Home extends Component {
                         </NavItem>
                     </Nav>
                 </div>
-                <CardDisplay changePage={this.deckView} cardsInfo={this.state.courses.slice(0, 9)}/>
+                <CardDisplay changePage={this.deckView} options={true} cardsInfo={this.state.courses.slice(0, 9)}/>
                 <Button id="newCourse" onClick={this.addCourse}>Add New Course</Button>
+                <div id="sharedContent">
+                    <Nav>
+                        <NavItem id="recentSharedContent">
+                            <h3>Recent Shared Content: </h3>
+                        </NavItem>
+                        <NavItem id="allSharedContent">
+                            <NavLink href='#' onClick={this.allCoursesView}>View All Shared Content</NavLink>
+                        </NavItem>
+                    </Nav>
+                    <CardDisplay changePage={this.deckView} cardsInfo={this.state.courses.slice(0, 9)}/>
+                </div>
             </div>
             )
         }

@@ -1,8 +1,8 @@
-#recentCourses {
+#recentCourses, #recentSharedContent {
   margin-left: 10%;
 }
 
-#allCourses {
+#allCourses, #allSharedContent {
   margin-left: auto;
   margin-right: 9%;
 }
@@ -16,4 +16,9 @@
 
 #user {
   margin: 2%;
+}
+
+#sharedContent {
+  margin-top: 10%;
+  margin-bottom: 7%;
 }

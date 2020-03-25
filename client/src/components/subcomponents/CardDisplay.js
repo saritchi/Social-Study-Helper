@@ -9,6 +9,7 @@ const CardDisplay = (props) => {
                                                        id={cardInfo.id} 
                                                        info={cardInfo.name} 
                                                        changePage={props.changePage}
+                                                       options={props.options}
                                             />)}
         </div>
     )
