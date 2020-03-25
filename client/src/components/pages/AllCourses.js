@@ -60,7 +60,7 @@ class AllCourses extends Component {
                 <div id="user">
                     <h1>All Courses</h1>
                 </div>
-                <CardDisplay changePage={this.deckView} cardsInfo={this.state.courses} />
+                <CardDisplay changePage={this.deckView} options={true} cardsInfo={this.state.courses} />
                 <Button id="newCourse" onClick={this.addCourse}>Add New Course</Button>
             </div>
             

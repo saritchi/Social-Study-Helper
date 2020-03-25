@@ -69,7 +69,7 @@ class DeckDisplay extends Component {
                         </NavItem>
                     </Nav>
                 </div>
-                <CardDisplay changePage={this.cardView} cardsInfo={this.state.decklist} />
+                <CardDisplay changePage={this.cardView} options={true} cardsInfo={this.state.decklist} />
                 <Button id="newDeck" onClick={this.addDeck}>Add New Deck</Button>
             </div>
         )
