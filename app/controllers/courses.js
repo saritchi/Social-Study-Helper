@@ -41,12 +41,12 @@ async function addCourse(req, res) {
     try {
         await runTransaction(async () => {
             const courseId = await course.create();
-            decks.map((deckname) => {
+            const deckPromises = decks.map((deckname) => {
                 const newDeck = new Deck(deckname, midterm, final, courseId);
                 return newDeck.create();
             })
             
-            await Promise.all(decks);
+            await Promise.all(deckPromises);
         })
         console.log("Add course with name: " + coursename);
         res.sendStatus(200);

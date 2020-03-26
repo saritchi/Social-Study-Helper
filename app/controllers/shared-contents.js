@@ -15,11 +15,11 @@ async function shareCourse(req, res) {
 
     try {
         
-        toUsers.map((toUser) => {
+        const sharedCoursesPromises = toUsers.map((toUser) => {
             const sharedCourse = new SharedCourse(toUser, fromUser, courseId);
             sharedCourse.create();
         })
-        await Promise.all(toUsers)
+        await Promise.all(sharedCoursesPromises)
         res.sendStatus(200);
     } catch (error) {
         console.log(`Unable to share course with id: ${courseId} from ${fromUser} to user ${toUsers}. Error: ${error.message}`)
@@ -36,12 +36,11 @@ async function shareDeck(req, res) {
     var deckId = body.id;
 
     try {
-        
-        toUsers.map((toUser) => {
+        const sharedDecksPromises = toUsers.map((toUser) => {
             const sharedDeck = new SharedDeck(toUser, fromUser, deckId);
             sharedDeck.create();
         })
-        await Promise.all(toUsers)
+        await Promise.all(sharedDecksPromises)
         res.sendStatus(200);
     } catch (error) {
         console.log(`Unable to share deck with id: ${deckId} from ${fromUser} to user ${toUsers}. Error: ${error.message}`)

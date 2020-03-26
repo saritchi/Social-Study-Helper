@@ -32,11 +32,11 @@ async function addDeck(req, res) {
     try {
         await runTransaction(async () => {
             const deckId = await deck.create();
-            cards.map((card) => {
+            const cardsPromises = cards.map((card) => {
                 const newCard = new Card(card.prompt, card.answer, deckId);
                 return newCard.create();
             })
-            await Promise.all(cards);
+            await Promise.all(cardsPromises);
         })
         res.sendStatus(200);
     } catch (error) {
