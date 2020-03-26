@@ -9,6 +9,7 @@ var authAgent = request.agent(app);
 beforeAll(async () => {
     await database.connect();
     database.initializeTablesIfNeeded();
+    //TODO: initialize good data for all get tests
 });
 
 describe('registration tests', () => {
@@ -298,6 +299,17 @@ describe('share courses tests', () => {
             .expect(404);
     })
 
+    test('should not be able to share course with yourself', async () => {
+        return authAgent
+            .post("/api/shareCourse")
+            .send({
+                fromEmail: 'test@test.com',
+                toEmails: ['test@test.com'],
+                id: 1
+            })
+            .expect(400);
+    })
+
     test('should not be able to share course when not authenticated', async () => {
         return request(app)
             .post("/api/shareCourse")
@@ -365,6 +377,17 @@ describe('share decks tests', () => {
                 id: 1
             })
             .expect(404);
+    })
+
+    test('should not be able to share deck with yourself', async () => {
+        return authAgent
+            .post("/api/shareDeck")
+            .send({
+                fromEmail: 'test@test.com',
+                toEmails: ['test@test.com'],
+                id: 1
+            })
+            .expect(400);
     })
 
     test('should not be able to share course when not authenticated', async () => {

@@ -19,6 +19,12 @@ async function shareCourse(req, res) {
     var fromEmail = body.fromEmail;
     var courseId = body.id;
 
+    if(containsCurrentUser(fromEmail, toEmails)) {
+        console.log("Attempting to share course with yourself.")
+        res.status(400).json({result: `Unable to share course with yourself. Please use a different email and try again.`})
+        return;
+    }
+
     try {
         const sharedCoursesPromises = toEmails.map(async (toEmail) => {
             const user = new User(toEmail)
@@ -52,6 +58,12 @@ async function shareDeck(req, res) {
     var fromEmail = body.fromEmail;
     var deckId = body.id;
 
+    if(containsCurrentUser(fromEmail, toEmails)) {
+        console.log("Attempting to share deck with yourself.")
+        res.status(400).json({result: `Unable to share deck with yourself. Please use a different email and try again.`})
+        return;
+    }
+
     try {
         const sharedDecksPromises = toEmails.map(async (toEmail) => {
             const user = new User(toEmail)
@@ -75,6 +87,10 @@ async function shareDeck(req, res) {
             res.status(500).json({result: "An error occurred while attempting to share that deck. Please try again later."})
         }
     }    
+}
+
+function containsCurrentUser(currentUserEmail, toEmails) {
+    return toEmails.includes(currentUserEmail)
 }
 
 async function getSharedCourses(req, res) {
