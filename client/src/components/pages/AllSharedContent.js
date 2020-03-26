@@ -21,21 +21,7 @@ class AllCourses extends Component {
         }
 
         try {
-            const sharedCoursesResponse = await axios.get('/api/sharedCourses', {
-                params: {
-                    email: this.props.user.email
-                }
-            });
-            const sharedCourses = sharedCoursesResponse.data.result;
-            console.log(sharedCourses);
-
-            const sharedDecksResponse = await axios.get('/api/sharedDecks', {
-                params: {
-                    email: this.props.user.email
-                }
-            });
-            const sharedDecks = sharedDecksResponse.data.result;
-            console.log(sharedDecks);
+            const {sharedCourses, sharedDecks} = this.getPageContent();
             this.setState({sharedCourses: sharedCourses, sharedDecks: sharedDecks})
         } catch(error) {
             if(error.response.status === 401) {
@@ -48,16 +34,44 @@ class AllCourses extends Component {
         }
     }
 
-    deckView = (deckId, deckName) => {
+    getPageContent = () => {
+        const sharedCoursesResponse = await axios.get('/api/sharedCourses', {
+            params: {
+                email: this.props.user.email
+            }
+        });
+        const sharedCourses = sharedCoursesResponse.data.result;
+        console.log(sharedCourses);
+
+        const sharedDecksResponse = await axios.get('/api/sharedDecks', {
+            params: {
+                email: this.props.user.email
+            }
+        });
+        const sharedDecks = sharedDecksResponse.data.result;
+        console.log(sharedDecks);
+
+        return {sharedCourses: sharedCourses, sharedDecks: sharedDecks}
+    }
+
+
+    /**
+     * @param {*} courseId id of the course the user is clicking
+     * @param {*} courseName name of the course the user is clicking
+     */
+    courseView = (courseId, courseName) => {
         this.props.history.push({
             pathname: '/decks',
             state: {
-                id: deckId,
-                name: deckName
+                id: courseId,
+                name: courseName
             }
         });
     }
 
+    /**
+     * @param {*} deckId id of the deck the user is clicking
+     */
     cardView = (deckId) => {
         this.props.history.push("/viewCards", {deckId});
     }
@@ -67,7 +81,7 @@ class AllCourses extends Component {
             <div>
                 <div id="sharedCourses">
                     <h1>Shared Courses</h1>
-                    <CardDisplay changePage={this.deckView} cardsInfo={this.state.sharedCourses} />
+                    <CardDisplay changePage={this.courseView} cardsInfo={this.state.sharedCourses} />
                 </div>
                 <div id="sharedDecks">
                     <h1>Shared Decks</h1>

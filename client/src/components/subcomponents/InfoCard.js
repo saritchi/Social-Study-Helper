@@ -5,8 +5,13 @@ import OptionsDropdown from './OptionsDropdown'
 
 const InfoCard = (props) => {
     return (
+        //Render the card and if needed render the header with a vertical dropdown icon
         <Card>
-            { props.options && <CardHeader><OptionsDropdown name={props.info} id={props.id} shareContentCallback={props.shareContentCallback} /></CardHeader> }
+            { props.options && 
+                <CardHeader>
+                    <OptionsDropdown name={props.info} id={props.id}
+                    shareContentCallback={props.shareContentCallback} />
+                </CardHeader> }
             <CardBody onClick={() => props.changePage(props.id, props.info)}>
                 <p>{props.info}</p>
             </CardBody>

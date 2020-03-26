@@ -17,15 +17,17 @@ export default class OptionsDropdown extends Component {
   render() {
     return (
       <div>
-      <ShareModal open={this.state.openShareMenu} name={this.props.name} id={this.props.id} callback={this.props.shareContentCallback} toggle={this.toggleShareMenu}/>
-      <Dropdown open={this.state.openMenu} toggle={this.toggle}>
-        <FiMoreVertical onClick={this.toggle}/>
-        <DropdownMenu>
-          <DropdownItem>Edit</DropdownItem>
-          <DropdownItem>Delete</DropdownItem>
-          <DropdownItem onClick={this.toggleShareMenu}>Share</DropdownItem>
-        </DropdownMenu>
-      </Dropdown>
+        <ShareModal open={this.state.openShareMenu} name={this.props.name} 
+                    id={this.props.id} callback={this.props.shareContentCallback} 
+                    toggle={this.toggleShareMenu}/>
+        <Dropdown open={this.state.openMenu} toggle={this.toggle}>
+          <FiMoreVertical onClick={this.toggle}/>
+          <DropdownMenu>
+            <DropdownItem>Edit</DropdownItem>
+            <DropdownItem>Delete</DropdownItem>
+            <DropdownItem onClick={this.toggleShareMenu}>Share</DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
       </div>
     );
   }

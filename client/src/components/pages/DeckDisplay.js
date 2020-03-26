@@ -43,6 +43,10 @@ class DeckDisplay extends Component {
         }
     }
 
+    /**
+     * @param {*} deckId id of the course to share
+     * @param {*} toEmails an Array of emails of users to share the course with 
+     */
     shareDeckCallback = async (deckId, toEmails) => {
         try {
             await axios.post('api/shareDeck', {
@@ -65,6 +69,9 @@ class DeckDisplay extends Component {
         });
     }
 
+     /**
+     * @param {*} deckId id of the deck the user is clicking
+     */
     cardView = (deckId) => {
         this.props.history.push("/viewCards", {deckId});
     }
