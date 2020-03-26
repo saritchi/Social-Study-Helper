@@ -66,14 +66,17 @@ class Home extends Component {
     /**
      * @param {*} courseId id of the course to share
      * @param {*} toEmails an Array of emails of users to share the course with 
+     * @returns {*} boolean if the callback succeeded
      */
-    shareCourseCallback = async (courseId, toEmails) => {
+    shareCourseCallback = async (courseId, toEmails, courseName) => {
         try {
             await axios.post('api/shareCourse', {
                 fromEmail: this.props.user.email,
                 toEmails: toEmails,
                 id: courseId
             })
+            const users = toEmails.join(', ')
+            this.props.showAlert(withAlert.successTheme, `Shared ${courseName} with ${users}.` )
         } catch (error) {
             console.error(error);
             this.props.showAlert(withAlert.errorTheme, error.response.data.result);

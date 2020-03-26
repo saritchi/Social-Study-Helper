@@ -28,7 +28,7 @@ export default class ShareModal extends Component {
 
     //when pressing the share button send the request to the server and close the modal
     shareContent = () => {
-        this.props.callback(this.props.id, this.state.emails)
+        this.props.callback(this.props.id, this.state.emails, this.props.name)
         this.props.toggle();
     }
 

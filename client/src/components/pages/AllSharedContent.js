@@ -34,7 +34,7 @@ class AllCourses extends Component {
         }
     }
 
-    getPageContent = () => {
+    getPageContent = async () => {
         const sharedCoursesResponse = await axios.get('/api/sharedCourses', {
             params: {
                 email: this.props.user.email

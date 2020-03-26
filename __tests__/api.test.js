@@ -249,6 +249,18 @@ describe('view cards tests', () => {
 })
 
 describe('share courses tests', () => {
+    //create the second user.
+    beforeAll(() => {
+        return request(app)
+        .post("/api/register")
+        .send({
+            email: "test2@test.com",
+            password: "test2",
+            fname: "super",
+            lname: "test2",
+        })
+    })
+
     test('should be able to share course', async () => {
         return authAgent
             .post("/api/shareCourse")
@@ -275,6 +287,17 @@ describe('share courses tests', () => {
             }]})
     })
 
+    test('should not be able to share course when the toEmail does not exist', async () => {
+        return authAgent
+            .post("/api/shareCourse")
+            .send({
+                fromEmail: 'test@test.com',
+                toEmails: ['notreal@noemail.com'],
+                id: 1
+            })
+            .expect(404);
+    })
+
     test('should not be able to share course when not authenticated', async () => {
         return request(app)
             .post("/api/shareCourse")
@@ -295,12 +318,23 @@ describe('share courses tests', () => {
 })
 
 describe('share decks tests', () => {
+    beforeAll(() => {
+        return request(app)
+        .post("/api/register")
+        .send({
+            email: "test3@test.com",
+            password: "test3",
+            fname: "super",
+            lname: "test3",
+        })
+    })
+
     test('should be able to share deck', async () => {
         return authAgent
             .post("/api/shareDeck")
             .send({
                 fromEmail: 'test@test.com',
-                toEmails: ['test2@test.com'],
+                toEmails: ['test3@test.com'],
                 id: 1
             })
             .expect(200)
@@ -309,7 +343,7 @@ describe('share decks tests', () => {
     test('should be able to get shared courses', async () => {
         return authAgent
             .get("/api/sharedDecks")
-            .query({email: "test2@test.com"})
+            .query({email: "test3@test.com"})
             .expect(200)
             .expect({result: [{
                 id: 1,
@@ -322,12 +356,23 @@ describe('share decks tests', () => {
             }]})
     })
 
+    test('should not be able to share deck when the toEmail does not exist', async () => {
+        return authAgent
+            .post("/api/shareDeck")
+            .send({
+                fromEmail: 'test@test.com',
+                toEmails: ['notreal@noemail.com'],
+                id: 1
+            })
+            .expect(404);
+    })
+
     test('should not be able to share course when not authenticated', async () => {
         return request(app)
             .post("/api/shareDeck")
             .send({
                 fromEmail: 'test@test.com',
-                toEmails: ['test2@test.com'],
+                toEmails: ['test3@test.com'],
                 id: 1
             })
             .expect(401);
@@ -336,7 +381,7 @@ describe('share decks tests', () => {
     test('should not be able to get shared courses when not authenticated', async () => {
         return request(app)
             .get("/api/sharedDecks")
-            .query({email: "test2@test.com"})
+            .query({email: "test3@test.com"})
             .expect(401);
     })
 })
