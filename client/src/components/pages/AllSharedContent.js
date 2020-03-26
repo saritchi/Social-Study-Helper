@@ -36,7 +36,7 @@ class AllCourses extends Component {
             });
             const sharedDecks = sharedDecksResponse.data.result;
             console.log(sharedDecks);
-            this.setState({sharedDecks: sharedDecks})
+            this.setState({sharedCourses: sharedCourses, sharedDecks: sharedDecks})
         } catch(error) {
             if(error.response.status === 401) {
                 this.props.history.replace("/");
@@ -67,11 +67,11 @@ class AllCourses extends Component {
             <div>
                 <div id="sharedCourses">
                     <h1>Shared Courses</h1>
-                    <CardDisplay changePage={this.deckView} cardsInfo={this.state.courses} />
+                    <CardDisplay changePage={this.deckView} cardsInfo={this.state.sharedCourses} />
                 </div>
                 <div id="sharedDecks">
                     <h1>Shared Decks</h1>
-                    <CardDisplay changePage={this.cardView} cardsInfo={this.state.courses} />
+                    <CardDisplay changePage={this.cardView} cardsInfo={this.state.sharedDecks} />
                 </div>
             </div>
             )

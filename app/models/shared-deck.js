@@ -33,6 +33,6 @@ module.exports.getForUser = async function getForUser(email, limit) {
 
     const results = await database.runQuery(getSharedDecksSQL, email);
     return results.map((result) => {
-        return new SharedDeck(result.toUser, result.fromUser, result.deckId);
+        return new SharedDeck(result.toUser, result.fromUser, result.deckId, result.id);
     })
 }

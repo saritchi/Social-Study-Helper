@@ -4,7 +4,7 @@ import { ReactMultiEmail, isEmail } from 'react-multi-email';
 import 'react-multi-email/style.css';
 import './ShareModal.css'
 
-//The code for the this was adapted from herer: https://www.npmjs.com/package/react-multi-email
+//The code for this was adapted from herer: https://www.npmjs.com/package/react-multi-email
 export default class ShareModal extends Component {
     state = { 
         emails: []

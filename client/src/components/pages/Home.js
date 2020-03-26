@@ -63,7 +63,7 @@ class Home extends Component {
         return {courses: courses, sharedCourses: sharedCourses, sharedDecks: sharedDecks}
     }
 
-    shareContentCallback = async (courseId, toEmails) => {
+    shareCourseCallback = async (courseId, toEmails) => {
         try {
             await axios.post('api/shareCourse', {
                 fromEmail: this.props.user.email,
@@ -97,6 +97,10 @@ class Home extends Component {
     allCoursesView = () => {
         this.props.history.push('/allCourses')
     }
+
+    allSharedContentView = () => {
+        this.props.history.push('/allSharedContent')
+    }
     
     render() {
         const username = this.props.user.fname + ' ' + this.props.user.lname;
@@ -115,7 +119,7 @@ class Home extends Component {
                         </NavItem>
                     </Nav>
                 </div>
-                <CardDisplay changePage={this.deckView} options={true} shareContentCallback={this.shareContentCallback} cardsInfo={this.state.courses}/>
+                <CardDisplay changePage={this.deckView} options={true} shareContentCallback={this.shareCourseCallback} cardsInfo={this.state.courses}/>
                 <Button id="newCourse" onClick={this.addCourse}>Add New Course</Button>
                 <div id="sharedCourses">
                     <Nav>
@@ -123,7 +127,7 @@ class Home extends Component {
                             <h3>Recent Shared Courses: </h3>
                         </NavItem>
                         <NavItem id="allSharedContent">
-                            <NavLink href='#' onClick={this.allCoursesView}>View All Shared Content</NavLink>
+                            <NavLink href='#' onClick={this.allSharedContentView}>View All Shared Content</NavLink>
                         </NavItem>
                     </Nav>
                     <CardDisplay changePage={this.deckView} cardsInfo={this.state.sharedCourses}/>
@@ -134,7 +138,7 @@ class Home extends Component {
                                 <h3>Recent Shared Decks: </h3>
                         </NavItem>
                     </Nav>
-                    <CardDisplay changePage={this.cardView} cardsInfo={this.state.courses}/>
+                    <CardDisplay changePage={this.cardView} cardsInfo={this.state.sharedDecks}/>
                 </div>
             </div>
             )

@@ -1,13 +1,13 @@
 var router = require('express').Router();
 var SharedCourse = require('../models/shared-course')
-var SharedDecks = require('../models/shared-deck')
+var SharedDeck = require('../models/shared-deck')
 var Course = require('../models/course');
 var Deck = require('../models/deck');
 var requireLogin = require('../middleware/authentication');
 
 //TODO error check that the content hasn't already been shared
 async function shareCourse(req, res) {
-    console.log("Getting shared courses")
+    console.log("Sharing courses")
     var body = req.body;
     var toUsers = body.toEmails;
     var fromUser = body.fromEmail;
@@ -28,8 +28,8 @@ async function shareCourse(req, res) {
 }
 
 //TODO error check that the content hasn't already been shared
-async function sharedDeck(req, res) {
-    console.log("Getting shared decks")
+async function shareDeck(req, res) {
+    console.log("Sharing decks")
     var body = req.body;
     var toUsers = body.toEmails;
     var fromUser = body.fromEmail;
@@ -38,7 +38,7 @@ async function sharedDeck(req, res) {
     try {
         
         toUsers.map((toUser) => {
-            const sharedDeck = new SharedDecks(toUser, fromUser, deckId);
+            const sharedDeck = new SharedDeck(toUser, fromUser, deckId);
             sharedDeck.create();
         })
         await Promise.all(toUsers)
@@ -50,7 +50,7 @@ async function sharedDeck(req, res) {
 }
 
 async function getSharedCourses(req, res) {
-    console.log("Getting shared content for user....");
+    console.log("Getting shared courses for user....");
     var userEmail = req.query.email;
     var limit = req.query.limit
 
@@ -67,13 +67,15 @@ async function getSharedCourses(req, res) {
 }
 
 async function getSharedDecks(req, res) {
-  console.log("Getting shared content for user....");
+  console.log("Getting shared decks for user....");
   var userEmail = req.query.email;
   var limit = req.query.limit
 
   try {
-      const sharedDecks = await SharedDecks.getForUser(userEmail, limit);
-      const sharedDeckPromises = sharedDecks.map((sharedDeck) =>  Deck.getFromId(sharedDeck.courseId))
+      const sharedDecks = await SharedDeck.getForUser(userEmail, limit);
+      const sharedDeckPromises = sharedDecks.map((sharedDeck) => {
+        return Deck.getFromId(sharedDeck.deckId)
+      })
       const decks = await Promise.all(sharedDeckPromises)
       console.log(decks);
       res.status(200).json({result: decks});
@@ -85,7 +87,7 @@ async function getSharedDecks(req, res) {
 
 
 router.post('/shareCourse', requireLogin, shareCourse)
-router.post('/shareDecks', requireLogin, sharedDeck)
+router.post('/shareDeck', requireLogin, shareDeck)
 router.get('/sharedCourses', requireLogin, getSharedCourses)
 router.get('/sharedDecks', requireLogin, getSharedDecks)
 

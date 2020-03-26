@@ -43,6 +43,20 @@ class DeckDisplay extends Component {
         }
     }
 
+    shareDeckCallback = async (deckId, toEmails) => {
+        try {
+            await axios.post('api/shareDeck', {
+                fromEmail: this.props.user.email,
+                toEmails: toEmails,
+                id: deckId
+            })
+        } catch (error) {
+            console.error(error);
+            this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+        }
+    }
+
+
     addDeck = () => {
         this.props.history.push(
         {
@@ -69,7 +83,7 @@ class DeckDisplay extends Component {
                         </NavItem>
                     </Nav>
                 </div>
-                <CardDisplay changePage={this.cardView} options={true} cardsInfo={this.state.decklist} />
+                <CardDisplay changePage={this.cardView} options={true} shareContentCallback={this.shareDeckCallback} cardsInfo={this.state.decklist} />
                 <Button id="newDeck" onClick={this.addDeck}>Add New Deck</Button>
             </div>
         )
