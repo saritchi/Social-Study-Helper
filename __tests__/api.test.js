@@ -224,7 +224,7 @@ describe('add card tests', () => {
 })
 
 describe('view cards tests', () => {
-    test('should be get cards', async () => {
+    test('should be able to get cards', async () => {
         return authAgent
             .get("/api/viewCards")
             .query({id: '3'})
@@ -248,8 +248,99 @@ describe('view cards tests', () => {
     })
 })
 
-// //Currently using --forceExit to fix a open handle warning from jest. This warning occurs
-// //despite the fact that the database closes
+describe('share courses tests', () => {
+    test('should be able to share course', async () => {
+        return authAgent
+            .post("/api/shareCourse")
+            .send({
+                fromEmail: 'test@test.com',
+                toEmails: ['test2@test.com'],
+                id: 1
+            })
+            .expect(200)
+    })
+
+    test('should be able to get shared courses', async () => {
+        return authAgent
+            .get("/api/sharedCourses")
+            .query({email: "test2@test.com"})
+            .expect(200)
+            .expect({result: [{
+                id: 1,
+                name: "test course",
+                lastAccess: null,
+                midterm: false,
+                final: false,
+                userEmail: "test@test.com"
+            }]})
+    })
+
+    test('should not be able to share course when not authenticated', async () => {
+        return request(app)
+            .post("/api/shareCourse")
+            .send({
+                fromEmail: 'test@test.com',
+                toEmails: ['test2@test.com'],
+                id: 1
+            })
+            .expect(401);
+    })
+
+    test('should not be able to get shared courses when not authenticated', async () => {
+        return request(app)
+            .get("/api/sharedCourses")
+            .query({email: "test2@test.com"})
+            .expect(401);
+    })
+})
+
+describe('share decks tests', () => {
+    test('should be able to share deck', async () => {
+        return authAgent
+            .post("/api/shareDeck")
+            .send({
+                fromEmail: 'test@test.com',
+                toEmails: ['test2@test.com'],
+                id: 1
+            })
+            .expect(200)
+    })
+
+    test('should be able to get shared courses', async () => {
+        return authAgent
+            .get("/api/sharedDecks")
+            .query({email: "test2@test.com"})
+            .expect(200)
+            .expect({result: [{
+                id: 1,
+                name: "test deck 1",
+                lastAccess: null,
+                lastStudy: null,
+                midterm: false,
+                final: false,
+                courseId: 1
+            }]})
+    })
+
+    test('should not be able to share course when not authenticated', async () => {
+        return request(app)
+            .post("/api/shareDeck")
+            .send({
+                fromEmail: 'test@test.com',
+                toEmails: ['test2@test.com'],
+                id: 1
+            })
+            .expect(401);
+    })
+
+    test('should not be able to get shared courses when not authenticated', async () => {
+        return request(app)
+            .get("/api/sharedDecks")
+            .query({email: "test2@test.com"})
+            .expect(401);
+    })
+})
+
 afterAll(async () => {
     return database.close();
 });
