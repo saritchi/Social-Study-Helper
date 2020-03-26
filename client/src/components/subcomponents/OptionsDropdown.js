@@ -1,10 +1,10 @@
-import React from "react";
+import React, { Component } from "react";
 import { Dropdown,DropdownMenu,DropdownItem } from "shards-react";
 import { FiMoreVertical } from 'react-icons/fi'
 import ShareModal from './ShareModal'
 
 
-export default class OptionsDropdown extends React.Component {
+export default class OptionsDropdown extends Component {
   constructor(props) {
     super(props);
     this.state = { openMenu: false, openShareMenu: false};

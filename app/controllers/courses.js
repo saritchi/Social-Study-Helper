@@ -5,12 +5,12 @@ var runTransaction = require('../database/helper');
 var requireLogin = require('../middleware/authentication');
 
 async function getCourses(req, res) {
-      //TODO: endpoint will need a query paremeter for the number of courses.
     console.log("Getting courses....");
     var userEmail = req.query.email;
+    var limit = req.query.limit
 
     try {
-        const courses = await Course.getAllForUser(userEmail);
+        const courses = await Course.getCoursesFourUser(userEmail, limit);
         console.log(courses);
         res.status(200).json({result: courses});
     } catch (error) {

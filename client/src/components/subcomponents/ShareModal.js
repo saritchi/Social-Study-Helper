@@ -36,7 +36,7 @@ export default class ShareModal extends Component {
             <Modal size="lg" open={this.props.open} toggle={this.props.toggle}>
             <ModalHeader>Share with others</ModalHeader>
             <ModalBody>
-                <p>Add all the emails you want to share {this.props.name} with.</p>
+                <p>Enter all the emails you want to share {this.props.name} with.</p>
                 <h4>Emails:</h4>
                     <ReactMultiEmail
                         placeholder="Enter email addresses...."

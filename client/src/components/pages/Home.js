@@ -11,8 +11,10 @@ class Home extends Component {
         super(props);
         this.state = {
             courses: [],
-            sharedContents: []
+            sharedCourses: [],
+            sharedDecks: []
         };
+        this.displayLimit = 9
     }
 
     async componentDidMount() {
@@ -21,24 +23,8 @@ class Home extends Component {
             return;
         }
         try {
-            const coursesResponse = await axios.get('/api/courses', {
-                params: {
-                    email: this.props.user.email
-                }
-            });
-            const sharedCOntentsResponse = await axios.get('/api/sharedContent', {
-                params: {
-                    email: this.props.user.email
-                }
-            })
-            const courses = coursesResponse.data.result;
-            console.log("Courses: ")
-            console.log(courses);
-
-            const sharedContents = sharedCOntentsResponse.data.result;
-            console.log("Shared Contents:")
-            console.log(sharedContents);
-            this.setState({courses: courses, sharedContents: sharedContents});
+            const {courses, sharedCourses, sharedDecks} = await this.getPageContent();
+            this.setState({courses: courses, sharedCourses: sharedCourses, sharedDecks: sharedDecks});
         } catch(error) {
             if(error.response.status === 401) {
                 this.props.history.replace("/");
@@ -50,12 +36,39 @@ class Home extends Component {
         }
     }
 
+    getPageContent = async() => {
+        const coursesResponse = await axios.get('/api/courses', {
+            params: {
+                email: this.props.user.email,
+                limit: this.displayLimit
+            }
+        });
+        const sharedCoursesResponse = await axios.get('/api/sharedCourses', {
+            params: {
+                email: this.props.user.email,
+                limit: this.displayLimit
+            }
+        })
+        const sharedDecksResponse = await axios.get('/api/sharedDecks', {
+            params: {
+                email: this.props.user.email,
+                limit: this.displayLimit
+            }
+        })
+
+        const courses = coursesResponse.data.result;
+        const sharedCourses = sharedCoursesResponse.data.result;
+        const sharedDecks = sharedDecksResponse.data.result
+
+        return {courses: courses, sharedCourses: sharedCourses, sharedDecks: sharedDecks}
+    }
+
     shareContentCallback = async (courseId, toEmails) => {
         try {
-            await axios.post('api/share', {
+            await axios.post('api/shareCourse', {
                 fromEmail: this.props.user.email,
                 toEmails: toEmails,
-                courseId: courseId
+                id: courseId
             })
         } catch (error) {
             console.error(error);
@@ -75,6 +88,10 @@ class Home extends Component {
                 name: deckName
             }
         });
+    }
+
+    cardView = (deckId) => {
+        this.props.history.push("/viewCards", {deckId});
     }
 
     allCoursesView = () => {
@@ -98,18 +115,26 @@ class Home extends Component {
                         </NavItem>
                     </Nav>
                 </div>
-                <CardDisplay changePage={this.deckView} options={true} shareContentCallback={this.shareContentCallback} cardsInfo={this.state.courses.slice(0, 9)}/>
+                <CardDisplay changePage={this.deckView} options={true} shareContentCallback={this.shareContentCallback} cardsInfo={this.state.courses}/>
                 <Button id="newCourse" onClick={this.addCourse}>Add New Course</Button>
-                <div id="sharedContent">
+                <div id="sharedCourses">
                     <Nav>
-                        <NavItem id="recentSharedContent">
-                            <h3>Recent Shared Content: </h3>
+                        <NavItem id="recentSharedCourses">
+                            <h3>Recent Shared Courses: </h3>
                         </NavItem>
                         <NavItem id="allSharedContent">
                             <NavLink href='#' onClick={this.allCoursesView}>View All Shared Content</NavLink>
                         </NavItem>
                     </Nav>
-                    <CardDisplay changePage={this.deckView} cardsInfo={this.state.sharedContents.slice(0, 9)}/>
+                    <CardDisplay changePage={this.deckView} cardsInfo={this.state.sharedCourses}/>
+                </div>
+                <div id="sharedDecks">
+                    <Nav>
+                        <NavItem id="recentSharedDecks">
+                                <h3>Recent Shared Decks: </h3>
+                        </NavItem>
+                    </Nav>
+                    <CardDisplay changePage={this.cardView} cardsInfo={this.state.courses}/>
                 </div>
             </div>
             )

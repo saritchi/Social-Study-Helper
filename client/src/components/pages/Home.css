@@ -1,4 +1,4 @@
-#recentCourses, #recentSharedContent {
+#recentCourses, #recentSharedCourses, #recentSharedDecks {
   margin-left: 10%;
 }
 
@@ -15,10 +15,14 @@
 }
 
 #user {
-  margin: 2%;
+  margin: 5%;
 }
 
-#sharedContent {
+#sharedCourses {
   margin-top: 10%;
-  margin-bottom: 7%;
+}
+
+#sharedDecks {
+  margin-top: 5%;
+  margin-bottom: 5%;
 }

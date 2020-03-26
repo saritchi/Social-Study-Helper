@@ -105,14 +105,20 @@ class Database {
             PRIMARY KEY (id)
         );`;
 
-        const createSharedContentSQL = `CREATE TABLE  IF NOT EXISTS SharedContent(
+        const createSharedCoursesSQL = `CREATE TABLE  IF NOT EXISTS SharedCourses(
             id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
             fromUser VARCHAR(2000) NOT NULL,
             toUser VARCHAR(2000) NOT NULL,
             courseId INT NULL,
-            deckId INT NULL,
             FOREIGN KEY (courseId)
-                REFERENCES Courses(id), 
+                REFERENCES Courses(id)  
+        );`;
+
+        const createSharedDecksSQL = `CREATE TABLE  IF NOT EXISTS SharedDecks(
+            id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+            fromUser VARCHAR(2000) NOT NULL,
+            toUser VARCHAR(2000) NOT NULL,
+            deckId INT NULL,
             FOREIGN KEY (deckId)
                 REFERENCES Decks(id)   
         );`;
@@ -121,13 +127,15 @@ class Database {
         const createCourseTablePromise = util.promisify(this.db.query).call(this.db, createCoursesTableSQL); 
         const createDeckTablePromise = util.promisify(this.db.query).call(this.db, createDeckTableSQL); 
         const createCardTablePromise = util.promisify(this.db.query).call(this.db, createCardTableSQL); 
-        const createSharedContentTablePromise = util.promisify(this.db.query).call(this.db, createSharedContentSQL);
+        const createSharedCoursesTablePromise = util.promisify(this.db.query).call(this.db, createSharedCoursesSQL);
+        const createSharedDecksTablePromise = util.promisify(this.db.query).call(this.db, createSharedDecksSQL);
 
         return createUserTablePromise
                 .then(createCourseTablePromise)
                 .then(createDeckTablePromise)
                 .then(createCardTablePromise)
-                .then(createSharedContentTablePromise)
+                .then(createSharedCoursesTablePromise)
+                .then(createSharedDecksTablePromise)
                 .catch(() => {
                     console.log("Unable to initialize database tables! Aborting server start up with error: " + error.message);
                     throw error;
