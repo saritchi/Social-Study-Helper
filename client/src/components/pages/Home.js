@@ -13,7 +13,6 @@ class Home extends Component {
             courses: [],
             sharedCourses: [],
             sharedDecks: [],
-            sharedUsers: []
         };
         this.displayLimit = 9
     }
@@ -73,11 +72,11 @@ class Home extends Component {
         //find the user each course has been shared with and add them to the course object
         courses.forEach((course) => {
             const users = sharedUsers.filter((sharedUser) => sharedUser.courseId === course.id).map((sharedUser) => {
-                return {id: sharedUser.id, email: sharedUser.toUser}
+                return {sharedId: sharedUser.id, email: sharedUser.toUser}
             });
             course['sharedWith'] = users;
         })
-        return {courses: courses, sharedCourses: sharedCourses, sharedDecks: sharedDecks, sharedUsers: sharedUsers}
+        return {courses: courses, sharedCourses: sharedCourses, sharedDecks: sharedDecks}
     }
 
     /**
@@ -87,18 +86,30 @@ class Home extends Component {
      */
     shareCourseCallback = async (courseId, toEmails, courseName) => {
         try {
-            await axios.post('api/shareCourse', {
+            const sharedContentResponse = await axios.post('api/shareCourse', {
                 fromEmail: this.props.user.email,
                 toEmails: toEmails,
                 id: courseId
             })
+            const sharedContent = sharedContentResponse.data.result;
+
+            this.addUsersToSharedWith(sharedContent, courseId);
             const users = toEmails.join(', ')
-            //TODO: update state
             this.props.showAlert(withAlert.successTheme, `Shared ${courseName} with ${users}.` )
         } catch (error) {
             console.error(error);
             this.props.showAlert(withAlert.errorTheme, error.response.data.result);
         }
+    }
+
+    addUsersToSharedWith = (sharedContent, courseId) => {
+        var courses = this.state.courses;
+        var courseIndex = courses.findIndex(course => course.id === courseId);
+        var  users = sharedContent.map((content) => {
+            return {sharedId: content.id, email: content.toUser}
+        })
+        courses[courseIndex].sharedWith = courses[courseIndex].sharedWith.concat(users);
+        this.setState({courses: courses});
     }
 
     /**

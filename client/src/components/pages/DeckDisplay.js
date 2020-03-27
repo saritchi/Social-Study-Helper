@@ -57,7 +57,7 @@ class DeckDisplay extends Component {
         //find the user each deck has been shared with and add them to the deck object
         decklist.forEach((deck) => {
             const users = sharedUsers.filter((sharedUser) => sharedUser.deckId === deck.id).map((sharedUser) => {
-                return {id: sharedUser.id, email: sharedUser.toUser}
+                return {sharedId: sharedUser.id, email: sharedUser.toUser}
             });
             deck['sharedWith'] = users;
         })
@@ -73,18 +73,31 @@ class DeckDisplay extends Component {
      */
     shareDeckCallback = async (deckId, toEmails, deckName) => {
         try {
-            await axios.post('api/shareDeck', {
+            const sharedContentResponse = await axios.post('api/shareDeck', {
                 fromEmail: this.props.user.email,
                 toEmails: toEmails,
                 id: deckId
             })
+            
+            const sharedContent = sharedContentResponse.data.result;
+            this.addUsersToSharedWith(sharedContent, deckId)
+            
             const users = toEmails.join(', ')
-            //TODO: update state
             this.props.showAlert(withAlert.successTheme, `Shared ${deckName} with ${users}.` )
         } catch (error) {
             console.error(error);
             this.props.showAlert(withAlert.errorTheme, error.response.data.result);
         }
+    }
+
+    addUsersToSharedWith = (sharedContent, deckId) => {
+        var decklist = this.state.decklist;
+        var deckIndex = decklist.findIndex(deck => deck.id === deckId);
+        var  users = sharedContent.map((content) => {
+            return {sharedId: content.id, email: content.toUser}
+        })
+        decklist[deckIndex].sharedWith = decklist[deckIndex].sharedWith.concat(users);
+        this.setState({decklist: decklist});
     }
 
       /**

@@ -14,7 +14,7 @@ class SharedDeck {
 
     async create() {
         const addCourseSQL = `INSERT INTO SharedDecks(toUser, fromUser, deckId) VALUES(?, ?, ?)`;
-        await database.runQuery(addCourseSQL, [this.toUser, this.fromUser, this.deckId]);
+        return (await database.runQuery(addCourseSQL, [this.toUser, this.fromUser, this.deckId])).insertId;
     }
 }
 

@@ -17,7 +17,8 @@ export default class OptionsDropdown extends Component {
   render() {
     return (
       <div>
-        <ShareModal open={this.state.openShareMenu} 
+        <ShareModal key={this.props.sharedWithUsers}
+                    open={this.state.openShareMenu} 
                     name={this.props.name} 
                     id={this.props.id} 
                     sharedContentCallback={this.props.shareContentCallback}

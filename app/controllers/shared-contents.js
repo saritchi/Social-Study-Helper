@@ -34,11 +34,13 @@ async function shareCourse(req, res) {
                 throw new UserDoesNotExistError(toEmail, `User ${toEmail} does not exist.`);
             }
 
-            const sharedCourse = new SharedCourse(toEmail, fromEmail, courseId);
-            sharedCourse.create();
+            var sharedCourse = new SharedCourse(toEmail, fromEmail, courseId);
+            sharedCourse.id = await sharedCourse.create();
+            return sharedCourse;
         })
-        await Promise.all(sharedCoursesPromises)
-        res.sendStatus(200);
+        const sharedCourses = await Promise.all(sharedCoursesPromises)
+        console.log(sharedCourses);
+        res.status(200).json({result: sharedCourses});
     } catch (error) {
         if (error instanceof UserDoesNotExistError) {
             console.log(`Unable to share course with id: ${courseId} from ${fromEmail} to users ${toEmails}. Error: ${error.message}`)
@@ -73,11 +75,13 @@ async function shareDeck(req, res) {
                 throw new DeckDoesNotExistError(toEmail, `User ${toEmail} does not exist.`);
             }
 
-            const sharedDeck = new SharedDeck(toEmail, fromEmail, deckId);
-            sharedDeck.create();
+            var sharedDeck = new SharedDeck(toEmail, fromEmail, deckId);
+            sharedDeck.id = await sharedDeck.create();
+            return sharedDeck;
         })
-        await Promise.all(sharedDecksPromises)
-        res.sendStatus(200);
+        
+        const sharedDecks = await Promise.all(sharedDecksPromises)
+        res.status(200).json({result: sharedDecks});
     } catch (error) {
         if (error instanceof DeckDoesNotExistError) {
             console.log(`Unable to share deck with id: ${deckId} from ${fromEmail} to users ${toEmails}. Error: ${error.message}`)

@@ -14,7 +14,7 @@ class SharedCourse {
 
     async create() {
         const addCourseSQL = `INSERT INTO SharedCourses(toUser, fromUser, courseId) VALUES(?, ?, ?)`;
-        await database.runQuery(addCourseSQL, [this.toUser, this.fromUser, this.courseId]);
+        return (await database.runQuery(addCourseSQL, [this.toUser, this.fromUser, this.courseId])).insertId;
     }
 }
 

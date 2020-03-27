@@ -271,6 +271,14 @@ describe('share courses tests', () => {
                 id: 1
             })
             .expect(200)
+            .expect({ result: 
+                [{
+                    toUser: 'test2@test.com',
+                    fromUser: 'test@test.com',
+                    courseId: 1,
+                    id: 1
+                }]
+            })
     })
 
     test('should be able to get shared courses', async () => {
@@ -350,6 +358,15 @@ describe('share decks tests', () => {
                 id: 1
             })
             .expect(200)
+            .expect({ result: 
+                [{
+
+                    toUser: 'test3@test.com',
+                    fromUser: 'test@test.com',
+                    deckId: 1,
+                    id: 1
+                }]
+            })
     })
 
     test('should be able to get shared courses', async () => {

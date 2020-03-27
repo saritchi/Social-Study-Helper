@@ -38,17 +38,16 @@ class ShareModal extends Component {
 
     renderUserAccessList = () => {
         return this.state.sharedWithUsers.map((user) => {
-            return <ListGroupItem key={user.id}>{user.email}<MdClear onClick={() => this.removeUser(user.id)} className="removeUser"/></ListGroupItem>
+            return <ListGroupItem key={user.sharedId}>{user.email}<MdClear onClick={() => this.removeUser(user.sharedId)} className="removeUser"/></ListGroupItem>
         })
     }
 
     removeUser = async (id) => {
         const success = await this.props.removeSharedContentCallback(id)
         if (success) {
-            const removeIndex = this.state.sharedWithUsers.map((user) => user.id).indexOf(id);
+            const removeIndex = this.state.sharedWithUsers.map((user) => user.sharedId).indexOf(id);
             var updatedSharedWithUsers = this.state.sharedWithUsers;
-
-            delete updatedSharedWithUsers[removeIndex]
+            updatedSharedWithUsers.splice(removeIndex, 1);
             this.setState({sharedWithUsers: updatedSharedWithUsers})
         }
     }
@@ -59,6 +58,9 @@ class ShareModal extends Component {
     }
 
     render() {
+        console.log("Share modal state: ");
+        console.log(this.state.sharedWithUsers);
+        console.log(this.props.sharedWithUsers);
         return (
             <Modal size="lg" open={this.props.open} toggle={this.props.toggle}>
             <ModalHeader>Share {this.props.name} with others</ModalHeader>
@@ -76,7 +78,7 @@ class ShareModal extends Component {
                         validateEmail={this.validateEmail}
                         getLabel={this.renderEmailItem}
                     />
-                    <Button className='shareContent' onClick={this.shareContent}>Share</Button>
+                    <Button className='shareContent' onClick={() => this.shareContent()}>Share</Button>
                 </div>
             </ModalBody>
             </Modal>
