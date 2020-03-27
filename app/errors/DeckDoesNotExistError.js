@@ -3,10 +3,10 @@ module.exports = class DeckDoesNotExistError extends Error {
         super(...params)
 
         if(Error.captureStackTrace) {
-            Error.captureStackTrace(this, DeckDoesNotExist)
+            Error.captureStackTrace(this, DeckDoesNotExistError)
         }
 
-        this.name = "DeckDoesNotExist"
+        this.name = "DeckDoesNotExistError"
         this.email = email;
     }
 }

@@ -23,7 +23,7 @@ async function addDeck(req, res) {
     var deckname = body.deckname;
     var cards = body.cards;
     var courseId = req.query.id;
-
+    console.log("Adding deck: " + deckname);
     //TODO: update midterm and final values when UI is updated
     const midterm = false;
     const final = false;       

@@ -3,10 +3,10 @@ module.exports = class UserDoesNotExistError extends Error {
         super(...params)
 
         if(Error.captureStackTrace) {
-            Error.captureStackTrace(this, UserDoesNotExist)
+            Error.captureStackTrace(this, UserDoesNotExistError)
         }
 
-        this.name = "UserDoesNotExist"
+        this.name = "UserDoesNotExistError"
         this.email = email;
     }
 }
