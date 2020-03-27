@@ -11,3 +11,21 @@
     margin-top: 3%;
     float: right;
 }
+
+.list-group {
+    text-align: left;
+    max-height: 9em;
+    overflow-y: auto;
+}
+
+.list-group-item {
+    border-style: none;
+}
+
+.addUsers {
+    margin-top: 5%;
+}
+
+.removeUser {
+    float: right
+}

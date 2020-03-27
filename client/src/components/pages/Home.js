@@ -12,7 +12,8 @@ class Home extends Component {
         this.state = {
             courses: [],
             sharedCourses: [],
-            sharedDecks: []
+            sharedDecks: [],
+            sharedUsers: []
         };
         this.displayLimit = 9
     }
@@ -23,15 +24,15 @@ class Home extends Component {
             return;
         }
         try {
-            const {courses, sharedCourses, sharedDecks} = await this.getPageContent();
-            this.setState({courses: courses, sharedCourses: sharedCourses, sharedDecks: sharedDecks});
-        } catch(error) {
-            if(error.response.status === 401) {
+            this.setState(await this.getPageContent());
+        } catch(error) { 
+            if(error.response?.status === 401) {
                 this.props.history.replace("/");
             }
             else {
                 console.error(error);
-                this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+                const errorMessage = error.response?.data.result ? error.response.data.result : "An error has occured. Please try again later."
+                this.props.showAlert(withAlert.errorTheme, errorMessage);
             }
         }
     }
@@ -56,16 +57,32 @@ class Home extends Component {
             }
         })
 
-        const courses = coursesResponse.data.result;
+        const sharedContentResponse = await axios.get('/api/sharedCourseContent', {
+            params: {
+                email: this.props.user.email
+            }
+        })
+
+        var courses = coursesResponse.data.result;
         const sharedCourses = sharedCoursesResponse.data.result;
         const sharedDecks = sharedDecksResponse.data.result
+        const sharedContent = sharedContentResponse.data.result;
 
-        return {courses: courses, sharedCourses: sharedCourses, sharedDecks: sharedDecks}
+        const courseIds = courses.map((course) => course.id);
+        const sharedUsers = sharedContent.filter((sharedContent) => courseIds.includes(sharedContent.courseId))
+        courses.forEach((course) => {
+            const users = sharedUsers.filter((sharedUser) => sharedUser.courseId === course.id).map((sharedUser) => {
+                return {id: sharedUser.id, email: sharedUser.toUser}
+            });
+            course['sharedWith'] = users;
+        })
+        return {courses: courses, sharedCourses: sharedCourses, sharedDecks: sharedDecks, sharedUsers: sharedUsers}
     }
 
     /**
      * @param {*} courseId id of the course to share
-     * @param {*} toEmails an Array of emails of users to share the course with 
+     * @param {*} toEmails an Array of emails of users to share the course with
+     * @param {*} courseName name of course to share
      * @returns {*} boolean if the callback succeeded
      */
     shareCourseCallback = async (courseId, toEmails, courseName) => {
@@ -76,12 +93,34 @@ class Home extends Component {
                 id: courseId
             })
             const users = toEmails.join(', ')
+            //TODO: update state
             this.props.showAlert(withAlert.successTheme, `Shared ${courseName} with ${users}.` )
         } catch (error) {
             console.error(error);
             this.props.showAlert(withAlert.errorTheme, error.response.data.result);
         }
     }
+
+        /**
+     * @param {*} contentId id of the course to share
+     * @returns {*} boolean if the callback succeeded
+     */
+    removeSharedCourseCallback = async (contentId) => {
+        try {
+            await axios.delete('api/sharedCourse', {
+                params: {
+                    id: contentId
+                }
+            })
+            return true;
+        } catch (error) {
+            console.error(error);
+            this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+        }
+
+        return false;
+    }
+
 
     addCourse = () => {
         this.props.history.push("/addCourse");
@@ -133,7 +172,11 @@ class Home extends Component {
                         </NavItem>
                     </Nav>
                 </div>
-                <CardDisplay changePage={this.courseView} options={true} shareContentCallback={this.shareCourseCallback} cardsInfo={this.state.courses}/>
+                <CardDisplay changePage={this.courseView} options={true} 
+                             shareContentCallback={this.shareCourseCallback}
+                             removeSharedCourseCallback={this.removeSharedCourseCallback}
+                             cardsInfo={this.state.courses}
+                />
                 <Button id="newCourse" onClick={this.addCourse}>Add New Course</Button>
                 <div id="sharedCourses">
                     <Nav>

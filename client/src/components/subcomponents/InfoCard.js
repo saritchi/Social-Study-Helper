@@ -9,8 +9,11 @@ const InfoCard = (props) => {
         <Card>
             { props.options && 
                 <CardHeader>
-                    <OptionsDropdown name={props.info} id={props.id}
-                    shareContentCallback={props.shareContentCallback} />
+                    <OptionsDropdown name={props.info} id={props.id} 
+                                     sharedWithUsers={props.sharedWithUsers}
+                                     shareContentCallback={props.shareContentCallback}
+                                     removeSharedCourseCallback={props.removeSharedCourseCallback}
+                    />
                 </CardHeader> }
             <CardBody onClick={() => props.changePage(props.id, props.info)}>
                 <p>{props.info}</p>

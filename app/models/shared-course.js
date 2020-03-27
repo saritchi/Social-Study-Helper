@@ -36,3 +36,27 @@ module.exports.getForUser = async function getForUser(email, limit) {
         return new SharedCourse(result.toUser, result.fromUser, result.courseId, result.id);
     })
 }
+
+/**
+ * Get all courses a user has shared
+ * @param {*} email a user's email
+ * @returns An array of Course objects
+ */
+module.exports.getCoursesForUser = async function getCoursesForUser(email) {
+    var getSharedCoursesSQL = `SELECT * FROM SharedCourses WHERE fromUser = ?`;
+
+    const results = await database.runQuery(getSharedCoursesSQL, email);
+    return results.map((result) => {
+        return new SharedCourse(result.toUser, result.fromUser, result.courseId, result.id);
+    })
+}
+
+/**
+ * Delete a course with a given id
+ * @param {*} id of the course to delete
+ */
+module.exports.deleteWithId = async function deleteWithId(id) {
+    var getSharedCoursesSQL = `DELETE FROM SharedCourses WHERE id = ?`;
+    return database.runQuery(getSharedCoursesSQL, id);
+}
+

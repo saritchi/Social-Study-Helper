@@ -1,13 +1,16 @@
 import React, { Component } from "react";
-import { Modal, Button, ModalBody, ModalHeader } from "shards-react";
+import * as withAlert from "../HOC/ComponentWithAlert";
+import { Modal, Button, ModalBody, ModalHeader, ListGroup, ListGroupItem, ListGroupItemHeading } from "shards-react";
 import { ReactMultiEmail, isEmail } from 'react-multi-email';
+import { MdClear } from 'react-icons/md'
 import 'react-multi-email/style.css';
 import './ShareModal.css'
 
 //The code for this was adapted from herer: https://www.npmjs.com/package/react-multi-email
-export default class ShareModal extends Component {
+class ShareModal extends Component {
     state = { 
-        emails: []
+        emails: [],
+        sharedWithUsers: this.props.sharedWithUsers
     };
 
     /**
@@ -28,28 +31,57 @@ export default class ShareModal extends Component {
 
     //when pressing the share button send the request to the server and close the modal
     shareContent = () => {
-        this.props.callback(this.props.id, this.state.emails, this.props.name)
+        this.props.sharedContentCallback(this.props.id, this.state.emails, this.props.name)
+        this.setState({emails: []})
         this.props.toggle();
+    }
+
+    renderUserAccessList = () => {
+        return this.state.sharedWithUsers.map((user) => {
+            return <ListGroupItem key={user.id}>{user.email}<MdClear onClick={() => this.removeUser(user.id)} className="removeUser"/></ListGroupItem>
+        })
+    }
+
+    removeUser = async (id) => {
+        const success = await this.props.removeSharedCourseCallback(id)
+        if (success) {
+            const removeIndex = this.state.sharedWithUsers.map((user) => user.id).indexOf(id);
+            var updatedSharedWithUsers = this.state.sharedWithUsers;
+
+            delete updatedSharedWithUsers[removeIndex]
+            this.setState({sharedWithUsers: updatedSharedWithUsers})
+        }
+    }
+
+    validateEmail = (email) => {
+        const sharedEmails = this.state.sharedWithUsers.map((user) => user.email)
+        return isEmail(email) && !sharedEmails.includes(email)
     }
 
     render() {
         return (
             <Modal size="lg" open={this.props.open} toggle={this.props.toggle}>
-            <ModalHeader>Share with others</ModalHeader>
+            <ModalHeader>Share {this.props.name} with others</ModalHeader>
             <ModalBody>
-                <p>Enter all the emails you want to share {this.props.name} with.</p>
-                <h4>Emails:</h4>
+                <ListGroup>
+                    <ListGroupItemHeading>Who has access: </ListGroupItemHeading>
+                    {this.renderUserAccessList()}
+                </ListGroup>
+                <div className="addUsers">
+                    <h4>Add People</h4>
                     <ReactMultiEmail
                         placeholder="Enter email addresses...."
                         emails={this.state.emails}
                         onChange={(enteredEmails) => this.setState({emails: enteredEmails})}
-                        validateEmail={email => isEmail(email)}
+                        validateEmail={this.validateEmail}
                         getLabel={this.renderEmailItem}
                     />
                     <Button className='shareContent' onClick={this.shareContent}>Share</Button>
+                </div>
             </ModalBody>
             </Modal>
         );
     }
 }
 
+export default withAlert.withAlert(ShareModal)

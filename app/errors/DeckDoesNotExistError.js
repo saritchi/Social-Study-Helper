@@ -1,4 +1,4 @@
-module.exports = class DeckDoesNotExist extends Error {
+module.exports = class DeckDoesNotExistError extends Error {
     constructor(email, ...params) {
         super(...params)
 

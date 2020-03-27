@@ -1,4 +1,4 @@
-module.exports = class UserDoesNotExist extends Error {
+module.exports = class UserDoesNotExistError extends Error {
     constructor(email, ...params) {
         super(...params)
 
