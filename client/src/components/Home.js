@@ -1,34 +1,44 @@
 import React, {Component} from 'react'
-import {withRouter } from "react-router-dom"
+import { withRouter } from "react-router-dom"
 import { Button, Nav, NavItem, NavLink } from 'shards-react'
 import './Home.css'
-import axios from "axios"
+import axios from 'axios';
 import CardDisplay from './CardDisplay';
-import * as withAlert from "./ComponentWithAlert";
 import UserCalendar from './UserCalendar'
+import * as withAlert from "./HOC/ComponentWithAlert";
 
 class Home extends Component {
     constructor(props) {
         super(props);
         this.state = {
             courses: [],
-            username: null,
         };
     }
 
     async componentDidMount() {
-        //TODO: should not need to make a request for this. Should be passed in from login page.
-        const user = (await axios.get('/api/user')).data.result ?? "";
+        if(!this.props.user.isAuthenticated) {
+            this.props.history.replace("/");
+            return;
+        }
         try {
-            const coursesResponse = await axios.get('/api/courses');
+            const coursesResponse = await axios.get('/api/courses', {
+                params: {
+                    email: this.props.user.email
+                }
+            });
             const courses = coursesResponse.data.result;
             courses.forEach((course) => {
                 console.log(course);
             })
-            this.setState({username: user, courses: courses});
+            this.setState({courses: courses});
         } catch(error) {
-            console.error(error);
-            this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+            if(error.response.status === 401) {
+                this.props.history.replace("/");
+            }
+            else {
+                console.error(error);
+                this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+            }
         }
     }
 
@@ -36,11 +46,25 @@ class Home extends Component {
         this.props.history.push("/addCourse");
     }
 
-    deckView = () => {
-        this.props.history.push("/deckDisplay");
+    deckView = (deckId, deckName) => {
+        this.props.history.push({
+            pathname: '/decks',
+            state: {
+                id: deckId,
+                name: deckName
+            }
+        });
+    }
+
+    allCoursesView = () => {
+        this.props.history.push({
+            pathname: '/allCourses',
+            state: { email: this.props.user.email }
+        });
     }
     
     render() {
+        const username = this.props.user.fname + ' ' + this.props.user.lname;
         return (
             <div>
                 <div id="user">
@@ -53,7 +77,7 @@ class Home extends Component {
                             <h3>Recent Courses: </h3>
                         </NavItem>
                         <NavItem id="allCourses">
-                            <NavLink href='/allCourses'>View All Courses</NavLink>
+                            <NavLink href='#' onClick={this.allCoursesView}>View All Courses</NavLink>
                         </NavItem>
                     </Nav>
                 </div>
@@ -64,4 +88,4 @@ class Home extends Component {
         }
 };
 
-export default withRouter(withAlert.withAlert(Home))
+export default withRouter(withAlert.withAlert(Home));

@@ -1,14 +1,14 @@
 import React, {Component} from "react";
+import { withRouter } from "react-router-dom"
 import { Button, Form, FormInput, FormGroup } from "shards-react";
 import './AddCourse.css';
 import axios from "axios";
-import './ComponentWithAlert';
-import * as withAlert from "./ComponentWithAlert";
+import * as withAlert from "./HOC/ComponentWithAlert";
 import { TiDelete } from 'react-icons/ti';
 
 class AddCourse extends Component {
-  chpaterInputTitle = "Chapter Name";
-  chapterInputToolTip = "Introduction to HTML";
+  deckInputTitle = "Deck Name";
+  deckInputToolTip = "Introduction to HTML";
   courseNameId = "courseName";
   invalidInputClassName = "is-invalid";
 
@@ -18,33 +18,39 @@ class AddCourse extends Component {
       coursename: '',
       //object of inputFormId : inputFormData
       //This stores data that the user types into the input fields
-      chapterInfo: {},
+      //TODO: need to update when UI can select an midterm/final/test day.
+      deckInfo: {},
     }
   }
   
   componentDidMount() {
-    this.addChapterInput();
+    if(!this.props.user.isAuthenticated) {
+      this.props.history.replace("/");
+      return;
+    }
+
+    this.addDeckInput();
   }
 
-  addChapterInput = () => {
-    const currentKey = "chapter" + Object.keys(this.state.chapterInfo).length;
-    const newChapterInfo = this.state.chapterInfo;
-    newChapterInfo[currentKey] = '';
-    this.setState({chapterInfo: newChapterInfo});
+  addDeckInput = () => {
+    const currentKey = "deck" + Object.keys(this.state.deckInfo).length;
+    const newDeckInfo = this.state.deckInfo;
+    newDeckInfo[currentKey] = '';
+    this.setState({deckInfo: newDeckInfo});
   }
 
-  renderAllChapterInputs = () => {
-    const chapterInfoArray = Object.keys(this.state.chapterInfo);
-    return chapterInfoArray.map((chapterInputKey, index) => {
+  renderAllDeckInputs = () => {
+    const deckInfoArray = Object.keys(this.state.deckInfo);
+    return deckInfoArray.map((deckInputKey, index) => {
       return (
-        <FormGroup key={chapterInputKey}>
-          <label htmlFor={chapterInputKey}>{this.chpaterInputTitle}</label>
-          <FormInput id={chapterInputKey} 
-                     name="chapterInfo" 
+        <FormGroup key={deckInputKey}>
+          <label htmlFor={deckInputKey}>{this.deckInputTitle}</label>
+          <FormInput id={deckInputKey} 
+                     name="deckInfo" 
                      onChange={this.onInputChange}
-                     placeholder={this.chapterInputToolTip}
+                     placeholder={this.deckInputToolTip}
           />
-          {index >= 1 && <TiDelete className="deleteChapter" id={index} onClick={(evt) => this.deleteChapter(evt, chapterInputKey)} size={"2em"}/>}
+          {index >= 1 && <TiDelete className="deleteDeck" id={index} onClick={(evt) => this.deleteChapter(evt, deckInputKey)} size={"2em"}/>}
         </FormGroup>
       )
     });
@@ -59,27 +65,33 @@ class AddCourse extends Component {
     }
     
     const coursename =  this.state.coursename;
-    const chapterInfo = this.state.chapterInfo;
-    const chapterNames = Object.keys(chapterInfo).map((key) => chapterInfo[key]);
+    const deckInfo = this.state.deckInfo;
+    //TODO: need to update when UI can select an midterm/final/test day.
+    const decknames = Object.keys(deckInfo).map((key) => deckInfo[key]);
 
     const json = {
       coursename: coursename,
-      chapters: chapterNames,
+      decks: decknames,
+      email: this.props.user.email,
     }
 
     console.log(json);
     try {
-      const response = await axios.post("/api/addCourse", json);
-      console.log(response.status);
+      await axios.post("/api/addCourse", json);
       this.setState(
         {
           coursename: '', 
-          chapterInfo: {}, 
-        }, this.addChapterInput);
+          deckInfo: {}, 
+        }, this.addDeckInput);
         this.props.showAlert(withAlert.successTheme, "Added Course");
     } catch (error) {
-      console.error(error);
-      this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+      if(error.response.status === 401) {
+        this.props.history.replace("/");
+      }
+      else {
+          console.error(error);
+          this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+      }
     }
   }
 
@@ -96,12 +108,12 @@ class AddCourse extends Component {
       courseNameInput.classList.remove(this.invalidInputClassName);
     }
     
-    const chapterInfo = this.state.chapterInfo;
-    const chapterInfoArray = Object.keys(chapterInfo)
-    for(var i = 0; i < chapterInfoArray.length; i++)  {
-      const key = chapterInfoArray[i];
+    const deckInfo = this.state.deckInfo;
+    const deckInfoArray = Object.keys(deckInfo)
+    for(var i = 0; i < deckInfoArray.length; i++)  {
+      const key = deckInfoArray[i];
       var courseNameInput = document.getElementById(key);
-      if(!chapterInfo[key]) {
+      if(!deckInfo[key]) {
         courseNameInput.className += ' ' + this.invalidInputClassName;
         validInput = false;
       }
@@ -114,10 +126,10 @@ class AddCourse extends Component {
   }
 
   onInputChange = e => {
-    if(e.target.name === "chapterInfo") {
-      const chapterInfo = this.state.chapterInfo;
-      chapterInfo[e.target.id] = e.target.value;
-      this.setState({[e.target.name]: chapterInfo});
+    if(e.target.name === "deckInfo") {
+      const deckInfo = this.state.deckInfo;
+      deckInfo[e.target.id] = e.target.value;
+      this.setState({[e.target.name]: deckInfo});
     } else {
       this.setState({[e.target.name]: e.target.value});
     }
@@ -125,10 +137,10 @@ class AddCourse extends Component {
 
   deleteChapter = (e, id) => {
     console.log(e.target.id);
-    const updatedChapterNames = this.state.chapterInfo;
+    const updatedDeckNames = this.state.deckInfo;
     //delete property for that chapter name
-    delete updatedChapterNames[id];
-    this.setState({[e.target.name]: updatedChapterNames});
+    delete updatedDeckNames[id];
+    this.setState({[e.target.name]: updatedDeckNames});
   }
 
   render() {
@@ -141,9 +153,9 @@ class AddCourse extends Component {
             <FormInput id={this.courseNameId} name="coursename" onChange={this.onInputChange} value={this.state.coursename} placeholder="CMPT 470" />
           </FormGroup>
 
-          <h2>Chapters:</h2>
-          {this.renderAllChapterInputs()}
-          <Button id="addChapter" onClick={this.addChapterInput}>Add Chapter</Button>
+          <h2>Decks:</h2>
+          {this.renderAllDeckInputs()}
+          <Button id="addDeck" onClick={this.addDeckInput}>Add Deck</Button>
           <Button id="addCourse" onClick={this.onSubmit}>Add Course</Button>
         </Form>
       </div>
@@ -151,4 +163,4 @@ class AddCourse extends Component {
   }
 }
 
-export default withAlert.withAlert(AddCourse);
+export default withRouter(withAlert.withAlert(AddCourse));

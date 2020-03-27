@@ -2,7 +2,7 @@ import React from 'react';
 import {withRouter} from "react-router-dom"
 import ReactCardFlip from 'react-card-flip';
 import './ViewCards.css';
-import * as withAlert from "./ComponentWithAlert";
+import * as withAlert from "./HOC/ComponentWithAlert";
 import axios from 'axios';
 
 class ViewCards extends React.Component {
@@ -12,16 +12,20 @@ class ViewCards extends React.Component {
       isFlipped: false,
       cardIndex: 0,
       cards: [],
-      deckId: 0
     };
     this.handleClick = this.handleClick.bind(this);
   }
 
   async componentDidMount() {
+    if(!this.props.user.isAuthenticated) {
+      this.props.history.replace("/");
+      return;
+    }
+
     try {
       const cardResponse = await axios.get('/api/viewCards', {
         params:{
-          deck: this.props.location.state.deckId
+          id: this.props.location.state.deckId
         } 
       });
       const flashcards = cardResponse.data.result;
@@ -31,8 +35,13 @@ class ViewCards extends React.Component {
       this.setState({cards: flashcards});
       document.addEventListener("keydown", this.handleKeyDown);
     } catch(error) {
-      console.error(error);
-      this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+      if(error.response.status === 401) {
+        this.props.history.replace("/");
+      }
+      else {
+          console.error(error);
+          this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+      }
     }
   }
 

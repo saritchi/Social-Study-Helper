@@ -2,7 +2,7 @@
   "name": "my_react",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:3003/",
+  "proxy": "http://localhost:8080/",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.4.1",
@@ -15,7 +15,8 @@
     "react-icons": "^3.9.0",
     "react-router-dom": "^5.1.2",
     "react-scripts": "^3.4.0",
-    "shards-react": "^1.0.3"
+    "shards-react": "^1.0.3",
+    "universal-cookie": "^4.0.3"
   },
   "scripts": {
     "start": "react-scripts start",

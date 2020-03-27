@@ -1,10 +1,10 @@
 import React, {Component} from 'react'
-import {withRouter } from "react-router-dom"
+import { withRouter } from "react-router-dom"
 import { Button } from 'shards-react'
 import './AllCourses.css'
 import axios from "axios"
 import CardDisplay from './CardDisplay';
-import * as withAlert from "./ComponentWithAlert";
+import * as withAlert from "./HOC/ComponentWithAlert";
 
 class AllCourses extends Component {
     constructor(props) {
@@ -13,16 +13,30 @@ class AllCourses extends Component {
     }
 
     async componentDidMount() {
+        if(!this.props.isAuthenticated) {
+            this.props.history.replace("/");
+            return;
+        }
+
         try {
-            const coursesResponse = await axios.get('/api/courses');
+            const coursesResponse = await axios.get('/api/courses', {
+                params: {
+                    email: this.props.location.state.email
+                }
+            });
             const courses = coursesResponse.data.result;
             courses.forEach((course) => {
                 console.log(course);
             })
             this.setState({courses: courses})
         } catch(error) {
-            console.error(error);
-            this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+            if(error.response.status === 401) {
+                this.props.history.replace("/");
+            }
+            else {
+                console.error(error);
+                this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+            }
         }
     }
 
@@ -30,8 +44,14 @@ class AllCourses extends Component {
         this.props.history.push("/addCourse");
     }
 
-    deckView = () => {
-        this.props.history.push("/deckDisplay");
+    deckView = (deckId, deckName) => {
+        this.props.history.push({
+            pathname: '/decks',
+            state: {
+                id: deckId,
+                name: deckName
+            }
+        });
     }
     
     render() {

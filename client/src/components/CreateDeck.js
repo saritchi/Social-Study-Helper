@@ -1,10 +1,11 @@
 import React from 'react'
+import { withRouter } from "react-router-dom"
 import { Form, FormGroup, FormTextarea, FormInput} from "shards-react";
 import { Container, Row, Col } from "shards-react";
 import {
     Button
   } from "shards-react";
-import * as withAlert from "./ComponentWithAlert"
+import * as withAlert from "./HOC/ComponentWithAlert";
 import Axios from 'axios';
 import './CreateDeck.css';
 
@@ -18,6 +19,11 @@ class CreateDeck extends React.Component {
     }
     
     componentDidMount(){
+        if(!this.props.user.isAuthenticated) {
+            this.props.history.replace("/");
+            return;
+        }
+
         this.addCard();
     }
 
@@ -70,7 +76,11 @@ class CreateDeck extends React.Component {
         }
 
         try{
-            const response = await Axios.post("/api/addDeck", json);
+            const response = await Axios.post("/api/addDeck", json, {
+                params:{
+                  id: this.props.location.state.courseId
+                } 
+            });
             console.log(response.status);
             this.setState(
                 {
@@ -118,4 +128,4 @@ class CreateDeck extends React.Component {
     }
 }
 
-export default withAlert.withAlert(CreateDeck);
+export default withRouter(withAlert.withAlert(CreateDeck));
