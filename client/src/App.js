@@ -13,6 +13,7 @@ import AddCourse from './components/AddCourse';
 import CreateDeck from './components/CreateDeck';
 import DeckDisplay from './components/DeckDisplay';
 import ViewCards from './components/ViewCards';
+import UserCalendar from './components/UserCalendar';
 
 function App() {
     return (
@@ -34,6 +35,7 @@ function App() {
               render={props => (
                     <React.Fragment>
                       <Home />
+                      
                     </React.Fragment>
                   )} 
               />
@@ -88,6 +90,15 @@ function App() {
                 render={props => (
                   <React.Fragment>
                     <Register/>
+                  </React.Fragment>
+                )}
+              />
+              <Route
+                path="/calendar"
+                exact
+                render={props => (
+                  <React.Fragment>
+                    <UserCalendar />
                   </React.Fragment>
                 )}
               />

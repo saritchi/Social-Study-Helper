@@ -5,6 +5,7 @@ import './Home.css'
 import axios from "axios"
 import CardDisplay from './CardDisplay';
 import * as withAlert from "./ComponentWithAlert";
+import UserCalendar from './UserCalendar'
 
 class Home extends Component {
     constructor(props) {
@@ -44,6 +45,7 @@ class Home extends Component {
             <div>
                 <div id="user">
                     <h1>Welcome {this.state.username}!</h1>
+                    <UserCalendar></UserCalendar>
                 </div>
                 <div>
                     <Nav>
