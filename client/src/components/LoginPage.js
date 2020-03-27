@@ -14,8 +14,24 @@ import axios from "axios";
         this.onSubmit = this.onSubmit.bind(this); 
         this.responseGoogle = this.responseGoogle.bind(this);      
     }
-    responseGoogle(response){
-        console.log(response.getBasicProfile().getName());
+   async responseGoogle(response){
+
+        var fname=response.getBasicProfile().vW;
+        var lname=response.getBasicProfile().wU
+        var email =response.getBasicProfile().zu;
+        var password='';
+        var isAuthenticated = true;
+        const user = new User(email,password,fname,lname,isAuthenticated);
+        try {
+            //TODO: get a user object back from the server
+            const response = await axios.post('/api/google/register', user);
+        } catch (error) {
+            this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+        }
+        this.props.setUser(user);
+        this.setState({user: user});
+
+
     }
     onChange(e) {
         const newUser = new User().copy(this.state.user);
@@ -40,6 +56,7 @@ import axios from "axios";
     }
     
     render() {
+        console.log(this.state);
         if(this.state.user.isAuthenticated){
             return(
                 <div>
@@ -69,7 +86,7 @@ import axios from "axios";
                 </Form> 
                 <GoogleLogin
                     clientId="450582683465-sa51lvh1nc8hcm86unoscffs8gcm8tsi.apps.googleusercontent.com"
-                    buttonText="Login"
+                    buttonText="Login with google"
                     onSuccess={this.responseGoogle}
                     onFailure={this.responseGoogle}
                     cookiePolicy={'single_host_origin'}
