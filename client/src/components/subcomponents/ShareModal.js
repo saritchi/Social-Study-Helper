@@ -43,7 +43,7 @@ class ShareModal extends Component {
     }
 
     removeUser = async (id) => {
-        const success = await this.props.removeSharedCourseCallback(id)
+        const success = await this.props.removeSharedContentCallback(id)
         if (success) {
             const removeIndex = this.state.sharedWithUsers.map((user) => user.id).indexOf(id);
             var updatedSharedWithUsers = this.state.sharedWithUsers;

@@ -21,7 +21,7 @@ export default class OptionsDropdown extends Component {
                     name={this.props.name} 
                     id={this.props.id} 
                     sharedContentCallback={this.props.shareContentCallback}
-                    removeSharedCourseCallback={this.props.removeSharedCourseCallback}
+                    removeSharedContentCallback={this.props.removeSharedContentCallback}
                     sharedWithUsers={this.props.sharedWithUsers}
                     toggle={this.toggleShareMenu}
           />

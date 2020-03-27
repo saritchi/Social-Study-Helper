@@ -36,3 +36,28 @@ module.exports.getForUser = async function getForUser(email, limit) {
         return new SharedDeck(result.toUser, result.fromUser, result.deckId, result.id);
     })
 }
+
+/**
+ * Get all shared deck entries for a given user
+ * @param {*} email a user's email
+ * @returns An array of SharedDeck objects
+ */
+module.exports.getDecksForUser = async function getDecksForUser(email) {
+    var getSharedCoursesSQL = `SELECT * FROM SharedDecks WHERE fromUser = ?`;
+
+    const results = await database.runQuery(getSharedCoursesSQL, email);
+    return results.map((result) => {
+        return new SharedDeck(result.toUser, result.fromUser, result.deckId, result.id);
+    })
+}
+
+
+/**
+ * Delete a deck with a given id
+ * @param {*} id of the course to delete
+ */
+module.exports.deleteWithId = async function deleteWithId(id) {
+    var getSharedCoursesSQL = `DELETE FROM SharedDecks WHERE id = ?`;
+    return database.runQuery(getSharedCoursesSQL, id);
+}
+

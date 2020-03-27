@@ -130,7 +130,7 @@ async function getSharedDecks(req, res) {
 }
 
 async function getUsersForSharedCourse(req, res) {
-    console.log("Getting shared content for user")
+    console.log("Getting shared course objects for user")
     var userEmail = req.query.email;
     try {
         const sharedCourses = await SharedCourse.getCoursesForUser(userEmail);
@@ -142,10 +142,11 @@ async function getUsersForSharedCourse(req, res) {
     }
 }
 
-async function getSharedDeckContent(req, res) {
+async function getUsersForSharedDeck(req, res) {
+    console.log("Getting shared deck objects for user")
     var userEmail = req.query.email;
     try {
-        const sharedDecks = await SharedDeck.getForUser(userEmail);
+        const sharedDecks = await SharedDeck.getDecksForUser(userEmail);
         console.log(sharedDecks);
         res.status(200).json({result: sharedDecks});
     } catch(error) {
@@ -167,6 +168,18 @@ async function deleteSharedCourse(req, res) {
 }
 
 
+async function deleteSharedDeck(req, res) {
+    var deckId = req.query.id
+    console.log("Deleting deck with id " + deckId);
+    try {
+        await SharedDeck.deleteWithId(deckId);
+        res.sendStatus(200)
+    } catch(error) {
+        console.log(`Unable to delete shared course from the database. Error: ${error.message}`)
+        res.status(500).json({result: "An error occurred while attempting to remove the shared user. Please try again later."})
+    }
+}
+
 router.post('/shareCourse', requireLogin, shareCourse)
 router.post('/shareDeck', requireLogin, shareDeck)
 
@@ -174,8 +187,9 @@ router.get('/sharedCourses', requireLogin, getSharedCourses)
 router.get('/sharedDecks', requireLogin, getSharedDecks)
 
 router.get('/sharedCourseContent', requireLogin, getUsersForSharedCourse)
-router.get('/sharedDeckContent', requireLogin, getSharedDeckContent)
+router.get('/sharedDeckContent', requireLogin, getUsersForSharedDeck)
 
 router.delete('/sharedCourse', requireLogin, deleteSharedCourse) 
+router.delete('/sharedDeck', requireLogin, deleteSharedDeck) 
 
 module.exports = router;

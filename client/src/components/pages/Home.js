@@ -70,6 +70,7 @@ class Home extends Component {
 
         const courseIds = courses.map((course) => course.id);
         const sharedUsers = sharedContent.filter((sharedContent) => courseIds.includes(sharedContent.courseId))
+        //find the user each course has been shared with and add them to the course object
         courses.forEach((course) => {
             const users = sharedUsers.filter((sharedUser) => sharedUser.courseId === course.id).map((sharedUser) => {
                 return {id: sharedUser.id, email: sharedUser.toUser}
@@ -83,7 +84,6 @@ class Home extends Component {
      * @param {*} courseId id of the course to share
      * @param {*} toEmails an Array of emails of users to share the course with
      * @param {*} courseName name of course to share
-     * @returns {*} boolean if the callback succeeded
      */
     shareCourseCallback = async (courseId, toEmails, courseName) => {
         try {
@@ -101,8 +101,8 @@ class Home extends Component {
         }
     }
 
-        /**
-     * @param {*} contentId id of the course to share
+    /**
+     * @param {*} contentId id of the course to delete
      * @returns {*} boolean if the callback succeeded
      */
     removeSharedCourseCallback = async (contentId) => {
@@ -174,7 +174,7 @@ class Home extends Component {
                 </div>
                 <CardDisplay changePage={this.courseView} options={true} 
                              shareContentCallback={this.shareCourseCallback}
-                             removeSharedCourseCallback={this.removeSharedCourseCallback}
+                             removeSharedContentCallback={this.removeSharedCourseCallback}
                              cardsInfo={this.state.courses}
                 />
                 <Button id="newCourse" onClick={this.addCourse}>Add New Course</Button>

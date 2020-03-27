@@ -12,7 +12,7 @@ const CardDisplay = (props) => {
                                                        changePage={props.changePage}
                                                        options={props.options}
                                                        shareContentCallback={props.shareContentCallback}
-                                                       removeSharedCourseCallback={props.removeSharedCourseCallback}
+                                                       removeSharedContentCallback={props.removeSharedContentCallback}
                                             />)}
         </div>
     )

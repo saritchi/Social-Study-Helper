@@ -12,7 +12,7 @@ const InfoCard = (props) => {
                     <OptionsDropdown name={props.info} id={props.id} 
                                      sharedWithUsers={props.sharedWithUsers}
                                      shareContentCallback={props.shareContentCallback}
-                                     removeSharedCourseCallback={props.removeSharedCourseCallback}
+                                     removeSharedContentCallback={props.removeSharedContentCallback}
                     />
                 </CardHeader> }
             <CardBody onClick={() => props.changePage(props.id, props.info)}>

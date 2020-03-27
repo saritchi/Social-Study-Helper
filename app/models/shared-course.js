@@ -38,9 +38,9 @@ module.exports.getForUser = async function getForUser(email, limit) {
 }
 
 /**
- * Get all courses a user has shared
+ * Get all shared courses entries for a given user
  * @param {*} email a user's email
- * @returns An array of Course objects
+ * @returns An array of SharedCourse objects
  */
 module.exports.getCoursesForUser = async function getCoursesForUser(email) {
     var getSharedCoursesSQL = `SELECT * FROM SharedCourses WHERE fromUser = ?`;

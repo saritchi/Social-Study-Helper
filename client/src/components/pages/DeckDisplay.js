@@ -22,15 +22,7 @@ class DeckDisplay extends Component {
         }
         
         try {
-            const deckResponse = await axios.get('/api/decks',  {
-                params: {
-                    id: this.props.location.state.id,
-                }
-            });
-            const decklist = deckResponse.data.result;
-            decklist.forEach((deck) => {
-                console.log(deck);
-            })
+            const decklist = await this.getPageContent();
             this.setState({decklist: decklist})
         } catch(error) {
             if(error.response.status === 401) {
@@ -43,23 +35,77 @@ class DeckDisplay extends Component {
         }
     }
 
+    getPageContent = async() => {
+        const deckResponse = await axios.get('/api/decks',  {
+            params: {
+                id: this.props.location.state.id,
+            }
+        });
+        const sharedContentResponse = await axios.get('/api/sharedDeckContent', {
+            params: {
+                email: this.props.user.email
+            }
+        })
+
+        var decklist = deckResponse.data.result;
+        const sharedContent = sharedContentResponse.data.result;
+        console.log(sharedContent);
+
+        const deckIds = decklist.map((deck) => deck.id);
+        const sharedUsers = sharedContent.filter((sharedContent) => deckIds.includes(sharedContent.deckId))
+        console.log(sharedUsers);
+        //find the user each deck has been shared with and add them to the deck object
+        decklist.forEach((deck) => {
+            const users = sharedUsers.filter((sharedUser) => sharedUser.deckId === deck.id).map((sharedUser) => {
+                return {id: sharedUser.id, email: sharedUser.toUser}
+            });
+            deck['sharedWith'] = users;
+        })
+
+        console.log(decklist);
+        return decklist
+    }
+
+
     /**
      * @param {*} deckId id of the course to share
      * @param {*} toEmails an Array of emails of users to share the course with 
      */
-    shareDeckCallback = async (deckId, toEmails) => {
+    shareDeckCallback = async (deckId, toEmails, deckName) => {
         try {
             await axios.post('api/shareDeck', {
                 fromEmail: this.props.user.email,
                 toEmails: toEmails,
                 id: deckId
             })
+            const users = toEmails.join(', ')
+            //TODO: update state
+            this.props.showAlert(withAlert.successTheme, `Shared ${deckName} with ${users}.` )
         } catch (error) {
             console.error(error);
             this.props.showAlert(withAlert.errorTheme, error.response.data.result);
         }
     }
 
+      /**
+     * @param {*} contentId id of the deck to delete
+     * @returns {*} boolean if the callback succeeded
+     */
+    removeSharedDeckCallback = async (contentId) => {
+        try {
+            await axios.delete('api/sharedDeck', {
+                params: {
+                    id: contentId
+                }
+            })
+            return true;
+        } catch (error) {
+            console.error(error);
+            this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+        }
+
+        return false;
+    }
 
     addDeck = () => {
         this.props.history.push(
@@ -90,7 +136,10 @@ class DeckDisplay extends Component {
                         </NavItem>
                     </Nav>
                 </div>
-                <CardDisplay changePage={this.cardView} options={true} shareContentCallback={this.shareDeckCallback} cardsInfo={this.state.decklist} />
+                <CardDisplay changePage={this.cardView} options={true}
+                             shareContentCallback={this.shareDeckCallback}
+                             removeSharedContentCallback={this.removeSharedDeckCallback}
+                             cardsInfo={this.state.decklist} />
                 <Button id="newDeck" onClick={this.addDeck}>Add New Deck</Button>
             </div>
         )
