@@ -26,12 +26,11 @@ import axios from "axios";
         try {
             //TODO: get a user object back from the server
             const response = await axios.post('/api/google/register', user);
+            this.props.setUser(user);
+            this.setState({user: user});
         } catch (error) {
             this.props.showAlert(withAlert.errorTheme, error.response.data.result);
         }
-        this.props.setUser(user);
-        this.setState({user: user});
-
 
     }
     onChange(e) {

@@ -54,13 +54,13 @@ async function registerGoogleUser(req, res) {
         if (userExists) {
             delete newUser.password;
             req.session.user = newUser;
-            res.status(200).json({result: "Already registered"});
+            res.sendStatus(200);
             return;
         }
         await newUser.create();
         delete newUser.password;
         req.session.user = newUser;
-        res.status(200).json({result: "Registration succesful."});
+        res.sendStatus(200);
      } catch (error) {
         console.log(error);
         res.status(500).json({result: "An error occured while attempting to register Google User. Please try again later."});
