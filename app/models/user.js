@@ -46,9 +46,6 @@ class User {
         
     }
 
-    async setAuthentication(isAuthenticated){
-        this.isAuthenticated = isAuthenticated;
-    }
 }
 
 module.exports = User;
