@@ -48,6 +48,29 @@ class User {
         
     }
 
+    async isTeacher(){
+        const query = `SELECT * FROM user WHERE email = ? AND role = teacher`;
+        const result = await database.runQuery(query, [this.email]);
+        if(result.length == 0){ 
+            return false;
+        }
+        return true;
+    }
+    async isStudent(){
+        const query = `SELECT * FROM user WHERE email = ? AND role = student`;
+        const result = await database.runQuery(query, [this.email]);
+        if(result.length == 0){ 
+            return false;
+        }
+        return true;
+    }
+    async getAllStudents(){
+        const query = `SELECT * FROM user WHERE  role = student`;
+        const result = await database.runQuery(query);
+        return result.map((student) => {
+            return new User(student.email,student.password,student.fname,student.lname);
+        })
+    }
 }
 
 module.exports = User;
