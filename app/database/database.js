@@ -63,10 +63,11 @@ class Database {
     
     initializeTablesIfNeeded() {
         const createUsersTableSQL = `create table IF NOT EXISTS user(
-            email VARCHAR(20) NOT NULL,
+            email VARCHAR(40) NOT NULL,
             password VARCHAR(20) NOT NULL, 
             fname VARCHAR(20) NOT NULL,
             lname VARCHAR(20),
+            role VARCHAR(20),
             PRIMARY KEY(email)
         );`
         const createCoursesTableSQL = `CREATE TABLE IF NOT EXISTS Courses(

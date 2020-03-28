@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import {Link,Redirect} from 'react-router-dom';
-import { Form,FormGroup,FormInput} from "shards-react";
+import { Form,FormGroup,FormInput,FormCheckbox} from "shards-react";
 import './Register.css'
 import * as withAlert from "./HOC/ComponentWithAlert";
 import axios from "axios";
@@ -12,15 +12,29 @@ import axios from "axios";
             password:'',
             fname:'',
             lname:'',
-            registered: false
+            role:'',
+            registered: false,
+            teacher:false,
+            student:false
         };
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.userType = this.userType.bind(this);
     }
 
     onChange(e) {
         this.setState({ [e.target.name]: e.target.value });
       }
+
+    userType(e,role){
+        this.setState({role:role});
+        if(role =='teacher'){
+            this.setState({teacher:true,student:false});
+        }
+        if(role =='student'){
+            this.setState({student:true,teacher:false});
+        }
+    }
     
    async onSubmit(e) {
         e.preventDefault();
@@ -30,6 +44,7 @@ import axios from "axios";
             password: this.state.password,
             fname: this.state.fname,
             lname: this.state.lname,
+            role: this.state.role
         };
         try {
             //TODO: get a user object back from the server
@@ -57,7 +72,7 @@ import axios from "axios";
                 </nav>
                 <Form id='form' onSubmit = {this.onSubmit}>
                     <FormGroup>
-                    <label>email: </label>
+                    <label>Email: </label>
                     <FormInput type="email" name="email" onChange = {this.onChange}></FormInput>
                     </FormGroup>
 
@@ -75,7 +90,9 @@ import axios from "axios";
                     <label>Last name: </label>
                     <FormInput type="text" name="lname" onChange = {this.onChange}></FormInput>
                     </FormGroup>
-
+                    <p style={{textAlign:"left",marginTop:'30px',fontSize:"larger"}}>User type:</p>
+                    <FormCheckbox  checked={this.state.teacher} onChange={e => this.userType(e, "teacher")}>Teacher</FormCheckbox>
+                    <FormCheckbox  checked={this.state.student} onChange={e => this.userType(e, "student")}>Student</FormCheckbox>
                     <FormInput type="submit" value="SignUp"></FormInput>
                 </Form> 
             </div>

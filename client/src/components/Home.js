@@ -63,7 +63,7 @@ class Home extends Component {
     }
     
     render() {
-        const username = this.props.user.fname + ' ' + this.props.user.lname;
+        const username = this.props.user.fname + ' ' + this.props.user.lname + ' ' + this.props.user.role;
         return (
             <div>
                 <div id="user">

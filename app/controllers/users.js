@@ -23,9 +23,10 @@ async function registerUser(req, res) {
     let password = post.password;
     let firstname = post.fname;
     let lastname = post.lname;
+    let role = post.role;
 
 
-    const newUser = new User(email, password, firstname, lastname);
+    const newUser = new User(email, password, firstname, lastname, role);
     try { 
         const userExists = await newUser.exists();
         if (userExists) {
