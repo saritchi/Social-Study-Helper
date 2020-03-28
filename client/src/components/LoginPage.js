@@ -14,11 +14,12 @@ import axios from "axios";
         this.onSubmit = this.onSubmit.bind(this); 
         this.responseGoogle = this.responseGoogle.bind(this);      
     }
+    
    async responseGoogle(response){
 
-        var fname=response.getBasicProfile().vW;
-        var lname=response.getBasicProfile().wU
-        var email =response.getBasicProfile().zu;
+        var fname=response.getBasicProfile().getGivenName();
+        var lname=response.getBasicProfile().getFamilyName()
+        var email =response.getBasicProfile().getEmail();
         var password='';
         var isAuthenticated = true;
         const user = new User(email,password,fname,lname,isAuthenticated);
