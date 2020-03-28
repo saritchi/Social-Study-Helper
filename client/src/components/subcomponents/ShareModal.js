@@ -58,9 +58,6 @@ class ShareModal extends Component {
     }
 
     render() {
-        console.log("Share modal state: ");
-        console.log(this.state.sharedWithUsers);
-        console.log(this.props.sharedWithUsers);
         return (
             <Modal size="lg" open={this.props.open} toggle={this.props.toggle}>
             <ModalHeader>Share {this.props.name} with others</ModalHeader>

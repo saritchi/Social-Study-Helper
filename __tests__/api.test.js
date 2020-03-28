@@ -9,7 +9,6 @@ var authAgent = request.agent(app);
 beforeAll(async () => {
     await database.connect();
     database.initializeTablesIfNeeded();
-    //TODO: initialize good data for all get tests
 });
 
 describe('registration tests', () => {
