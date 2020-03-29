@@ -226,38 +226,50 @@ app.post('/api/editDeck', (req, res) => {
     var cards = body.cards;
     var deckId = body.deckId;
 
-    console.log(cards);
+    const updateDeckNameString = 'UPDATE Decks SET name=? WHERE id=?';
+    database.runQuery(updateDeckNameString, [deckname, deckId], (error) => {
+        if(error){
+            console.log(error.message)
+            res.status(500).json({result: "An error has occured while attempting to update the deckname to the database. Please try again later."});
+        }
+
         const deleteQueryString = 'DELETE FROM Cards WHERE deckId = ?';
         database.runQuery(deleteQueryString, [cards[0].deckId], (error) => {
             if(error){
                 console.log(error.message)
-                res.status(500).json({result: "An error has occured while attempting to delete the deck to the database. Please try again later."});
+                res.status(500).json({result: "An error has occured while attempting to update the new deck to the database. Please try again later."});
             }
-
+    
             numCards = Object.keys(cards).length;
             for(var i = 0; i < numCards; i++){
                 cards[i] = [deckId, cards[i].prompt, cards[i].answer];
             }
-            
-            const insertQueryString = 'INSERT INTO Cards(deckId, prompt, answer) VALUES ?';
-            database.runQuery(insertQueryString, [cards], (error) => {
+                
+            const resetIncrementString = 'ALTER TABLE Cards AUTO_INCREMENT = 0'
+            database.runQuery(resetIncrementString, (error) => {
                 if(error){
                     console.log(error.message)
-                    res.status(500).json({result: "An error has occured while attempting to insert the new deck to the database. Please try again later."});
+                    res.status(500).json({result: "An error has occured while attempting to update the new deck to the database. Please try again later."});
                 }
-
-                const deleteNullString = 'DELETE FROM Cards WHERE prompt IS NULL OR answer IS NULL OR deckId IS NULL'
-                database.runQuery(deleteNullString, [cards], (error) => {
+                const insertQueryString = 'INSERT INTO Cards(deckId, prompt, answer) VALUES ?';
+                database.runQuery(insertQueryString, [cards], (error) => {
                     if(error){
                         console.log(error.message)
-                        res.status(500).json({result: "An error has occured while attempting to insert the new deck to the database. Please try again later."});
-                    } 
+                        res.status(500).json({result: "An error has occured while attempting to update the new deck to the database. Please try again later."});
+                    }
+        
+                    const deleteNullString = 'DELETE FROM Cards WHERE prompt IS NULL AND answer IS NULL OR deckId IS NULL'
+                    database.runQuery(deleteNullString, [cards], (error) => {
+                        if(error){
+                            console.log(error.message)
+                            res.status(500).json({result: "An error has occured while attempting to update the new deck to the database. Please try again later."});
+                        } 
+                    })
+                    res.sendStatus(200);         
                 })
-                res.sendStatus(200);
-                
             })
         })
-
+    })
 })
 
 app.get('/api/editDeck', (req, res) => {

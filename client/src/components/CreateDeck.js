@@ -96,12 +96,13 @@ class CreateDeck extends React.Component {
     }
 
     onInputChange = event => {
+        const card = this.state.cards;
         if(event.target.name === "card_prompt") {
-            const cards = this.state.cards;
-            cards[event.target.id].prompt = event.target.value;
+            card[event.target.id].prompt = event.target.value;
+            this.setState({cards: card});
         }else if(event.target.name === "card_answer"){
-            const cards = this.state.cards;
-            cards[event.target.id].answer = event.target.value;
+            card[event.target.id].answer = event.target.value;
+            this.setState({cards: card});
         }else{
             this.setState({[event.target.name]: event.target.value});
         }

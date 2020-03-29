@@ -2,11 +2,12 @@ import React from 'react'
 import { Button, Form, FormGroup, FormTextarea, FormInput} from "shards-react";
 import { Container, Row, Col } from "shards-react";
 import { TiDelete } from 'react-icons/ti';
-import * as withAlert from "./ComponentWithAlert";
+import * as withAlert from "./HOC/ComponentWithAlert";
 import axios from 'axios';
 import './CreateDeck.css';
 
 class EditDeck extends React.Component {
+    invalidInputClassName = "is-invalid";
     constructor(props) {
         super(props);
         this.state = {
@@ -90,7 +91,12 @@ class EditDeck extends React.Component {
 
     onSubmit = async event => {
         event.preventDefault();
-        event.stopPropagation();
+
+        if (!this.isValidInput()) {
+            this.props.showAlert(withAlert.errorTheme, "Error. Deckname is required. Please remove or fill empty forms.")
+            return;
+        }
+
         const deckname = this.state.deckname;
         const cardsObject = this.state.cards;
         const deckId = this.state.deckId;
@@ -115,14 +121,27 @@ class EditDeck extends React.Component {
             this.props.showAlert(withAlert.errorTheme, error.response.data.result);
         }
     }
+    isValidInput() {
+        var validInput = true;
+        const deckname = this.state.deckname;
+        
+        if (!deckname) {
+          validInput = false;
+        }
+        
+        return validInput;
+      }
 
     onInputChange = (event) => {
+        const card = this.state.cards;
         if(event.target.name === "card_prompt") {
-            this.state.cards[event.target.id].prompt = event.target.value;
+            card[event.target.id].prompt = event.target.value;
+            this.setState({cards: card});
         }else if(event.target.name === "card_answer"){
-            this.state.cards[event.target.id].answer = event.target.value;
-        }else{
-            this.setState({[event.target.name]: event.target.value});
+            card[event.target.id].answer = event.target.value;
+            this.setState({cards: card});
+        }else if(event.target.name === "deckname"){
+            this.setState({deckname: event.target.value});
         }
     }
 
