@@ -12,6 +12,8 @@ class Home extends Component {
         this.state = {
             courses: [],
         };
+        this.assignStudentBtn = this.assignStudentBtn.bind(this);
+        this.ifTeacher = this.ifTeacher.bind(this);
     }
 
     async componentDidMount() {
@@ -61,6 +63,17 @@ class Home extends Component {
             state: { email: this.props.user.email }
         });
     }
+    assignStudentBtn(e){
+        this.props.history.push({
+            pathname: '/assignStudents',
+            state: { teacher: this.props.user.email }
+        });
+    }
+    ifTeacher(){
+        if(this.props.user.role === 'teacher'){
+            return <NavLink href='#' onClick={this.assignStudentBtn}>Assign Students</NavLink>
+        }
+    }
     
     render() {
         const username = this.props.user.fname + ' ' + this.props.user.lname + ' ' + this.props.user.role;
@@ -68,6 +81,7 @@ class Home extends Component {
             <div>
                 <div id="user">
                     <h1>Welcome {username}!</h1>
+                    {this.ifTeacher()}
                 </div>
                 <div>
                     <Nav>

@@ -14,7 +14,7 @@ class AssignStudents extends Component {
     }
     studentClicked(e){
         e.persist()
-        console.log(e.target.value);
+        console.log(this.props.location.state.teacher + " " + e.target.value);
     }
     async componentDidMount() {
         try {
