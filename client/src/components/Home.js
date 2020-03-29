@@ -11,7 +11,6 @@ class Home extends Component {
         super(props);
         this.state = {
             courses: [],
-            students:[]
         };
     }
 
@@ -39,14 +38,6 @@ class Home extends Component {
                 console.error(error);
                 this.props.showAlert(withAlert.errorTheme, error.response.data.result);
             }
-        }
-        try {
-            const studentsResponse = await axios.get('/api/allStudents');
-            const students = studentsResponse.data.result;
-            this.setState({students: students});
-            console.log(this.state.students);
-        } catch(error) {
-            this.props.showAlert(withAlert.errorTheme, error.response.data.result);
         }
     }
 

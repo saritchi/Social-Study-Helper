@@ -13,6 +13,7 @@ import AddCourse from './components/AddCourse';
 import CreateDeck from './components/CreateDeck';
 import DeckDisplay from './components/DeckDisplay';
 import ViewCards from './components/ViewCards';
+import AssignStudents from './components/AssignStudents';
 import User from './User';
 
 const userStorageKey = 'user';
@@ -99,6 +100,15 @@ class App extends Component {
                   </React.Fragment>
                 )}
               />
+              <Route
+                path="/assignStudents"
+                exact
+                render={props => (
+                  <React.Fragment>
+                    <AssignStudents/>
+                  </React.Fragment>
+                )}
+             />
           </Switch>
       </div>
       </Router>
