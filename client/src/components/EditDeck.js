@@ -7,7 +7,6 @@ import axios from 'axios';
 import './CreateDeck.css';
 
 class EditDeck extends React.Component {
-    invalidInputClassName = "is-invalid";
     constructor(props) {
         super(props);
         this.state = {
