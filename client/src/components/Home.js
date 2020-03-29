@@ -66,7 +66,7 @@ class Home extends Component {
     assignStudentBtn(e){
         this.props.history.push({
             pathname: '/assignStudents',
-            state: { teacher: this.props.user.email }
+            state: { teacherEmail: this.props.user.email }
         });
     }
     ifTeacher(){

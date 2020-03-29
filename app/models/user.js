@@ -49,7 +49,7 @@ class User {
     }
 
     async isTeacher(){
-        const query = `SELECT * FROM user WHERE email = ? AND role = teacher`;
+        const query = `SELECT * FROM user WHERE email = ? AND role = 'teacher'`;
         const result = await database.runQuery(query, [this.email]);
         if(result.length == 0){ 
             return false;
@@ -57,7 +57,7 @@ class User {
         return true;
     }
     async isStudent(){
-        const query = `SELECT * FROM user WHERE email = ? AND role = student`;
+        const query = `SELECT * FROM user WHERE email = ? AND role = 'student'`;
         const result = await database.runQuery(query, [this.email]);
         if(result.length == 0){ 
             return false;
@@ -73,8 +73,7 @@ module.exports = User;
  * @returns A User object
  */
 module.exports.getUserFromEmail = async function getUserFromEmail(email) {
-    const query = 'SELECT FROM user WHERE email = ?';
-    const result = await database.runQuery(query, email);
-
+    const query = 'SELECT * FROM user WHERE email = ?';
+    const result = await database.runQuery(query, [email]);
     return new User(result.email, result.password, result.fname, result.lname, result.role);
 }

@@ -12,9 +12,17 @@ class AssignStudents extends Component {
         };
         this.studentClicked = this.studentClicked.bind(this);
     }
-    studentClicked(e){
+    async studentClicked(e){
         e.persist()
-        console.log(this.props.location.state.teacher + " " + e.target.value);
+        try {
+            const response = await axios.post('/api/assignStudent',{
+                teacherEmail:this.props.location.state.teacherEmail,
+                studentEmail:e.target.value
+            });
+            this.props.showAlert(withAlert.successTheme, response.data.result);
+        } catch(error) {
+            this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+        }
     }
     async componentDidMount() {
         try {
