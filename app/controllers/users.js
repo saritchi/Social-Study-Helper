@@ -1,5 +1,6 @@
 var router = require('express').Router();
 var User = require('../models/user');
+const database = require('../database/database')(process.env);
 
 async function authenticateUser(req, res) {
     let email = req.body.email;
@@ -47,9 +48,9 @@ async function registerGoogleUser(req, res) {
     let password = post.password;
     let firstname = post.fname;
     let lastname = post.lname;
+    let role = post.role;
 
-
-    const newUser = new User(email, password, firstname, lastname);
+    const newUser = new User(email, password, firstname, lastname, role);
     try { 
         const userExists = await newUser.exists();
         if (userExists) {
@@ -68,8 +69,23 @@ async function registerGoogleUser(req, res) {
     }
 }
 
+async function getAllStudents(req, res) {
+    try { 
+        const query = `SELECT * FROM user WHERE  role = 'student'`;
+        const result = await database.runQuery(query);
+        const students = result.map((student) => {
+            return new User(student.email,student.password,student.fname,student.lname,student.role);
+        })
+        res.status(200).json({result: students});
+     } catch (error) {
+         console.log(error);
+        res.status(500).json({result: "An error occured while attempting to get All students. Please try again later."});
+    }
+}
+
 router.post('/auth', authenticateUser)
 router.post('/register', registerUser)
 router.post('/google/register', registerGoogleUser)
+router.get('/allStudents', getAllStudents)
 
 module.exports = router;

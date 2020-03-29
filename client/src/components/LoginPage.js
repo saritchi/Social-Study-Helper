@@ -21,8 +21,9 @@ import axios from "axios";
         var lname=response.getBasicProfile().getFamilyName()
         var email =response.getBasicProfile().getEmail();
         var password='';
+        var role='student';
         var isAuthenticated = true;
-        const user = new User(email,password,fname,lname,isAuthenticated);
+        const user = new User(email,password,fname,lname,role,isAuthenticated);
         try {
             //TODO: get a user object back from the server
             const response = await axios.post('/api/google/register', user);
@@ -56,7 +57,6 @@ import axios from "axios";
     }
     
     render() {
-        console.log(this.state);
         if(this.state.user.isAuthenticated){
             return(
                 <div>

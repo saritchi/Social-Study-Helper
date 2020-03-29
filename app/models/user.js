@@ -64,13 +64,6 @@ class User {
         }
         return true;
     }
-    async getAllStudents(){
-        const query = `SELECT * FROM user WHERE  role = student`;
-        const result = await database.runQuery(query);
-        return result.map((student) => {
-            return new User(student.email,student.password,student.fname,student.lname);
-        })
-    }
 }
 
 module.exports = User;
