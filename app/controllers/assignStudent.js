@@ -13,15 +13,15 @@ async function assignStudent(req, res) {
         const teacher = new User(teacherResponse.email,teacherResponse.password,teacherResponse.fname,teacherResponse.lname,teacherResponse.role);
         const student = new User(studentResponse.email,studentResponse.password,studentResponse.fname,studentResponse.lname,studentResponse.role);
         if(await teacher.isStudent()){
-            res.status(400).json({result: "Bad request"});
+            res.status(400).json({result: "Bad request You are not a teacher"});
             return;
         }
         if(await student.isTeacher()){
-            res.status(400).json({result: "Bad request"});
+            res.status(400).json({result: "Bad request You are not assiging a student"});
             return;
         };
         if(await assignStudent.exist()){
-            res.status(409).json({result: "The Student you are trying to assign is already your student"});
+            res.status(409).json({result: "The Student you are trying to assign is already your assigned student"});
             return;
         }
         await assignStudent.assignStudent()

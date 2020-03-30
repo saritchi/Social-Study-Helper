@@ -71,11 +71,7 @@ async function registerGoogleUser(req, res) {
 
 async function getAllStudents(req, res) {
     try { 
-        const query = `SELECT * FROM user WHERE  role = 'student'`;
-        const result = await database.runQuery(query);
-        const students = result.map((student) => {
-            return new User(student.email,student.password,student.fname,student.lname,student.role);
-        })
+        const students = await User.getAllStudents();
         res.status(200).json({result: students});
      } catch (error) {
          console.log(error);
@@ -83,9 +79,31 @@ async function getAllStudents(req, res) {
     }
 }
 
+async function getAssignedStudents(req, res) {
+    let post = JSON.parse(req.query.user);
+    let email = post.email;
+    let password = post.password;
+    let firstname = post.fname;
+    let lastname = post.lname;
+    let role = post.role;
+
+    const user = new User(email, password, firstname, lastname, role);
+    try { 
+        if(await user.isStudent()){
+            res.status(400).json({result: "Bad request you are not a teacher"});
+            return;
+        }
+        const students = await user.getAssignedStudents();
+        res.status(200).json({result:  students});
+     } catch (error) {
+        res.status(500).json({result: "An error occured while attempting to get assigned students. Please try again later."});
+    }
+}
+
 router.post('/auth', authenticateUser)
 router.post('/register', registerUser)
 router.post('/google/register', registerGoogleUser)
 router.get('/allStudents', getAllStudents)
+router.get('/assignedStudents',getAssignedStudents)
 
 module.exports = router;

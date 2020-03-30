@@ -24,12 +24,12 @@ class AssignStudents {
     async getTeacher(){
         const query = 'SELECT * FROM user WHERE email = ?';
         const result = await database.runQuery(query, [this.teacherEmail]);
-        return JSON.parse(JSON.stringify(result[0]));
+        return result[0];
     }
     async getStudent(){
         const query = 'SELECT * FROM user WHERE email = ?';
         const result = await database.runQuery(query, [this.studentEmail]);
-        return JSON.parse(JSON.stringify(result[0]));
+        return result[0];
     }
 }
 

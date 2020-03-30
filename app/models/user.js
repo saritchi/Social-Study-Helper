@@ -64,6 +64,16 @@ class User {
         }
         return true;
     }
+    async getAssignedStudents(){
+        const query = 'SELECT student FROM assignStudent WHERE teacher = ?';
+        let result = await database.runQuery(query, [this.email]);
+        result = JSON.parse(JSON.stringify(result));
+        let students = result.map(async (student) => {
+             return await User.getUserFromEmail(student.student);
+        })
+        students = await Promise.all(students);
+        return students;
+    }
 }
 
 module.exports = User;
@@ -75,5 +85,14 @@ module.exports = User;
 module.exports.getUserFromEmail = async function getUserFromEmail(email) {
     const query = 'SELECT * FROM user WHERE email = ?';
     const result = await database.runQuery(query, [email]);
-    return new User(result.email, result.password, result.fname, result.lname, result.role);
+    return new User(result[0].email, result[0].password, result[0].fname, result[0].lname, result[0].role);
+}
+
+module.exports.getAllStudents = async function getAllStudents(){
+    const query = `SELECT * FROM user WHERE  role = 'student'`;
+    const result = await database.runQuery(query);
+    const students = result.map((student) => {
+        return new User(student.email,student.password,student.fname,student.lname,student.role);
+    })
+    return students;
 }

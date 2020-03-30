@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import { withRouter } from "react-router-dom"
-import { Button, Nav, NavItem, NavLink } from 'shards-react'
+import { Button, Nav, NavItem, NavLink, ButtonGroup } from 'shards-react'
 import './Home.css'
 import axios from 'axios';
 import CardDisplay from './CardDisplay';
@@ -11,9 +11,11 @@ class Home extends Component {
         super(props);
         this.state = {
             courses: [],
+            assinedStudents:[]
         };
         this.assignStudentBtn = this.assignStudentBtn.bind(this);
         this.ifTeacher = this.ifTeacher.bind(this);
+        this.displayAssignedStudents = this.displayAssignedStudents.bind(this);
     }
 
     async componentDidMount() {
@@ -39,6 +41,21 @@ class Home extends Component {
             else {
                 console.error(error);
                 this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+            }
+        }
+        if(this.props.user.role === 'teacher'){
+            try {
+                const response = await axios.get('/api/assignedStudents', {
+                    params: {
+                        user: this.props.user
+                    }
+                });
+                const students = response.data.result;
+                console.log(students);
+                this.setState({assinedStudents: students});
+            } catch(error) {
+                    console.error(error);
+                    this.props.showAlert(withAlert.errorTheme, error.response.data.result);
             }
         }
     }
@@ -71,12 +88,24 @@ class Home extends Component {
     }
     ifTeacher(){
         if(this.props.user.role === 'teacher'){
-            return <NavLink href='#' onClick={this.assignStudentBtn}>Assign Students</NavLink>
+            return <Button theme="dark" onClick={this.assignStudentBtn}>Assign Students</Button>
+        }
+    }
+
+    displayAssignedStudents(){
+        if(this.props.user.role === 'teacher'){
+            const students = this.state.assinedStudents.map(student => (
+                <Button key={student.email} outline theme="info" >{student.fname + ' ' + student.lname}</Button>
+            ));
+            return (<div style={{marginTop:'200px', textAlign:"left",marginLeft:'50px',marginBottom:'200px'}}>
+                <h1>Your Students</h1>
+                <ButtonGroup vertical>{students}</ButtonGroup>
+                </div>);
         }
     }
     
     render() {
-        const username = this.props.user.fname + ' ' + this.props.user.lname + ' ' + this.props.user.role;
+        const username = this.props.user.fname + ' ' + this.props.user.lname;
         return (
             <div>
                 <div id="user">
@@ -95,6 +124,7 @@ class Home extends Component {
                 </div>
                 <CardDisplay changePage={this.deckView} cardsInfo={this.state.courses.slice(0, 9)}/>
                 <Button id="newCourse" onClick={this.addCourse}>Add New Course</Button>
+                {this.displayAssignedStudents()}
             </div>
             )
         }
