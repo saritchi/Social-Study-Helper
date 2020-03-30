@@ -12,13 +12,13 @@ class EditDeck extends React.Component {
         this.state = {
             deckname: '',
             cards: [],
-            deckId: 0
+            deckId: 0,
+            courseId: 0
         }
     }
     
     async componentDidMount(){
         try {
-            console.log(this.props.deckId);
             const response = await axios.get('/api/editDeck', {
               params:{
                 deck: this.props.deckId
@@ -32,7 +32,7 @@ class EditDeck extends React.Component {
             })
 
             // From GET, copy the contents to the state
-            this.setState({cards: cardSet, deckId: cardSet[0].deckId, deckname: deckName[0].name});
+            this.setState({cards: cardSet, deckId: cardSet[0].deckId, deckname: deckName[0].name, courseId: deckName.courseId});
             this.addCard();
 
         } catch(error) {
@@ -99,6 +99,7 @@ class EditDeck extends React.Component {
         const deckname = this.state.deckname;
         const cardsObject = this.state.cards;
         const deckId = this.state.deckId;
+        const courseId = this.state.courseId;
 
         const card = Object.keys(cardsObject).map((key) => {
             return cardsObject[key];
@@ -108,6 +109,7 @@ class EditDeck extends React.Component {
             deckname: deckname,
             cards: card, 
             deckId: deckId,
+            courseId: courseId
         }
 
         try{

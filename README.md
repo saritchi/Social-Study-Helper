@@ -111,6 +111,14 @@ Once these items have been added the mysql node package should be able to connec
 
 	More information regarding this error can be found [here](https://stackoverflow.com/questions/50093144/mysql-8-0-client-does-not-support-authentication-protocol-requested-by-server/53382070).
 
+# Testing
+To set up and run the tests you'll need to do the following
+ 1. `npm install` in the root folder to get the appropriate testing packages.
+ 2. Log into mysql using the following command `mysql -u root - p`
+ 3. Create a new table called testdb
+
+ Once this is done you can run `npm test` to run the tests.
+
 # Deploying on Google App Engine
 We are using Google App Engine (GAE) and Cloud SQL to deploy our application. To deploy the application to GAE the following steps need to be done first.
 
