@@ -41,7 +41,7 @@ class App extends Component {
               exact               
               render={props => (
                     <React.Fragment>
-                      <Home user={this.state.user} />
+                      <Home user={this.state.user} setUser={this.setUser} />
                     </React.Fragment>
                   )} 
               />
@@ -50,7 +50,7 @@ class App extends Component {
               exact               
               render={props => (
                     <React.Fragment>
-                      <DeckDisplay user={this.state.user} />
+                      <DeckDisplay user={this.state.user} setUser={this.setUser} />
                     </React.Fragment>
                   )} 
               />
@@ -59,7 +59,7 @@ class App extends Component {
                 exact               
                 render={props => (
                       <React.Fragment>
-                        <AddCourse user={this.state.user} />
+                        <AddCourse user={this.state.user} setUser={this.setUser} />
                       </React.Fragment>
                     )} 
               />
@@ -68,7 +68,7 @@ class App extends Component {
                 exact               
                 render={props => (
                       <React.Fragment>
-                        <CreateDeck user={this.state.user} />
+                        <CreateDeck user={this.state.user} setUser={this.setUser} />
                       </React.Fragment>
                     )}
               />
@@ -77,7 +77,7 @@ class App extends Component {
                 exact               
                 render={props => (
                       <React.Fragment>
-                        <AllCourses user={this.state.user} />
+                        <AllCourses user={this.state.user} setUser={this.setUser} />
                       </React.Fragment>
                     )} 
               />
@@ -86,7 +86,7 @@ class App extends Component {
                 exact
                 render={props => (
                   <React.Fragment>
-                    <ViewCards user={this.state.user} />
+                    <ViewCards user={this.state.user} setUser={this.setUser} />
                   </React.Fragment>
                 )}
               />

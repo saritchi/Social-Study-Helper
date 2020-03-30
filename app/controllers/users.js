@@ -1,4 +1,5 @@
 var router = require('express').Router();
+var requireLogin = require('../middleware/authentication');
 var User = require('../models/user');
 
 async function authenticateUser(req, res) {
@@ -39,7 +40,7 @@ async function registerUser(req, res) {
         res.status(500).json({result: "An error occured while attempting to register. Please try again later."});
     }
 }
-
+    
 async function registerGoogleUser(req, res) {
     let post = req.body;
     let email = post.email;
@@ -67,8 +68,15 @@ async function registerGoogleUser(req, res) {
     }
 }
 
+function logoutUser(req, res) {
+    console.log("Resetting user session")
+    req.session.reset();
+    res.sendStatus(200);
+}
+
 router.post('/auth', authenticateUser)
 router.post('/register', registerUser)
+router.get('/logout', requireLogin, logoutUser);
 router.post('/google/register', registerGoogleUser)
 
 module.exports = router;

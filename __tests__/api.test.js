@@ -248,6 +248,25 @@ describe('view cards tests', () => {
     })
 })
 
+describe('logout tests', () => {
+    test('should not be able to logout when not authenticated',() => {
+        return request(app)
+        .get("/api/logout")
+        .expect(401)
+    })
+    test('should be able to logout', () => {
+        return authAgent
+            .get("/api/logout")
+            .expect(200)
+    })
+    test('should not be able to access authentication content after logout', () => {
+        return authAgent
+        .get("/api/courses")
+        .query({email: "test@test.com"})
+        .expect(401);
+    })
+})
+
 // //Currently using --forceExit to fix a open handle warning from jest. This warning occurs
 // //despite the fact that the database closes
 afterAll(async () => {

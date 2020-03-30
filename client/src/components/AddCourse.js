@@ -4,6 +4,7 @@ import { Button, Form, FormInput, FormGroup } from "shards-react";
 import './AddCourse.css';
 import axios from "axios";
 import * as withAlert from "./HOC/ComponentWithAlert";
+import withMenu from './HOC/ComponentWithMenu';
 import { TiDelete } from 'react-icons/ti';
 
 class AddCourse extends Component {
@@ -163,4 +164,4 @@ class AddCourse extends Component {
   }
 }
 
-export default withRouter(withAlert.withAlert(AddCourse));
+export default withMenu(withRouter(withAlert.withAlert(AddCourse)));
