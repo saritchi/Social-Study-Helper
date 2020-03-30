@@ -5,6 +5,8 @@ import './AllCourses.css'
 import axios from "axios"
 import CardDisplay from '../subcomponents/CardDisplay';
 import * as withAlert from "../HOC/ComponentWithAlert";
+import withMenu from '../HOC/ComponentWithMenu';
+
 
 class AllCourses extends Component {
     constructor(props) {
@@ -68,4 +70,4 @@ class AllCourses extends Component {
         }
 };
 
-export default withRouter(withAlert.withAlert(AllCourses));
+export default withMenu(withRouter(withAlert.withAlert(AllCourses)));

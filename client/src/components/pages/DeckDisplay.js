@@ -4,6 +4,7 @@ import { Button, Nav, NavItem } from 'shards-react';
 import axios from "axios";
 import './DeckDisplay.css';
 import * as withAlert from "../HOC/ComponentWithAlert";
+import withMenu from '../HOC/ComponentWithMenu';
 import CardDisplay from '../subcomponents/CardDisplay';
 
 
@@ -159,4 +160,4 @@ class DeckDisplay extends Component {
     }
 };
 
-export default withRouter(withAlert.withAlert(DeckDisplay));
+export default withMenu(withRouter(withAlert.withAlert(DeckDisplay)));
