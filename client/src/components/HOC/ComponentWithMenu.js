@@ -13,8 +13,8 @@ export default (WrappedComponent) => {
                 <div>
                     <Menu id="menu">
                         <a id="home" className="menu-item" href="/home">Home</a>
-                        <a id="home" className="menu-item" onClick={this.allCoursesView} href="/allCourses">All Courses</a>
-                        <a id="home" className="menu-item" onClick={this.logout} href="/">Logout</a>
+                        <a id="allCourses" className="menu-item" onClick={this.allCoursesView} href="/allCourses">All Courses</a>
+                        <a id="logout" className="menu-item" onClick={this.logout} href="/">Logout</a>
                     </Menu>
                     <WrappedComponent {...this.props}/>
                 </div>
