@@ -168,5 +168,4 @@ class EditDeck extends React.Component {
     }
 }
 
-// export default withAlert.withAlert(EditDeck);
 export default withMenu(withAlert.withAlert(EditDeck));
