@@ -11,14 +11,16 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "shards-ui/dist/css/shards.min.css"
 import AddCourse from './components/AddCourse';
 import CreateDeck from './components/CreateDeck';
+import EditDeck from './components/EditDeck';
 import DeckDisplay from './components/DeckDisplay';
 import ViewCards from './components/ViewCards';
+import User from './User';
 
 const userStorageKey = 'user';
 class App extends Component {
   //read the user object out of the browser sotrage to allow the page to be refreshed and not lose the user information
   state = {
-    user: JSON.parse(localStorage.getItem(userStorageKey)),
+    user: JSON.parse(localStorage.getItem(userStorageKey)) || new User(),
   }
 
   render() {
@@ -40,7 +42,7 @@ class App extends Component {
               exact               
               render={props => (
                     <React.Fragment>
-                      <Home user={this.state.user} />
+                      <Home user={this.state.user} setUser={this.setUser} />
                     </React.Fragment>
                   )} 
               />
@@ -49,7 +51,7 @@ class App extends Component {
               exact               
               render={props => (
                     <React.Fragment>
-                      <DeckDisplay />
+                      <DeckDisplay user={this.state.user} setUser={this.setUser} />
                     </React.Fragment>
                   )} 
               />
@@ -58,7 +60,7 @@ class App extends Component {
                 exact               
                 render={props => (
                       <React.Fragment>
-                        <AddCourse user={this.state.user} />
+                        <AddCourse user={this.state.user} setUser={this.setUser} />
                       </React.Fragment>
                     )} 
               />
@@ -67,7 +69,7 @@ class App extends Component {
                 exact               
                 render={props => (
                       <React.Fragment>
-                        <CreateDeck />
+                        <CreateDeck user={this.state.user} setUser={this.setUser} />
                       </React.Fragment>
                     )}
               />
@@ -76,7 +78,7 @@ class App extends Component {
                 exact               
                 render={props => (
                       <React.Fragment>
-                        <AllCourses user={this.state.user} />
+                        <AllCourses user={this.state.user} setUser={this.setUser} />
                       </React.Fragment>
                     )} 
               />
@@ -85,7 +87,7 @@ class App extends Component {
                 exact
                 render={props => (
                   <React.Fragment>
-                    <ViewCards />
+                    <ViewCards user={this.state.user} setUser={this.setUser} />
                   </React.Fragment>
                 )}
               />
@@ -95,6 +97,15 @@ class App extends Component {
                 render={props => (
                   <React.Fragment>
                     <Register/>
+                  </React.Fragment>
+                )}
+              />
+              <Route
+                path="/editDeck"
+                exact
+                render={props => (
+                  <React.Fragment>
+                    <EditDeck deckId={1}/>
                   </React.Fragment>
                 )}
               />

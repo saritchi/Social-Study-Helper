@@ -4,19 +4,21 @@
   "description": "",
   "main": "new_card.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "cross-env NODE_ENV=test DB_NAME=testdb jest",
+    "pretest": "cross-env NODE_ENV=test DB_NAME=testdb node ./__tests__/helpers/testDatabaseManager.js",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "start": "node server.js",
-    "server": "nodemon server.js",
+    "start": "node ./app/server",
+    "server": "nodemon ./app/server",
     "client": "node start-client.js",
     "prod": "npm install && cd client && npm install && npm run build",
     "debug": "concurrently \"npm run server\" \"npm run client\"",
-    "debug-server": "nodemon --inspect index.js"
+    "debug-server": "nodemon --inspect ./app/server.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
+    "client-sessions": "^0.8.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "morgan": "^1.9.1",
@@ -24,16 +26,28 @@
   },
   "devDependencies": {
     "concurrently": "^5.1.0",
+    "cross-env": "^7.0.2",
     "eslint": "^6.8.0",
     "eslint-plugin-react": "^7.18.3",
-    "nodemon": "^2.0.2"
+    "jest": "^24.9.0",
+    "nodemon": "^2.0.2",
+    "supertest": "^4.0.2"
   },
   "engines": {
     "node": "10.x.x"
   },
   "nodemonConfig": {
     "ignore": [
-      "client/*"
+      "client/*",
+      "__test__/*"
+    ]
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/client/",
+      "/__tests__/helpers"
     ]
   }
 }

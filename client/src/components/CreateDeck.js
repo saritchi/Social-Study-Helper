@@ -1,11 +1,12 @@
 import React from 'react'
-import { Form, FormGroup, FormTextarea, FormInput} from "shards-react";
 import { withRouter } from "react-router-dom"
+import { Form, FormGroup, FormTextarea, FormInput} from "shards-react";
 import { Container, Row, Col } from "shards-react";
 import {
     Button
   } from "shards-react";
-import * as withAlert from "./ComponentWithAlert"
+import * as withAlert from "./HOC/ComponentWithAlert";
+import withMenu from './HOC/ComponentWithMenu';
 import Axios from 'axios';
 import './CreateDeck.css';
 
@@ -19,6 +20,11 @@ class CreateDeck extends React.Component {
     }
     
     componentDidMount(){
+        if(!this.props.user.isAuthenticated) {
+            this.props.history.replace("/");
+            return;
+        }
+
         this.addCard();
     }
 
@@ -91,12 +97,13 @@ class CreateDeck extends React.Component {
     }
 
     onInputChange = event => {
+        const card = this.state.cards;
         if(event.target.name === "card_prompt") {
-            const cards = this.state.cards;
-            cards[event.target.id].prompt = event.target.value;
+            card[event.target.id].prompt = event.target.value;
+            this.setState({cards: card});
         }else if(event.target.name === "card_answer"){
-            const cards = this.state.cards;
-            cards[event.target.id].answer = event.target.value;
+            card[event.target.id].answer = event.target.value;
+            this.setState({cards: card});
         }else{
             this.setState({[event.target.name]: event.target.value});
         }
@@ -123,4 +130,4 @@ class CreateDeck extends React.Component {
     }
 }
 
-export default withRouter(withAlert.withAlert(CreateDeck));
+export default withMenu(withRouter(withAlert.withAlert(CreateDeck)));

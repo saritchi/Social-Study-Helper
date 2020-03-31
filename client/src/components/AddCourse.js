@@ -1,9 +1,10 @@
 import React, {Component} from "react";
+import { withRouter } from "react-router-dom"
 import { Button, Form, FormInput, FormGroup } from "shards-react";
 import './AddCourse.css';
 import axios from "axios";
-import './ComponentWithAlert';
-import * as withAlert from "./ComponentWithAlert";
+import * as withAlert from "./HOC/ComponentWithAlert";
+import withMenu from './HOC/ComponentWithMenu';
 import { TiDelete } from 'react-icons/ti';
 
 class AddCourse extends Component {
@@ -24,6 +25,11 @@ class AddCourse extends Component {
   }
   
   componentDidMount() {
+    if(!this.props.user.isAuthenticated) {
+      this.props.history.replace("/");
+      return;
+    }
+
     this.addDeckInput();
   }
 
@@ -80,8 +86,13 @@ class AddCourse extends Component {
         }, this.addDeckInput);
         this.props.showAlert(withAlert.successTheme, "Added Course");
     } catch (error) {
-      console.error(error);
-      this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+      if(error.response.status === 401) {
+        this.props.history.replace("/");
+      }
+      else {
+          console.error(error);
+          this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+      }
     }
   }
 
@@ -153,4 +164,4 @@ class AddCourse extends Component {
   }
 }
 
-export default withAlert.withAlert(AddCourse);
+export default withMenu(withRouter(withAlert.withAlert(AddCourse)));

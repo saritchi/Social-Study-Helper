@@ -30,6 +30,6 @@ export const withAlert = (WrappedComponent) => {
 
     return WithAlert;
 };
-
+//
 export const errorTheme = 'danger';
 export const successTheme = 'success';

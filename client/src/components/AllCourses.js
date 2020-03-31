@@ -1,10 +1,12 @@
 import React, {Component} from 'react'
-import {withRouter } from "react-router-dom"
+import { withRouter } from "react-router-dom"
 import { Button } from 'shards-react'
 import './AllCourses.css'
 import axios from "axios"
 import CardDisplay from './CardDisplay';
-import * as withAlert from "./ComponentWithAlert";
+import * as withAlert from "./HOC/ComponentWithAlert";
+import withMenu from './HOC/ComponentWithMenu';
+
 
 class AllCourses extends Component {
     constructor(props) {
@@ -13,6 +15,11 @@ class AllCourses extends Component {
     }
 
     async componentDidMount() {
+        if(!this.props.user.isAuthenticated) {
+            this.props.history.replace("/");
+            return;
+        }
+
         try {
             const coursesResponse = await axios.get('/api/courses', {
                 params: {
@@ -25,8 +32,13 @@ class AllCourses extends Component {
             })
             this.setState({courses: courses})
         } catch(error) {
-            console.error(error);
-            this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+            if(error.response.status === 401) {
+                this.props.history.replace("/");
+            }
+            else {
+                console.error(error);
+                this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+            }
         }
     }
 
@@ -36,7 +48,7 @@ class AllCourses extends Component {
 
     deckView = (deckId, deckName) => {
         this.props.history.push({
-            pathname: '/chapters',
+            pathname: '/decks',
             state: {
                 id: deckId,
                 name: deckName
@@ -58,4 +70,4 @@ class AllCourses extends Component {
         }
 };
 
-export default withRouter(withAlert.withAlert(AllCourses));
+export default withMenu(withRouter(withAlert.withAlert(AllCourses)));
