@@ -15,7 +15,7 @@ import CreateDeck from './components/pages/CreateDeck';
 import DeckDisplay from './components/pages/DeckDisplay';
 import ViewCards from './components/pages/ViewCards';
 import AllSharedContent from './components/pages/AllSharedContent'
-import EditDeck from './components/EditDeck';
+import EditDeck from './components/pages/EditDeck';
 import User from './User';
 
 const userStorageKey = 'user';

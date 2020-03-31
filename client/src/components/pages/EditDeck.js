@@ -2,8 +2,8 @@ import React from 'react'
 import { Button, Form, FormGroup, FormTextarea, FormInput} from "shards-react";
 import { Container, Row, Col } from "shards-react";
 import { TiDelete } from 'react-icons/ti';
-import * as withAlert from "./HOC/ComponentWithAlert";
-import withMenu from './HOC/ComponentWithMenu';
+import * as withAlert from "../HOC/ComponentWithAlert";
+import withMenu from '../HOC/ComponentWithMenu';
 import axios from 'axios';
 import './CreateDeck.css';
 
