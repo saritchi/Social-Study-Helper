@@ -11,6 +11,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "shards-ui/dist/css/shards.min.css"
 import AddCourse from './components/AddCourse';
 import CreateDeck from './components/CreateDeck';
+import EditDeck from './components/EditDeck';
 import DeckDisplay from './components/DeckDisplay';
 import ViewCards from './components/ViewCards';
 import User from './User';
@@ -96,6 +97,15 @@ class App extends Component {
                 render={props => (
                   <React.Fragment>
                     <Register/>
+                  </React.Fragment>
+                )}
+              />
+              <Route
+                path="/editDeck"
+                exact
+                render={props => (
+                  <React.Fragment>
+                    <EditDeck deckId={1}/>
                   </React.Fragment>
                 )}
               />
