@@ -3,6 +3,7 @@ import { Button, Form, FormGroup, FormTextarea, FormInput} from "shards-react";
 import { Container, Row, Col } from "shards-react";
 import { TiDelete } from 'react-icons/ti';
 import * as withAlert from "./HOC/ComponentWithAlert";
+import withMenu from './HOC/ComponentWithMenu';
 import axios from 'axios';
 import './CreateDeck.css';
 
@@ -167,4 +168,5 @@ class EditDeck extends React.Component {
     }
 }
 
-export default withAlert.withAlert(EditDeck);
+// export default withAlert.withAlert(EditDeck);
+export default withMenu(withAlert.withAlert(EditDeck));
