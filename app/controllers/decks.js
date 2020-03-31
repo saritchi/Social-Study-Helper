@@ -8,7 +8,7 @@ async function getDecks(req, res) {
     console.log("Getting decks....");
     try {
         console.log(req.query.id);
-        const decklist = await Deck.getAllFromCourseId(req.query.id);
+        const decklist = await Deck.getDecksFromCourseId(req.query.id);
         console.log(decklist);
         res.status(200).json({result: decklist});
     } catch (error) {
@@ -52,7 +52,7 @@ async function getDeckData(req, res) {
     try {
         const cards = await Card.getAllFromDeckId(deckId);
         console.log(cards)
-        const deck = await Deck.getAllFromCourseId(deckId);
+        const deck = await Deck.getNamefromDeckId(deckId);
         console.log(deck)
         
         res.status(200).json({result_cards: cards, result_names: deck});

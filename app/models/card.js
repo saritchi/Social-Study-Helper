@@ -52,3 +52,4 @@ module.exports.getAllFromDeckId = async function getAllFromDeckId(deckId) {
         return new Card(result.prompt, result.answer, result.deckId, result.id, result.nextStudyTime);
     })
 }
+
