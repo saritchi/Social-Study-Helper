@@ -186,7 +186,7 @@ class Home extends Component {
                     </Nav>
                 </div>
                 <CardDisplay changePage={this.courseView} options={true} 
-                             shareContentCallback={this.shareCourseCallback}
+                             sharedContentCallback={this.shareCourseCallback}
                              removeSharedContentCallback={this.removeSharedCourseCallback}
                              cardsInfo={this.state.courses}
                 />
