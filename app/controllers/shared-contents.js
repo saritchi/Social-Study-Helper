@@ -9,10 +9,8 @@ var runTransaction = require('../database/helper');
 var UserDoesNotExistError = require('../errors/UserDoesNotExistError')
 var DeckDoesNotExistError = require('../errors/DeckDoesNotExistError')
 
-
 var requireLogin = require('../middleware/authentication');
 
-//TODO error check that the content hasn't already been shared
 async function shareCourse(req, res) {
     console.log("Sharing course")
     var body = req.body;
@@ -74,7 +72,6 @@ async function shareDecksFromCourseId(toEmail, fromEmail, courseId) {
     })
 }
 
-//TODO error check that the content hasn't already been shared
 async function shareDeck(req, res) {
     console.log("Sharing deck")
     var body = req.body;
