@@ -13,7 +13,8 @@ class DeckDisplay extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            decklist: []
+            decklist: [],
+            coursename:  this.props.location?.state?.name || ''
         };
     }
 
@@ -58,11 +59,11 @@ class DeckDisplay extends Component {
     }
 
     render() {
-        const coursename = this.props.location?.state?.name || '';
+        // const coursename = this.props.location?.state?.name || '';
         return (
             <div>
                 <div id="courseName">
-                    <h1>{coursename}</h1>
+                    <h1>{this.state.coursename}</h1>
                 </div>
                 <div>
                     <Nav>
@@ -73,7 +74,10 @@ class DeckDisplay extends Component {
                 </div>
                 <CardDisplay changePage={this.cardView} cardsInfo={this.state.decklist} />
                 <Button id="newDeck" onClick={this.addDeck}>Add New Deck</Button>
-                <TestModal id = "newTest"></TestModal>
+                <div id = "newTest">
+
+                <TestModal isExam={false} coursename={this.state.coursename}></TestModal>
+                </div>
             </div>
         )
     }
