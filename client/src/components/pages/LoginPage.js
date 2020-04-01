@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { FormGroup, Form,FormInput } from 'shards-react'
 import {Link,Redirect} from 'react-router-dom';
-import * as withAlert from "./HOC/ComponentWithAlert";
-import User from '../User.js';
+import * as withAlert from "../HOC/ComponentWithAlert";
+import User from '../../User.js';
 import './Loginpage.css';
 import GoogleLogin from 'react-google-login';
 import axios from "axios";
@@ -12,10 +12,9 @@ import axios from "axios";
         this.state = {user: new User()};
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this); 
-        this.responseGoogle = this.responseGoogle.bind(this);      
     }
     
-   async responseGoogle(response){
+    responseGoogle = async response =>{
 
         var fname=response.getBasicProfile().getGivenName();
         var lname=response.getBasicProfile().getFamilyName()

@@ -5,12 +5,12 @@ var runTransaction = require('../database/helper');
 var requireLogin = require('../middleware/authentication');
 
 async function getCourses(req, res) {
-      //TODO: endpoint will need a query paremeter for the number of courses.
     console.log("Getting courses....");
     var userEmail = req.query.email;
+    var limit = req.query.limit
 
     try {
-        const courses = await Course.getAllForUser(userEmail);
+        const courses = await Course.getCoursesFourUser(userEmail, limit);
         console.log(courses);
         res.status(200).json({result: courses});
     } catch (error) {
@@ -41,12 +41,12 @@ async function addCourse(req, res) {
     try {
         await runTransaction(async () => {
             const courseId = await course.create();
-            decks.map((deckname) => {
+            const deckPromises = decks.map((deckname) => {
                 const newDeck = new Deck(deckname, midterm, final, courseId);
                 return newDeck.create();
             })
             
-            await Promise.all(decks);
+            await Promise.all(deckPromises);
         })
         console.log("Add course with name: " + coursename);
         res.sendStatus(200);
@@ -66,6 +66,7 @@ function isValidCourseRequest(coursename, decks) {
 
     return coursename && !emptyDecks;
 }
+
 
 router.get('/courses', requireLogin, getCourses)
 router.post('/addCourse', requireLogin, addCourse)

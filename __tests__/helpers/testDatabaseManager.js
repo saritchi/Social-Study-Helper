@@ -10,6 +10,8 @@ async function dropTables() {
         drop table if exists Decks;
         drop table if exists Courses;
         drop table if exists Cards;
+        drop table if exists SharedCourses;
+        drop table if exists SharedDecks;
         SET FOREIGN_KEY_CHECKS = 1
     `
     

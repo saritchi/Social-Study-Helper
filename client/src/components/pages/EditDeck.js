@@ -2,8 +2,8 @@ import React from 'react'
 import { Button, Form, FormGroup, FormTextarea, FormInput} from "shards-react";
 import { Container, Row, Col } from "shards-react";
 import { TiDelete } from 'react-icons/ti';
-import * as withAlert from "./HOC/ComponentWithAlert";
-import withMenu from './HOC/ComponentWithMenu';
+import * as withAlert from "../HOC/ComponentWithAlert";
+import withMenu from '../HOC/ComponentWithMenu';
 import axios from 'axios';
 import './CreateDeck.css';
 
@@ -19,21 +19,27 @@ class EditDeck extends React.Component {
     }
     
     async componentDidMount(){
+        if(!this.props.user.isAuthenticated) {
+            this.props.history.replace("/");
+            return;
+        }
+
         try {
             const response = await axios.get('/api/editDeck', {
               params:{
-                deck: this.props.deckId
+                deck: this.props.location.state.deckId
               } 
             });
   
             const deckName = response.data.result_names;
             const cardSet = response.data.result_cards;
+            console.log(deckName);
             cardSet.forEach((card) => {
               console.log(card);
             })
 
             // From GET, copy the contents to the state
-            this.setState({cards: cardSet, deckId: cardSet[0].deckId, deckname: deckName[0].name, courseId: deckName.courseId});
+            this.setState({cards: cardSet, deckId: this.props.location.state.deckId, deckname: deckName.name, courseId: deckName.courseId});
             this.addCard();
 
         } catch(error) {
