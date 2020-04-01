@@ -134,7 +134,7 @@ class AllCourses extends Component {
                     <h1>All Courses</h1>
                 </div>
                 <CardDisplay changePage={this.courseView} options={true} 
-                             shareContentCallback={this.shareCourseCallback}
+                             sharedContentCallback={this.shareCourseCallback}
                              removeSharedContentCallback={this.removeSharedCourseCallback}
                              cardsInfo={this.state.courses}
                 />

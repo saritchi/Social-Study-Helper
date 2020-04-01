@@ -158,7 +158,7 @@ class DeckDisplay extends Component {
                     </Nav>
                 </div>
                 <CardDisplay changePage={this.cardView} options={true}
-                             shareContentCallback={this.shareDeckCallback}
+                             sharedContentCallback={this.shareDeckCallback}
                              removeSharedContentCallback={this.removeSharedDeckCallback}
                              cardsInfo={this.state.decklist}
                              editCallback={this.editDeckView} />

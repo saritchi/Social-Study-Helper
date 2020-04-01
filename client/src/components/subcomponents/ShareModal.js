@@ -31,6 +31,7 @@ class ShareModal extends Component {
 
     //when pressing the share button send the request to the server and close the modal
     shareContent = () => {
+        //TODO: check for empty emails.
         this.props.sharedContentCallback(this.props.id, this.state.emails, this.props.name)
         this.setState({emails: []})
         this.props.toggle();
