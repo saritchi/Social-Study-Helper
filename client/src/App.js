@@ -116,7 +116,7 @@ class App extends Component {
                 exact
                 render={props => (
                   <React.Fragment>
-                    <EditDeck deckId={1}/>
+                    <EditDeck  user={this.state.user}/>
                   </React.Fragment>
                 )}
               />

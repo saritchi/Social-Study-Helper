@@ -8,10 +8,8 @@ const InfoCard = (props) => {
         <Card>
             {props.options && 
                 <CardHeader>
-                    <OptionsDropdown name={props.info} id={props.id} 
-                                    sharedWithUsers={props.sharedWithUsers}
-                                    shareContentCallback={props.shareContentCallback}
-                                    removeSharedContentCallback={props.removeSharedContentCallback}
+                    <OptionsDropdown name={props.info}
+                                     {...props}
                     />
                 </CardHeader>
             }

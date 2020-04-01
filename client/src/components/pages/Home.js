@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import { withRouter } from "react-router-dom"
-import { Button, Nav, NavItem, NavLink } from 'shards-react'
+import { Button, Nav, NavItem, NavLink, CardBody, CardHeader } from 'shards-react'
 import './Home.css'
 import axios from 'axios';
 import CardDisplay from '../subcomponents/CardDisplay';
