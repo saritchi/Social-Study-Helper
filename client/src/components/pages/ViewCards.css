@@ -10,6 +10,17 @@
   margin-top: 10%;
 }
 
+.flashcard-done {
+  border-radius: 3px; 
+  box-shadow: none;
+  width: 40%;
+  height: 500px; 
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  cursor: pointer;
+}
+
 .flashcard {
     border: 1px solid rgb(238, 238, 238);
     border-radius: 3px; 
@@ -48,7 +59,8 @@
 }
 
 .difficulty-button-container {
-  margin-top: 2%;
+  margin-top: 39%;
+  /* height: 50%; */
 }
 
 
