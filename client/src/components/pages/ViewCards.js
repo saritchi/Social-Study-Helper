@@ -2,6 +2,7 @@ import React from 'react';
 import {withRouter} from "react-router-dom"
 import ReactCardFlip from 'react-card-flip';
 import { Button, Card, Progress} from 'shards-react';
+import { TiMediaPlay, TiMediaPlayReverse } from 'react-icons/ti';
 import './ViewCards.css';
 import * as withAlert from "../HOC/ComponentWithAlert";
 import withMenu from '../HOC/ComponentWithMenu';
@@ -14,10 +15,8 @@ class ViewCards extends React.Component {
       isFlipped: false,
       cardIndex: 0,
       cards: [],
+      deck_end: false
     };
-    this.handleClick = this.handleClick.bind(this);
-    this.restartDeck = this.restartDeck.bind(this);
-    this.markDifficulty = this.markDifficulty.bind(this);
   }
 
   async componentDidMount() {
@@ -32,11 +31,12 @@ class ViewCards extends React.Component {
           id: this.props.location.state.deckId
         } 
       });
+      
       const flashcards = cardResponse.data.result;
-
       this.extract_cards_today(flashcards)
       
       document.addEventListener("keydown", this.handleKeyDown);
+
     } catch(error) {
       if(error.response.status === 401) {
         this.props.history.replace("/");
@@ -90,6 +90,7 @@ class ViewCards extends React.Component {
 
     flashcards.forEach((card) => {
       // Splice studytime from query and reconstruct the string
+      console.log(card)
       var studyTime = card.nextStudyTime
       var study_year = studyTime.slice(0,4)
       var study_month = studyTime.slice(6,7)
@@ -107,6 +108,7 @@ class ViewCards extends React.Component {
       }
     })
   }
+
  
   markDifficulty = async (event, difficulty) => {
     const currentCard = this.state.cardIndex
@@ -118,7 +120,6 @@ class ViewCards extends React.Component {
     var datetime = this.get_date(difficulty);
 
     datetime = datetime.getFullYear() + "-" + (datetime.getMonth() + 1) + "-" +  datetime.getDate()
-    console.log(datetime)
 
     const json = {
       card_id: card_id,
@@ -139,11 +140,40 @@ class ViewCards extends React.Component {
   }
 
   restartDeck = (e) => {
-    this.setState({cardIndex: 0})
+    this.setState({cardIndex: 0, deck_end: false})
   }
 
   handleClick = (e) => {
     this.setState(prevState => ({ isFlipped: !prevState.isFlipped }));
+  }
+
+  increment_index = () => {
+    if(this.state.cardIndex < this.state.cards.length){
+      this.setState({cardIndex: this.state.cardIndex + 1}, () => { 
+        if(this.state.cardIndex == this.state.cards.length){
+          this.setState({deck_end: true})
+        }
+      })
+    }
+  }
+
+  decrement_index = () => {
+    if(this.state.cardIndex > 0){
+      this.setState({cardIndex: this.state.cardIndex - 1}, () => { 
+        if(this.state.cardIndex < this.state.cards.length){
+          this.setState({deck_end: false})
+        }
+      })
+    }
+  }
+
+  updateCard = (type) => {  
+    if(type === "NEXT"){
+      this.increment_index()
+    }
+    else if(type === "BACK" && this.state.cardIndex > 0){
+      this.decrement_index()
+    }
   }
 
   handleKeyDown = (e) => {
@@ -151,52 +181,76 @@ class ViewCards extends React.Component {
       this.setState(prevState => ({ isFlipped: !prevState.isFlipped }));
     }
     else if(e.key === 'ArrowRight'){
-      if(this.state.cardIndex < this.state.cards.length){
-        this.setState({cardIndex: this.state.cardIndex + 1})
-      }
+      this.increment_index()
     }
-    else if(e.key === 'ArrowLeft' && this.state.cardIndex > 0){
-      this.setState({cardIndex: this.state.cardIndex - 1})  
+    else if(e.key === 'ArrowLeft'){
+      this.decrement_index() 
     }
-    
   }
 
   render(){
-    if(this.state.cardIndex == this.state.cards.length){
+    if(this.state.deck_end == true){
       return(
         <div>
           <div id="progress-bar">
-            <Progress theme="primary" value={(this.state.cardIndex/this.state.cards.length) * 100} />          
+            <Progress theme="primary" value={(this.state.cardIndex+1/this.state.cards.length) * 100} />          
           </div>
           <div id="deck-complete">
             <h1>Great Work!</h1>
-            <h3>You just studied {this.state.cards.length} cards!</h3>
-            <Button onClick={this.restartDeck}>Study Again!</Button>
+            <h3>You just studied {this.state.cards.length} card(s)!</h3>
+            <Button  onClick={this.restartDeck} block>Study Again!</Button>
+            <Button block>Study Next Deck?</Button>
           </div>
-          <Button>Study Next Deck?</Button>
+
+          <div className="switch-card-button">
+                  <Button id="button-click" theme="secondary" onClick={() => {this.updateCard("BACK")}}>
+                    <TiMediaPlayReverse size={30}/>
+                  </Button>
+                  <Button id="button-click" theme="secondary" disabled onClick={() => {this.updateCard("NEXT")}}>
+                    <TiMediaPlay size={30}/>
+                  </Button>
+          </div>
+
         </div>
       );
-    } else {
+    } 
+    else {
       return (
         <div>
-          <div id="progress-bar">
-            <Progress theme="primary" value={(this.state.cardIndex/this.state.cards.length) * 100} />          
-          </div>
-          <div className="flash-container">  
-              <ReactCardFlip isFlipped={this.state.isFlipped} flipDirection="vertical">
-                <Card className="flashcard" onClick={this.handleClick}>
-                  {this.renderPrompt(this.state.cardIndex)}
-                </Card >
-                <Card className="flashcard" onClick={this.handleClick}>
-                  {this.renderAnswer(this.state.cardIndex)}
-                </Card>
-              </ReactCardFlip>
-              <div className="button-container">
-                <Button className="difficulty-button" size="lg" theme="success" onClick={(e) => this.markDifficulty(e, "EASY")}>Easy</Button>
-                <Button className="difficulty-button" size="lg" onClick={(e) => this.markDifficulty(e, "MEDIUM")}>Medium</Button>
-                <Button className="difficulty-button" size="lg" theme="danger" onClick={(e) => this.markDifficulty(e, "HARD")}>Hard</Button>
-              </div>
-          </div>
+            <div id="progress-bar">
+              <Progress theme="primary" value={(this.state.cardIndex+1/this.state.cards.length) * 100} />  
+              <p>{this.state.cardIndex+1 + "/" + this.state.cards.length}</p>        
+            </div>
+
+            <div className="flash-container"> 
+
+                <ReactCardFlip isFlipped={this.state.isFlipped} flipDirection="vertical">
+                  <Card className="flashcard" onClick={this.handleClick}>
+                    {this.renderPrompt(this.state.cardIndex)}
+                  </Card >
+                  <Card className="flashcard" onClick={this.handleClick}>
+                    {this.renderAnswer(this.state.cardIndex)}
+                  </Card>
+                </ReactCardFlip>
+
+                  <div className="switch-card-button">
+                    <Button id="button-click" theme="secondary" disabled={this.state.cardIndex == 0} onClick={() => {this.updateCard("BACK")}}>
+                      <TiMediaPlayReverse size={30}/>
+                    </Button>
+                    <Button id="button-click" theme="secondary" onClick={() => {this.updateCard("NEXT")}}>
+                      <TiMediaPlay size={30}/>
+                    </Button>
+                  </div>
+
+                  <div className="difficulty-button-container">
+                    <Button className="difficulty-button" size="lg" theme="success" onClick={(e) => this.markDifficulty(e, "EASY")}>Easy</Button>
+                    <Button className="difficulty-button" size="lg" onClick={(e) => this.markDifficulty(e, "MEDIUM")}>Medium</Button>
+                    <Button className="difficulty-button" size="lg" theme="danger" onClick={(e) => this.markDifficulty(e, "HARD")}>Hard</Button>
+                  </div>
+
+            </div>
+
+
         </div>
 
       );
