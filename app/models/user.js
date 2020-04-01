@@ -4,7 +4,7 @@ const database = require('../database/database')(process.env);
  * User model that communicates with the database
  */
 class User {
-    constructor(email, password, fname = '', lname = '') {
+    constructor(email, password = '', fname = '', lname = '') {
         this.email = email;
         this.password = password;
         this.fname = fname;

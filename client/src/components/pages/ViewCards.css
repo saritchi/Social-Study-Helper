@@ -1,4 +1,4 @@
-#flashcard {
+.flashcard {
     border: 1px solid rgb(238, 238, 238);
     border-radius: 3px; 
     width:800px;
@@ -6,6 +6,7 @@
     align-items: center;
     justify-content: center;
     margin: auto;
+    cursor: pointer;
   }
   
 .flash-container {
@@ -28,4 +29,8 @@
 #progress-bar {
   margin: auto;
   width: 90%;
+}
+
+.text{
+  margin-top: auto;
 }

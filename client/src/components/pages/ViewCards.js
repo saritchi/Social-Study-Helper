@@ -1,10 +1,10 @@
 import React from 'react';
 import {withRouter} from "react-router-dom"
 import ReactCardFlip from 'react-card-flip';
-import { Button, Progress} from 'shards-react';
+import { Button, Card, Progress} from 'shards-react';
 import './ViewCards.css';
-import * as withAlert from "./HOC/ComponentWithAlert";
-import withMenu from './HOC/ComponentWithMenu';
+import * as withAlert from "../HOC/ComponentWithAlert";
+import withMenu from '../HOC/ComponentWithMenu';
 import axios from 'axios';
 
 class ViewCards extends React.Component {
@@ -33,10 +33,9 @@ class ViewCards extends React.Component {
         } 
       });
       const flashcards = cardResponse.data.result;
-      flashcards.forEach((card) => {
-        console.log(card);
-      })
-      this.setState({cards: flashcards});
+
+      this.extract_cards_today(flashcards)
+      
       document.addEventListener("keydown", this.handleKeyDown);
     } catch(error) {
       if(error.response.status === 401) {
@@ -52,29 +51,72 @@ class ViewCards extends React.Component {
   async componentWillUnmount() {
     document.removeEventListener("keydown", this.handleKeyDown);
   }
+
+  get_date = (difficulty = null) => {
+    var year = new Date().getFullYear()
+    var month = new Date().getMonth()
+    var date = new Date().getDate()
+    var datetime = new Date(year, month, date)
+
+    if(difficulty != null){
+      if(difficulty == "EASY"){
+        console.log("Easy button pressed")
+        datetime.setDate(date + 3)
+      }
+      else if(difficulty == "MEDIUM"){
+        console.log("Medium button pressed")
+        datetime.setDate(date + 2)
+      }
+      else{
+        console.log("Hard button pressed")
+        datetime.setDate(date + 1)
+      }
+    }
+    else{
+      // Here to change which date set to view...
+      datetime.setDate(date + 1)
+    }
+
+    return datetime
+  }
+
+  extract_cards_today = (flashcards) => {
+
+    var datetime = this.get_date()
+
+    // Necessary to get correct format
+    datetime = datetime.getFullYear() + "-" + (datetime.getMonth() + 1) + "-" +  datetime.getDate()
+    console.log("Adding cards with date: " + datetime)
+
+    flashcards.forEach((card) => {
+      // Splice studytime from query and reconstruct the string
+      var studyTime = card.nextStudyTime
+      var study_year = studyTime.slice(0,4)
+      var study_month = studyTime.slice(6,7)
+      var study_date1 = studyTime.slice(8,9)
+      var study_date2 = studyTime.slice(9,10)
+      if(study_date1 == 0){
+        studyTime = study_year + '-' + study_month + '-' + study_date2;
+      }
+      else{
+        studyTime = study_year + '-' + study_month + '-' + study_date1 + study_date2;
+      }
+
+      if(datetime == studyTime){
+        this.setState({cards: [...this.state.cards, card]});
+      }
+    })
+  }
  
   markDifficulty = async (event, difficulty) => {
     const currentCard = this.state.cardIndex
     event.preventDefault()
     const card_id = this.state.cards[currentCard].id
     const deck_id = this.state.cards[currentCard].deckId
+
     console.log("Marking card number " + card_id + " from deck " + deck_id + " with EASY...")
-    var year = new Date().getFullYear()
-    var month = new Date().getMonth()
-    var date = new Date().getDate()
-    var datetime = new Date(year, month, date)
-    if(difficulty == "EASY"){
-      console.log("Easy button pressed")
-      datetime.setDate(date + 3)
-    }
-    else if(difficulty == "MEDIUM"){
-      console.log("Medium button pressed")
-      datetime.setDate(date + 2)
-    }
-    else{
-      console.log("Hard button pressed")
-      datetime.setDate(date + 1)
-    }
+    var datetime = this.get_date(difficulty);
+
     datetime = datetime.getFullYear() + "-" + (datetime.getMonth() + 1) + "-" +  datetime.getDate()
     console.log(datetime)
 
@@ -142,12 +184,12 @@ class ViewCards extends React.Component {
           </div>
           <div className="flash-container">  
               <ReactCardFlip isFlipped={this.state.isFlipped} flipDirection="vertical">
-                <div id="flashcard" onClick={this.handleClick}>
+                <Card className="flashcard" onClick={this.handleClick}>
                   {this.renderPrompt(this.state.cardIndex)}
-                </div >
-                <div id="flashcard" onClick={this.handleClick}>
+                </Card >
+                <Card className="flashcard" onClick={this.handleClick}>
                   {this.renderAnswer(this.state.cardIndex)}
-                </div>
+                </Card>
               </ReactCardFlip>
               <div className="button-container">
                 <Button className="difficulty-button" size="lg" theme="success" onClick={(e) => this.markDifficulty(e, "EASY")}>Easy</Button>
@@ -163,14 +205,14 @@ class ViewCards extends React.Component {
 
   renderPrompt = (index) => {
     return(
-      this.state.cards.slice(index, index+1).map(card => <p>{card.prompt}</p>)
+      this.state.cards.slice(index, index+1).map(card => <h3>{card.prompt}</h3>)
     );
 
   }
 
   renderAnswer = (index) => {
     return (
-      this.state.cards.slice(index, index+1).map(card => <p>{card.answer}</p>)
+      this.state.cards.slice(index, index+1).map(card => <h3>{card.answer}</h3>)
     );
   }
 

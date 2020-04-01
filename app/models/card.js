@@ -38,8 +38,6 @@ class Card {
     }
 
     async update_difficulty () {
-        console.log(this.nextStudyTime, this.id, this.deckId)
-        console.log("Inside update_difficulty funciton")
         const updateNextStudy = 'UPDATE Cards SET nextStudyTime = ? WHERE id = ? AND deckId = ?'
         await database.runQuery(updateNextStudy, [this.nextStudyTime, this.id, this.deckId])
     }

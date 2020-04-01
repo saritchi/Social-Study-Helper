@@ -1,0 +1,31 @@
+.modal-header {
+    text-align: center;
+}
+
+.modal-body h4 {
+    text-align: left;
+    margin-bottom: 3%;
+}
+
+.shareContent {
+    margin-top: 3%;
+    float: right;
+}
+
+.list-group {
+    text-align: left;
+    max-height: 9em;
+    overflow-y: auto;
+}
+
+.list-group-item {
+    border-style: none;
+}
+
+.addUsers {
+    margin-top: 5%;
+}
+
+.removeUser {
+    float: right
+}
