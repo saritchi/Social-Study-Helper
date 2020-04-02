@@ -112,6 +112,24 @@ class Database {
             PRIMARY KEY(teacher,student),
             FOREIGN KEY (teacher) REFERENCES user(email),
             FOREIGN KEY (student) REFERENCES user(email)
+            );`;
+
+        const createSharedCoursesSQL = `CREATE TABLE  IF NOT EXISTS SharedCourses(
+            id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+            fromUser VARCHAR(2000) NOT NULL,
+            toUser VARCHAR(2000) NOT NULL,
+            courseId INT NULL,
+            FOREIGN KEY (courseId)
+                REFERENCES Courses(id)  
+        );`;
+
+        const createSharedDecksSQL = `CREATE TABLE  IF NOT EXISTS SharedDecks(
+            id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+            fromUser VARCHAR(2000) NOT NULL,
+            toUser VARCHAR(2000) NOT NULL,
+            deckId INT NULL,
+            FOREIGN KEY (deckId)
+                REFERENCES Decks(id)   
         );`;
 
         const createUserTablePromise = util.promisify(this.db.query).call(this.db, createUsersTableSQL); 
@@ -120,12 +138,16 @@ class Database {
         const createCardTablePromise = util.promisify(this.db.query).call(this.db, createCardTableSQL); 
         const createAssignStudentTablePromise = util.promisify(this.db.query).call(this.db, createAssignStudentTableSQL); 
 
+        const createSharedCoursesTablePromise = util.promisify(this.db.query).call(this.db, createSharedCoursesSQL);
+        const createSharedDecksTablePromise = util.promisify(this.db.query).call(this.db, createSharedDecksSQL);
 
         return createUserTablePromise
                 .then(createCourseTablePromise)
                 .then(createDeckTablePromise)
                 .then(createCardTablePromise)
                 .then(createAssignStudentTablePromise)
+                .then(createSharedCoursesTablePromise)
+                .then(createSharedDecksTablePromise)
                 .catch(() => {
                     console.log("Unable to initialize database tables! Aborting server start up with error: " + error.message);
                     throw error;

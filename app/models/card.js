@@ -17,6 +17,25 @@ class Card {
         const cardQueryString = 'INSERT INTO Cards(prompt, answer, deckId) VALUES (?, ?, ?)';
         await database.runQuery(cardQueryString, [this.prompt, this.answer, this.deckId]);
     }
+    async insert_cards() {
+        const cardQueryString = 'INSERT INTO Cards(prompt, answer, deckId) VALUES (?, ?, ?)';
+        await database.runQuery(cardQueryString, [this.prompt, this.answer, this.deckId]);
+    }
+
+    async delete_cards () {
+        const deleteQueryString = 'DELETE FROM Cards WHERE deckId = ?';
+        await database.runQuery(deleteQueryString, [this.deckId]);
+    }
+
+    async reset_increment () {
+        const resetIncrementString = 'ALTER TABLE Cards AUTO_INCREMENT = 0'
+        await database.runQuery(resetIncrementString);
+    }
+
+    async delete_empty_cards () {
+        const deleteNullString = 'DELETE FROM Cards WHERE prompt IS NULL AND answer IS NULL OR deckId IS NULL'
+        await database.runQuery(deleteNullString)
+    }
 }
 
 module.exports = Card;
@@ -33,3 +52,4 @@ module.exports.getAllFromDeckId = async function getAllFromDeckId(deckId) {
         return new Card(result.prompt, result.answer, result.deckId, result.id, result.nextStudyTime);
     })
 }
+

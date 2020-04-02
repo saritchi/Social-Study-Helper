@@ -1,18 +1,21 @@
 import React, { Component } from 'react';
 import './App.css';
-import Register from './components/Register';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import LoginPage from './components/LoginPage';
-import Home from './components/Home';
-import AllCourses from './components/AllCourses';
 
 import './App.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "shards-ui/dist/css/shards.min.css"
-import AddCourse from './components/AddCourse';
-import CreateDeck from './components/CreateDeck';
-import DeckDisplay from './components/DeckDisplay';
-import ViewCards from './components/ViewCards';
+
+import Register from './components/pages/Register';
+import LoginPage from './components/pages/LoginPage';
+import Home from './components/pages/Home';
+import AllCourses from './components/pages/AllCourses';
+import AddCourse from './components/pages/AddCourse';
+import CreateDeck from './components/pages/CreateDeck';
+import DeckDisplay from './components/pages/DeckDisplay';
+import ViewCards from './components/pages/ViewCards';
+import AllSharedContent from './components/pages/AllSharedContent'
+import EditDeck from './components/pages/EditDeck';
 import AssignStudents from './components/AssignStudents';
 import User from './User';
 
@@ -42,7 +45,7 @@ class App extends Component {
               exact               
               render={props => (
                     <React.Fragment>
-                      <Home user={this.state.user} />
+                      <Home user={this.state.user} setUser={this.setUser} />
                     </React.Fragment>
                   )} 
               />
@@ -51,7 +54,7 @@ class App extends Component {
               exact               
               render={props => (
                     <React.Fragment>
-                      <DeckDisplay user={this.state.user} />
+                      <DeckDisplay user={this.state.user} setUser={this.setUser} />
                     </React.Fragment>
                   )} 
               />
@@ -60,7 +63,7 @@ class App extends Component {
                 exact               
                 render={props => (
                       <React.Fragment>
-                        <AddCourse user={this.state.user} />
+                        <AddCourse user={this.state.user} setUser={this.setUser} />
                       </React.Fragment>
                     )} 
               />
@@ -69,7 +72,7 @@ class App extends Component {
                 exact               
                 render={props => (
                       <React.Fragment>
-                        <CreateDeck user={this.state.user} />
+                        <CreateDeck user={this.state.user} setUser={this.setUser} />
                       </React.Fragment>
                     )}
               />
@@ -78,7 +81,16 @@ class App extends Component {
                 exact               
                 render={props => (
                       <React.Fragment>
-                        <AllCourses user={this.state.user} />
+                        <AllCourses user={this.state.user} setUser={this.setUser} />
+                      </React.Fragment>
+                    )} 
+              />
+                <Route
+                path="/allSharedContent" 
+                exact               
+                render={props => (
+                      <React.Fragment>
+                        <AllSharedContent user={this.state.user} />
                       </React.Fragment>
                     )} 
               />
@@ -87,7 +99,7 @@ class App extends Component {
                 exact
                 render={props => (
                   <React.Fragment>
-                    <ViewCards user={this.state.user} />
+                    <ViewCards user={this.state.user} setUser={this.setUser} />
                   </React.Fragment>
                 )}
               />
@@ -109,6 +121,14 @@ class App extends Component {
                   </React.Fragment>
                 )}
              />
+                path="/editDeck"
+                exact
+                render={props => (
+                  <React.Fragment>
+                    <EditDeck  user={this.state.user}/>
+                  </React.Fragment>
+                )}
+              />
           </Switch>
       </div>
       </Router>

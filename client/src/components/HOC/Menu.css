@@ -1,0 +1,57 @@
+/** Styling was adapted from the read me of the burger-menu component https://github.com/negomi/react-burger-menu#styling **/
+.bm-burger-button {
+    position: absolute;
+    width: 2.1em;
+    height: 1.9em;
+    left: 2.5em;
+    top: 3.2em;
+}
+  
+.bm-burger-bars {
+  background: #373a47;
+}
+
+.bm-burger-bars-hover {
+  background: #a90000;
+}
+
+.bm-cross-button {
+  height: 24px;
+  width: 24px;
+}
+
+.bm-cross {
+  background: #bdc3c7;
+}
+
+.bm-menu-wrap {
+  position: fixed;
+  height: 100%;
+}
+
+.bm-menu {
+  background: #FFFFFF;
+  padding: 2.5em 1.5em 0;
+  font-size: 1.15em;
+}
+
+.menu-item {
+  color: black;
+  padding: 0.5em;
+}
+.bm-morph-shape {
+  fill: #373a47;
+}
+
+.bm-item-list {
+  color: #b8b7ad;
+  padding: 0.8em;
+}
+
+.bm-item {
+  display: inline-block;
+}
+
+.bm-overlay {
+  background: rgba(0, 0, 0, 0.3);
+}

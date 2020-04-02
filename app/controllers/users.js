@@ -1,4 +1,5 @@
 var router = require('express').Router();
+var requireLogin = require('../middleware/authentication');
 var User = require('../models/user');
 const database = require('../database/database')(process.env);
 
@@ -41,7 +42,7 @@ async function registerUser(req, res) {
         res.status(500).json({result: "An error occured while attempting to register. Please try again later."});
     }
 }
-
+    
 async function registerGoogleUser(req, res) {
     let post = req.body;
     let email = post.email;
@@ -99,11 +100,16 @@ async function getAssignedStudents(req, res) {
         res.status(500).json({result: "An error occured while attempting to get assigned students. Please try again later."});
     }
 }
+function logoutUser(req, res) {
+    console.log("Resetting user session")
+    req.session.reset();
+    res.sendStatus(200);
+}
 
 router.post('/auth', authenticateUser)
 router.post('/register', registerUser)
+router.get('/logout', requireLogin, logoutUser)
 router.post('/google/register', registerGoogleUser)
 router.get('/allStudents', getAllStudents)
-router.get('/assignedStudents',getAssignedStudents)
-
+router.get('/assignedStudents', getAssignedStudents)
 module.exports = router;

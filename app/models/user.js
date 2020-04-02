@@ -16,11 +16,7 @@ class User {
     async exists() {
         const query = `Select * from user where email = ?`;
         const result = await database.runQuery(query, [this.email]);
-        if(result.length == 0){ 
-            return false;
-        }
-        
-        return true;
+        return result.length !== 0;
     }
 
     async create() {
