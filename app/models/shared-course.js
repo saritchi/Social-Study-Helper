@@ -25,11 +25,16 @@ module.exports = SharedCourse;
  * @param {*} limit number of courses to retrieve
  * @returns An array of Course objects
  */
-module.exports.getForUser = async function getForUser(email, limit) {
+module.exports.getForUser = async function getForUser(email, limit, orderBy) {
     var getSharedCoursesSQL = `SELECT * FROM SharedCourses WHERE toUser = ?`;
-    if (limit) {
-        getSharedCoursesSQL += ' LIMIT ' + parseInt(limit);
+    if (orderBy) {
+        addCourseSQL += ' ORDER BY ' + orderBy + ' DESC';
     }
+
+    if (limit) {
+        addCourseSQL += ' LIMIT ' + parseInt(limit)
+    }
+
 
     const results = await database.runQuery(getSharedCoursesSQL, email);
     return results.map((result) => {
