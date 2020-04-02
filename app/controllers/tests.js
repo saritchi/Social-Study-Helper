@@ -19,6 +19,7 @@ async function addTest(req, res) {
             const testId = await test.create();
         })
         res.sendStatus(200);
+        
     } catch (error) {
         console.log(`Unable to add test with name: ${name} to database. Error: ${error.message}`);
         res.status(500).json({result: "An error occurred while attempting to add the test to the database. Please try again later."});

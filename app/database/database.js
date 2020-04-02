@@ -109,7 +109,7 @@ class Database {
             id INT PRIMARY KEY AUTO_INCREMENT,
             name VARCHAR(255) NOT NULL,
             courseId INT NOT NULL,
-            decklist JSON NOT NULL,
+            decklist VARCHAR(1020) NOT NULL,
             testDate DATETIME,
             userEmail VARCHAR(255),
             FOREIGN KEY (courseId)

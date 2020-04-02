@@ -10,7 +10,7 @@ module.exports = async function runTransaction(transaction) {
         await transaction();
         await database.commit();
         console.log("Finished transaction");
-    } catch {
+    } catch (error) {
         console.log("Rolling back transaction")
         await database.rollback();
         throw error;

@@ -16,6 +16,9 @@ class DeckDisplay extends Component {
             decklist: [],
             coursename:  this.props.location?.state?.name || ''
         };
+        console.log(this.props);
+        console.log(this.props.history);
+        console.log(this.props.location);
     }
 
     async componentDidMount() {
@@ -75,7 +78,12 @@ class DeckDisplay extends Component {
                 <Button id="newDeck" onClick={this.addDeck}>Add New Deck</Button>
                 <div id = "newTest">
 
-                <TestModal isExam={false} coursename={this.state.coursename} courseId={this.props.location.state.id} options={this.state.decklist}></TestModal>
+                <TestModal coursename={this.state.coursename} 
+                            courseId={this.props.location.state.id} 
+                            options={this.state.decklist} 
+                            userEmail={this.props.user.email}>
+
+                </TestModal>
                 </div>
             </div>
         )
