@@ -79,7 +79,7 @@ class ViewCards extends React.Component {
         break;
       case null:
         // Here to change which date set to view when PULLING cards from db
-        datetime.setDate(date + 1)
+        datetime.setDate(date)
     }
 
     return datetime
