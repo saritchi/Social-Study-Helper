@@ -16,7 +16,8 @@ class Home extends Component {
             sharedCourses: [],
             sharedDecks: [],
         };
-        this.displayLimit = 9
+        this.coursesDisplayLimit = 9
+        this.sharedContentDisplayLimit = 3;
         this.orderBy = 'lastAccess'
     }
 
@@ -43,21 +44,21 @@ class Home extends Component {
         const coursesResponse = await axios.get('/api/courses', {
             params: {
                 email: this.props.user.email,
-                limit: this.displayLimit,
+                limit: this.coursesDisplayLimit,
                 orderBy: this.orderBy
             }
         });
         const sharedCoursesResponse = await axios.get('/api/sharedCourses', {
             params: {
                 email: this.props.user.email,
-                limit: this.displayLimit,
+                limit: this.sharedContentDisplayLimit,
                 orderBy: this.orderBy
             }
         })
         const sharedDecksResponse = await axios.get('/api/sharedDecks', {
             params: {
                 email: this.props.user.email,
-                limit: this.displayLimit,
+                limit: this.sharedContentDisplayLimit,
                 orderBy: this.orderBy
             }
         })
@@ -231,7 +232,7 @@ class Home extends Component {
                 <div id="sharedCourses">
                     <Nav>
                         <NavItem id="recentSharedCourses">
-                            <h3>Recent Shared Courses: </h3>
+                            <h3>Shared Courses Preview: </h3>
                         </NavItem>
                         <NavItem id="allSharedContent">
                             <NavLink href='#' onClick={this.allSharedContentView}>View All Shared Content</NavLink>
@@ -242,7 +243,7 @@ class Home extends Component {
                 <div id="sharedDecks">
                     <Nav>
                         <NavItem id="recentSharedDecks">
-                                <h3>Recent Shared Decks: </h3>
+                                <h3>Shared Decks Preview: </h3>
                         </NavItem>
                     </Nav>
                     <CardDisplay changePage={this.cardView} cardsInfo={this.state.sharedDecks}/>

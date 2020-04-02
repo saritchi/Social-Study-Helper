@@ -31,16 +31,11 @@ module.exports = SharedDeck;
  * @param {*} limit number of shared courses to get
  * @returns An array of Course objects
  */
-module.exports.getForUser = async function getForUser(email, limit, orderBy) {
+module.exports.getForUser = async function getForUser(email, limit) {
     var getSharedDecksSQL = `SELECT * FROM SharedDecks WHERE toUser = ?`;
-    if (orderBy) {
-        addCourseSQL += ' ORDER BY ' + orderBy + ' DESC';
-    }
-
     if (limit) {
-        addCourseSQL += ' LIMIT ' + parseInt(limit)
+        getSharedDecksSQL += ' LIMIT ' + parseInt(limit);
     }
-
 
     const results = await database.runQuery(getSharedDecksSQL, email);
     return results.map((result) => {
