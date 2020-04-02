@@ -169,7 +169,23 @@ class Home extends Component {
             pathname: '/decks',
             state: {
                 id: courseId,
-                name: courseName
+                name: courseName,
+                shared: false
+            }
+        });
+    }
+
+      /**
+     * @param {*} courseId id of the course the user is clicking
+     * @param {*} courseName name of the course the user is clicking
+     */
+    sharedCourseView = (courseId, courseName) => {
+        this.props.history.push({
+            pathname: '/decks',
+            state: {
+                id: courseId,
+                name: courseName,
+                shared: true
             }
         });
     }
@@ -227,7 +243,7 @@ class Home extends Component {
                             <NavLink href='#' onClick={this.allSharedContentView}>View All Shared Content</NavLink>
                         </NavItem>
                     </Nav>
-                    <CardDisplay changePage={this.courseView} cardsInfo={this.state.sharedCourses}/>
+                    <CardDisplay changePage={this.sharedCourseView} cardsInfo={this.state.sharedCourses}/>
                 </div>
                 <div id="sharedDecks">
                     <Nav>

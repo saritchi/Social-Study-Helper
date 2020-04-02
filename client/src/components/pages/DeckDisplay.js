@@ -166,6 +166,7 @@ class DeckDisplay extends Component {
 
     render() {
         const coursename = this.props.location?.state?.name || '';
+        const showOptions = !this.props.location?.state?.shared;
         return (
             <div>
                 <div id="courseName">
@@ -178,7 +179,7 @@ class DeckDisplay extends Component {
                         </NavItem>
                     </Nav>
                 </div>
-                <CardDisplay changePage={this.cardView} options={true}
+                <CardDisplay changePage={this.cardView} options={showOptions}
                              sharedContentCallback={this.shareDeckCallback}
                              removeSharedContentCallback={this.removeSharedDeckCallback}
                              cardsInfo={this.state.decklist}

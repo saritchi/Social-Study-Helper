@@ -2,6 +2,8 @@ var router = require('express').Router();
 var Course = require('../models/course');
 var Deck = require('../models/deck');
 var Card = require('../models/card');
+var SharedCourse = require('../models/shared-course');
+var SharedDeck = require('../models/shared-deck');
 var runTransaction = require('../database/helper');
 var requireLogin = require('../middleware/authentication');
 
@@ -127,7 +129,12 @@ async function deleteCourse(req, res) {
     const courseId = req.query.id;
     try {
         await runTransaction(async () => {
-            await deleteAllDecksFromCourse(courseId);
+            const deleteSharedCoursesPromise = await deleteAllassociatedSharedCourses(courseId)
+            await Promise.all(deleteSharedCoursesPromise);
+
+            const deleteAllDecksFromCoursePromise = await deleteAllDecksFromCourse(courseId);
+            await Promise.all(deleteAllDecksFromCoursePromise);
+
             await Course.deleteWithId(courseId);
         })
         res.sendStatus(200);
@@ -137,16 +144,28 @@ async function deleteCourse(req, res) {
     }
 }
 
+async function deleteAllassociatedSharedCourses(courseId) {
+    const sharedCourses = await SharedCourse.getAllForCourseId(courseId);
+    return sharedCourses.map(async (sharedCourses) => SharedCourse.deleteWithId(sharedCourses.id))
+}
+
 async function deleteAllDecksFromCourse(courseId) {
     const decks = await Deck.getDecksFromCourseId(courseId);
-    await decks.forEach(async (deck) => {
+    return decks.map(async (deck) => {
+        const deletesharedDecksPromise = await deleteAllassociatedSharedDecks(deck.id);
+        await Promise.all(deletesharedDecksPromise);
+
         const card = new Card(null, null, deck.id);
         await card.delete_cards();
 
-        await Deck.deleteWithId(deck.id);
+        return Deck.deleteWithId(deck.id);
     })
 }
 
+async function deleteAllassociatedSharedDecks(deckId) {
+    const sharedDecks = await SharedDeck.getAllForDeckId(deckId);
+    return sharedDecks.map(async (sharedDeck) => await SharedDeck.deleteWithId(sharedDeck.id))
+}
 
 router.get('/courses', requireLogin, getCourses)
 router.get('/course', requireLogin, getCourse);

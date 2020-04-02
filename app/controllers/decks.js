@@ -1,6 +1,7 @@
 var router = require('express').Router();
 var Deck = require('../models/deck');
 var Card = require('../models/card');
+var SharedDeck = require('../models/shared-deck')
 var runTransaction = require('../database/helper');
 var requireLogin = require('../middleware/authentication');
 
@@ -97,6 +98,7 @@ async function deleteDeck(req, res) {
     const deckId = req.query.id;
     try {
         await runTransaction(async () => {
+            await deleteAllassociatedSharedDecks(deckId);
             await deleteAllCardFromDeck(deckId);
             await Deck.deleteWithId(deckId);
         })
@@ -105,6 +107,13 @@ async function deleteDeck(req, res) {
         console.log(`Unable to delete deck with id: ${deckId}. Error: ${error.message}`)
         res.status(500).json({result: "An error occurred while attempting to remove that deck. Please try again later."})
     }
+}
+
+async function deleteAllassociatedSharedDecks(deckId) {
+    const sharedDecks = await SharedDeck.getAllForDeckId(deckId);
+    sharedDecks.forEach(async (sharedDeck) => {
+        await SharedDeck.deleteWithId(sharedDeck.id)
+    })
 }
 
 async function deleteAllCardFromDeck(deckId) {
