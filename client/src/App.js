@@ -16,6 +16,7 @@ import DeckDisplay from './components/pages/DeckDisplay';
 import ViewCards from './components/pages/ViewCards';
 import AllSharedContent from './components/pages/AllSharedContent'
 import EditDeck from './components/pages/EditDeck';
+import EditCourse from './components/pages/EditCourse';
 import User from './User';
 
 const userStorageKey = 'user';
@@ -117,6 +118,15 @@ class App extends Component {
                 render={props => (
                   <React.Fragment>
                     <EditDeck  user={this.state.user}/>
+                  </React.Fragment>
+                )}
+              />
+              <Route
+                path="/editCourse"
+                exact
+                render={props => (
+                  <React.Fragment>
+                    <EditCourse  user={this.state.user}/>
                   </React.Fragment>
                 )}
               />

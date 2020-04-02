@@ -20,6 +20,22 @@ async function getCourses(req, res) {
     }
 }
 
+async function getCourse(req, res) {
+    console.log("Getting course....");
+    var courseId = req.query.id;
+
+    try {
+        const course = await Course.getFromId(courseId);
+        const decks = await Deck.getDecksFromCourseId(courseId);
+        course['decknames'] = decks.map((deck) => deck.name);
+        console.log(course);
+        res.status(200).json({result: course});
+    } catch (error) {
+        console.log(`Unable to get course from the database. Error: ${error.message}`)
+        res.status(500).json({result: "An error occurred while attempting to get your course. Please try again later."})
+    }
+}
+
 async function addCourse(req, res) {
     var body = req.body;
     var coursename = body.coursename;
@@ -68,6 +84,45 @@ function isValidCourseRequest(coursename, decks) {
     return coursename && !emptyDecks;
 }
 
+async function updateCourse(req, res) {
+    var body = req.body;
+    const courseId = body.id;
+    var coursename = body.coursename;
+    var decknames = body.decks;
+    var userEmail = body.email;
+
+
+    if(!isValidCourseRequest(coursename, decknames)) {
+        console.log("Invalid course request found.")
+        res.status(400).json({result: "Error processing request."})
+        return;
+    }
+
+     //TODO: when chapters table is set up, insert chapters into that table with FK is the course PK.
+    //TODO: when UI for addCourse is updated use the final and midterm values.
+    var final = false;
+    var midterm = false;
+    const course = new Course(coursename, midterm, final, userEmail, courseId);
+    try {
+        await runTransaction(async () => {
+            await course.update();
+
+            const decks = await Deck.getDecksFromCourseId(courseId);
+            const deckUpdates = decknames.map((deckname, index) => {
+                const existingDeck = new Deck(deckname, midterm, final, courseId, decks[index].id);
+                return existingDeck.update_name();
+            })
+
+            await Promise.all(deckUpdates);
+        })
+        console.log("Updated course with name: " + coursename);
+        res.sendStatus(200);
+    } catch (error) {
+        console.log(`Unable to update course with name: ${coursename} to database. Error: ${error.message}`)
+        res.status(500).json({result: "An error occurred while attempting to update the course. Please try again later."})
+    }
+}
+
 async function deleteCourse(req, res) {
     const courseId = req.query.id;
     try {
@@ -94,7 +149,11 @@ async function deleteAllDecksFromCourse(courseId) {
 
 
 router.get('/courses', requireLogin, getCourses)
+router.get('/course', requireLogin, getCourse);
+
 router.post('/addCourse', requireLogin, addCourse)
+router.post('/updateCourse', requireLogin, updateCourse)
+
 router.delete('/deleteCourse', requireLogin, deleteCourse);
 
 module.exports = router;

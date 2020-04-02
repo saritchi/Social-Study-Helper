@@ -174,6 +174,10 @@ class Home extends Component {
         });
     }
 
+    editCourseView = (courseId) => {
+        this.props.history.push("/editCourse", {courseId});
+    }
+
     /**
      * @param {*} deckId id of the deck the user is clicking
      */
@@ -210,6 +214,7 @@ class Home extends Component {
                              sharedContentCallback={this.shareCourseCallback}
                              removeSharedContentCallback={this.removeSharedCourseCallback}
                              deleteCallback={this.deleteCourseCallback}
+                             editCallback={this.editCourseView}
                              cardsInfo={this.state.courses}
                 />
                 <Button id="newCourse" onClick={this.addCourse}>Add New Course</Button>

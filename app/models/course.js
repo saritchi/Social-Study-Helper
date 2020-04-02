@@ -18,6 +18,11 @@ class Course {
         const addCourseSQL = `INSERT INTO Courses(name, midterm, final, userEmail) VALUES(?, ?, ?, ?)`;
         return (await database.runQuery(addCourseSQL, [this.name, this.midterm, this.final, this.userEmail])).insertId;
     }
+
+    async update() {
+        const updateCourseSQL = `UPDATE Courses SET name = ?, midterm = ?, final = ?, userEmail = ? WHERE id = ?`;
+        return database.runQuery(updateCourseSQL, [this.name, this.midterm, this.final, this.userEmail, this.id])
+    }
 }
 
 module.exports = Course;

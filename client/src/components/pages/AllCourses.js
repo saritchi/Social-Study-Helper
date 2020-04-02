@@ -147,6 +147,10 @@ class AllCourses extends Component {
             }
         });
     }
+
+    editCourseView = (courseId) => {
+        this.props.history.push("/editCourse", {courseId});
+    }
     
     render() {
         return (
@@ -158,6 +162,7 @@ class AllCourses extends Component {
                              sharedContentCallback={this.shareCourseCallback}
                              removeSharedContentCallback={this.removeSharedCourseCallback}
                              deleteCallback={this.deleteCourseCallback}
+                             editCallback={this.editCourseView}
                              cardsInfo={this.state.courses}
                 />
                 <Button id="newCourse" onClick={this.addCourse}>Add New Course</Button>
