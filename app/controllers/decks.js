@@ -93,8 +93,32 @@ async function updateDeck(req, res) {
     }
 }
 
+async function deleteDeck(req, res) {
+    const deckId = req.query.id;
+    try {
+        await runTransaction(async () => {
+            await deleteAllCardFromDeck(deckId);
+            await Deck.deleteWithId(deckId);
+        })
+        res.sendStatus(200);
+    } catch(error) {
+        console.log(`Unable to delete deck with id: ${deckId}. Error: ${error.message}`)
+        res.status(500).json({result: "An error occurred while attempting to remove that deck. Please try again later."})
+    }
+}
+
+async function deleteAllCardFromDeck(deckId) {
+    const card = new Card(null, null, deckId);
+    return card.delete_cards();
+}
+
+
 router.get('/decks', requireLogin, getDecks)
 router.get('/editDeck', requireLogin, getDeckData)
+
 router.post('/addDeck', requireLogin, addDeck)
 router.post('/editDeck', requireLogin, updateDeck)
+
+router.delete('/deleteDeck', requireLogin, deleteDeck)
+
 module.exports = router;

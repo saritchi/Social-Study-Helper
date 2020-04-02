@@ -1,6 +1,7 @@
 var router = require('express').Router();
 var Course = require('../models/course');
 var Deck = require('../models/deck');
+var Card = require('../models/card');
 var runTransaction = require('../database/helper');
 var requireLogin = require('../middleware/authentication');
 
@@ -70,12 +71,25 @@ function isValidCourseRequest(coursename, decks) {
 async function deleteCourse(req, res) {
     const courseId = req.query.id;
     try {
-        await Course.deleteWithId(courseId);
+        await runTransaction(async () => {
+            await deleteAllDecksFromCourse(courseId);
+            await Course.deleteWithId(courseId);
+        })
         res.sendStatus(200);
     } catch(error) {
         console.log(`Unable to delete course with id: ${courseId}. Error: ${error.message}`)
         res.status(500).json({result: "An error occurred while attempting to remove that course. Please try again later."})
     }
+}
+
+async function deleteAllDecksFromCourse(courseId) {
+    const decks = await Deck.getDecksFromCourseId(courseId);
+    await decks.forEach(async (deck) => {
+        const card = new Card(null, null, deck.id);
+        await card.delete_cards();
+
+        await Deck.deleteWithId(deck.id);
+    })
 }
 
 
