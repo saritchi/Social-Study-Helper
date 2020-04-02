@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import { withRouter } from "react-router-dom"
 import { Button, ButtonGroup } from 'shards-react'
 import axios from 'axios';
-import * as withAlert from "./HOC/ComponentWithAlert";
+import * as withAlert from "../HOC/ComponentWithAlert";
 
 class AssignStudents extends Component {
     constructor(props) {

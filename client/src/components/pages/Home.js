@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import { withRouter } from "react-router-dom"
-import { Button, Nav, NavItem, NavLink, CardBody, CardHeader } from 'shards-react'
+import { Button,ButtonGroup, Nav, NavItem, NavLink, CardBody, CardHeader } from 'shards-react'
 import './Home.css'
 import axios from 'axios';
 import CardDisplay from '../subcomponents/CardDisplay';
@@ -15,8 +15,12 @@ class Home extends Component {
             courses: [],
             sharedCourses: [],
             sharedDecks: [],
+            assignedStudents:[]
         };
         this.displayLimit = 9
+        this.assignStudentBtn = this.assignStudentBtn.bind(this);
+        this.ifTeacher = this.ifTeacher.bind(this);
+        this.displayAssignedStudents = this.displayAssignedStudents.bind(this);
     }
 
     async componentDidMount() {
@@ -63,12 +67,20 @@ class Home extends Component {
                 email: this.props.user.email
             }
         })
+       var assignedStudents = [];
+        if(this.props.user.role === 'teacher'){
+                const assignedStudentsResponse = await axios.get('/api/assignedStudents', {
+                    params: {
+                        user: this.props.user
+                    }
+                })
+                assignedStudents = assignedStudentsResponse.data.result;
+        }
 
         var courses = coursesResponse.data.result;
         const sharedCourses = sharedCoursesResponse.data.result;
         const sharedDecks = sharedDecksResponse.data.result
         const sharedContent = sharedContentResponse.data.result;
-
         const courseIds = courses.map((course) => course.id);
         const sharedUsers = sharedContent.filter((sharedContent) => courseIds.includes(sharedContent.courseId))
         //find the user each course has been shared with and add them to the course object
@@ -78,7 +90,7 @@ class Home extends Component {
             });
             course['sharedWith'] = users;
         })
-        return {courses: courses, sharedCourses: sharedCourses, sharedDecks: sharedDecks}
+        return {courses: courses, sharedCourses: sharedCourses, sharedDecks: sharedDecks, assignedStudents:assignedStudents}
     }
 
     /**
@@ -167,6 +179,30 @@ class Home extends Component {
     allSharedContentView = () => {
         this.props.history.push('/allSharedContent')
     }
+
+    assignStudentBtn(e){
+        this.props.history.push({
+            pathname: '/assignStudents',
+            state: { teacherEmail: this.props.user.email }
+        });
+    }
+    ifTeacher(){
+        if(this.props.user.role === 'teacher'){
+            return <Button theme="dark" onClick={this.assignStudentBtn}>Assign Students</Button>
+        }
+    }
+
+    displayAssignedStudents(){
+        if(this.props.user.role === 'teacher'){
+            const students = this.state.assignedStudents.map(student => (
+                <Button key={student.email} outline theme="info" >{student.fname + ' ' + student.lname}</Button>
+            ));
+            return (<div style={{marginTop:'200px', textAlign:"left",marginLeft:'50px',marginBottom:'200px'}}>
+                <h1>Your Students</h1>
+                <ButtonGroup vertical>{students}</ButtonGroup>
+                </div>);
+        }
+    }
     
     render() {
         const username = this.props.user.fname + ' ' + this.props.user.lname;
@@ -174,6 +210,7 @@ class Home extends Component {
             <div>
                 <div id="user">
                     <h1>Welcome {username}!</h1>
+                    {this.ifTeacher()}
                 </div>
                 <div>
                     <Nav>
@@ -191,6 +228,7 @@ class Home extends Component {
                              cardsInfo={this.state.courses}
                 />
                 <Button id="newCourse" onClick={this.addCourse}>Add New Course</Button>
+                {this.displayAssignedStudents()}
                 <div id="sharedCourses">
                     <Nav>
                         <NavItem id="recentSharedCourses">

@@ -44,6 +44,7 @@ import axios from "axios";
         try {
             const response = await axios.post('/api/auth', this.state.user);
             let currentUser = new User().copy(response.data);
+            console.log(currentUser);
             this.props.setUser(currentUser);
             this.setState({user: currentUser}, () => {
                 if (!this.state.user.isAuthenticated) {
@@ -51,6 +52,7 @@ import axios from "axios";
                  }
             })
         } catch(error) {
+            console.log(error);
             this.props.showAlert(withAlert.errorTheme, error.response.data.result);
         }
     }
