@@ -105,6 +105,7 @@ class Database {
             PRIMARY KEY (id)
         );`;
 
+<<<<<<< HEAD
         const createTestTableSQL = `CREATE TABLE IF NOT EXISTS Tests(
             id INT PRIMARY KEY AUTO_INCREMENT,
             name VARCHAR(255) NOT NULL,
@@ -118,20 +119,48 @@ class Database {
             FOREIGN KEY (userEmail)
                 REFERENCES user(email)
                 ON DELETE CASCADE
+=======
+        const createSharedCoursesSQL = `CREATE TABLE  IF NOT EXISTS SharedCourses(
+            id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+            fromUser VARCHAR(2000) NOT NULL,
+            toUser VARCHAR(2000) NOT NULL,
+            courseId INT NULL,
+            FOREIGN KEY (courseId)
+                REFERENCES Courses(id)  
+        );`;
+
+        const createSharedDecksSQL = `CREATE TABLE  IF NOT EXISTS SharedDecks(
+            id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+            fromUser VARCHAR(2000) NOT NULL,
+            toUser VARCHAR(2000) NOT NULL,
+            deckId INT NULL,
+            FOREIGN KEY (deckId)
+                REFERENCES Decks(id)   
+>>>>>>> master
         );`;
 
         const createUserTablePromise = util.promisify(this.db.query).call(this.db, createUsersTableSQL); 
         const createCourseTablePromise = util.promisify(this.db.query).call(this.db, createCoursesTableSQL); 
         const createDeckTablePromise = util.promisify(this.db.query).call(this.db, createDeckTableSQL); 
         const createCardTablePromise = util.promisify(this.db.query).call(this.db, createCardTableSQL); 
+<<<<<<< HEAD
         const createTestTablePromise = util.promisify(this.db.query).call(this.db, createTestTableSQL); 
 
+=======
+        const createSharedCoursesTablePromise = util.promisify(this.db.query).call(this.db, createSharedCoursesSQL);
+        const createSharedDecksTablePromise = util.promisify(this.db.query).call(this.db, createSharedDecksSQL);
+>>>>>>> master
 
         return createUserTablePromise
                 .then(createCourseTablePromise)
                 .then(createDeckTablePromise)
                 .then(createCardTablePromise)
+<<<<<<< HEAD
                 .then(createTestTablePromise)
+=======
+                .then(createSharedCoursesTablePromise)
+                .then(createSharedDecksTablePromise)
+>>>>>>> master
                 .catch(() => {
                     console.log("Unable to initialize database tables! Aborting server start up with error: " + error.message);
                     throw error;

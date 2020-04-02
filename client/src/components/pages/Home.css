@@ -1,0 +1,28 @@
+#recentCourses, #recentSharedCourses, #recentSharedDecks {
+  margin-left: 10%;
+}
+
+#allCourses, #allSharedContent {
+  margin-left: auto;
+  margin-right: 9%;
+}
+
+
+#newCourse {
+  margin-right: 10%;
+  margin-top: 5%;
+  float: right;
+}
+
+#user {
+  margin: 5%;
+}
+
+#sharedCourses {
+  margin-top: 10%;
+}
+
+#sharedDecks {
+  margin-top: 5%;
+  margin-bottom: 5%;
+}

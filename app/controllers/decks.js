@@ -23,7 +23,7 @@ async function addDeck(req, res) {
     var deckname = body.deckname;
     var cards = body.cards;
     var courseId = req.query.id;
-
+    console.log("Adding deck: " + deckname);
     //TODO: update midterm and final values when UI is updated
     const midterm = false;
     const final = false;       
@@ -32,11 +32,11 @@ async function addDeck(req, res) {
     try {
         await runTransaction(async () => {
             const deckId = await deck.create();
-            cards.map((card) => {
+            const cardsPromises = cards.map((card) => {
                 const newCard = new Card(card.prompt, card.answer, deckId);
                 return newCard.create();
             })
-            await Promise.all(cards);
+            await Promise.all(cardsPromises);
         })
         res.sendStatus(200);
     } catch (error) {
@@ -52,7 +52,7 @@ async function getDeckData(req, res) {
     try {
         const cards = await Card.getAllFromDeckId(deckId);
         console.log(cards)
-        const deck = await Deck.getNamefromDeckId(deckId);
+        const deck = await Deck.getFromId(deckId);
         console.log(deck)
         
         res.status(200).json({result_cards: cards, result_names: deck});

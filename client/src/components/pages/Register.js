@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import {Link,Redirect} from 'react-router-dom';
 import { Form,FormGroup,FormInput} from "shards-react";
 import './Register.css'
-import * as withAlert from "./HOC/ComponentWithAlert";
+import * as withAlert from "../HOC/ComponentWithAlert";
 import axios from "axios";
  class Register extends Component {
     constructor(props){
