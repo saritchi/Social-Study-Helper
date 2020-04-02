@@ -15,7 +15,8 @@ class ViewCards extends React.Component {
       isFlipped: false,
       cardIndex: 0,
       cards: [],
-      deck_end: false
+      deck_end: false,
+      difficulty_selected: []
     };
   }
 
@@ -33,7 +34,12 @@ class ViewCards extends React.Component {
       });
 
       const flashcards = cardResponse.data.result;
-      this.extract_cards_today(flashcards)
+      if(this.firsttime_study(flashcards)){
+        this.setState({cards: flashcards});
+      }
+      else{
+        this.extract_cards_today(flashcards)
+      }
 
       document.addEventListener("keydown", this.handleKeyDown);
 
@@ -58,32 +64,31 @@ class ViewCards extends React.Component {
     var date = new Date().getDate()
     var datetime = new Date(year, month, date)
 
-    if (difficulty != null) {
-      if (difficulty == "EASY") {
+    switch (difficulty){
+      case "EASY":
         console.log("Easy button pressed")
         datetime.setDate(date + 3)
-      }
-      else if (difficulty == "MEDIUM") {
+        break;
+      case "MEDIUM":
         console.log("Medium button pressed")
         datetime.setDate(date + 2)
-      }
-      else {
+        break;
+      case "HARD":
         console.log("Hard button pressed")
         datetime.setDate(date + 1)
-      }
-    }
-    else {
-      // Here to change which date set to view...
-      datetime.setDate(date + 1)
+        break;
+      case null:
+        // Here to change which date set to view when PULLING cards from db
+        datetime.setDate(date + 1)
     }
 
     return datetime
   }
 
   extract_cards_today = (flashcards) => {
-
     var datetime = this.get_date()
-
+    var results = this.state.cards
+    var difficulty_check = this.state.difficulty_selected
     // Necessary to get correct format
     datetime = datetime.getFullYear() + "-" + (datetime.getMonth() + 1) + "-" + datetime.getDate()
     console.log("Adding cards with date: " + datetime)
@@ -91,32 +96,58 @@ class ViewCards extends React.Component {
     flashcards.forEach((card) => {
       // Splice studytime from query and reconstruct the string
       console.log(card)
-      var studyTime = card.nextStudyTime
-      var study_year = studyTime.slice(0, 4)
-      var study_month = studyTime.slice(6, 7)
-      var study_date1 = studyTime.slice(8, 9)
-      var study_date2 = studyTime.slice(9, 10)
-      if (study_date1 == 0) {
-        studyTime = study_year + '-' + study_month + '-' + study_date2;
-      }
-      else {
-        studyTime = study_year + '-' + study_month + '-' + study_date1 + study_date2;
+      
+      if(card.nextStudyTime != null){
+        var studyTime = card.nextStudyTime
+        var study_year = studyTime.slice(0, 4)
+        var study_month = studyTime.slice(6, 7)
+        var study_date1 = studyTime.slice(8, 9)
+        var study_date2 = studyTime.slice(9, 10)
+        if (study_date1 == 0) {
+          studyTime = study_year + '-' + study_month + '-' + study_date2;
+        }
+        else {
+          studyTime = study_year + '-' + study_month + '-' + study_date1 + study_date2;
+        }
+  
+        if (datetime == studyTime) {
+          results.push(card)
+          difficulty_check.push(false)
+        }
       }
 
-      if (datetime == studyTime) {
-        this.setState({ cards: [...this.state.cards, card] });
+    })
+    this.setState({ cards: results , difficulty_selected: difficulty_check});
+  }
+
+  firsttime_study = (flashcards) => {
+    var viewed = true;
+    var difficulty_check = this.state.difficulty_selected
+    flashcards.forEach((card) => {
+      difficulty_check.push(false)
+      if(card.nextStudyTime != null){
+        console.log("Cards have been viewed before")
+        viewed = false
       }
     })
+    if(viewed == true){
+      this.setState({ difficulty_selected: difficulty_check })
+    }
+    return viewed
   }
 
 
   markDifficulty = async (event, difficulty) => {
+    const difficulty_check = this.state.difficulty_selected
     const currentCard = this.state.cardIndex
+    
+    difficulty_check[currentCard] = true
+    this.setState({ difficulty_selected: difficulty_check })
+
     event.preventDefault()
     const card_id = this.state.cards[currentCard].id
     const deck_id = this.state.cards[currentCard].deckId
 
-    console.log("Marking card number " + card_id + " from deck " + deck_id + " with EASY...")
     var datetime = this.get_date(difficulty);
 
     datetime = datetime.getFullYear() + "-" + (datetime.getMonth() + 1) + "-" + datetime.getDate()
@@ -148,6 +179,11 @@ class ViewCards extends React.Component {
   }
 
   increment_index = () => {
+    const difficulty_check = this.state.difficulty_selected;
+    if(difficulty_check[this.state.cardIndex] == false){
+      this.props.showAlert(withAlert.errorTheme, "Please select a difficulty for the card!");
+      return;
+    }
     if (this.state.cardIndex < this.state.cards.length) {
       this.setState({ cardIndex: this.state.cardIndex + 1 }, () => {
         if (this.state.cardIndex == this.state.cards.length) {
@@ -155,6 +191,7 @@ class ViewCards extends React.Component {
         }
       })
     }
+    console.log(this.state.cardIndex)
   }
 
   decrement_index = () => {
@@ -221,7 +258,7 @@ class ViewCards extends React.Component {
         <div>
           
           <div id="progress-bar">
-            <Progress theme="primary" value={(this.state.cardIndex + 1 / this.state.cards.length) * 100} />
+            <Progress theme="primary" value={((this.state.cardIndex + 1)  / this.state.cards.length) * 100} />
             <p>{this.state.cardIndex + 1 + "/" + this.state.cards.length}</p>
           </div>
 
