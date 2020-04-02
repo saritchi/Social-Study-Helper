@@ -52,14 +52,12 @@ class Home extends Component {
             params: {
                 email: this.props.user.email,
                 limit: this.sharedContentDisplayLimit,
-                orderBy: this.orderBy
             }
         })
         const sharedDecksResponse = await axios.get('/api/sharedDecks', {
             params: {
                 email: this.props.user.email,
                 limit: this.sharedContentDisplayLimit,
-                orderBy: this.orderBy
             }
         })
 

@@ -120,10 +120,9 @@ async function getSharedCourses(req, res) {
     console.log("Getting shared courses for user....");
     var userEmail = req.query.email;
     var limit = req.query.limit
-    var orderBy = req.query.orderBy;
 
     try {
-        const sharedCourses = await SharedCourse.getForUser(userEmail, limit, orderBy);
+        const sharedCourses = await SharedCourse.getForUser(userEmail, limit);
         const sharedCoursesPromises = sharedCourses.map((sharedCourse) => Course.getFromId(sharedCourse.courseId))
         const courses = await Promise.all(sharedCoursesPromises)
         console.log(courses);
@@ -138,10 +137,9 @@ async function getSharedDecks(req, res) {
   console.log("Getting shared decks for user....");
   var userEmail = req.query.email;
   var limit = req.query.limit
-  var orderBy = req.query.orderBy;
 
   try {
-      const sharedDecks = await SharedDeck.getForUser(userEmail, limit, orderBy);
+      const sharedDecks = await SharedDeck.getForUser(userEmail, limit);
       const sharedDeckPromises = sharedDecks.map((sharedDeck) => {
         return Deck.getFromId(sharedDeck.deckId)
       })
