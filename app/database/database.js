@@ -105,16 +105,27 @@ class Database {
             PRIMARY KEY (id)
         );`;
 
+        const createEventTableSQL = `CREATE TABLE IF NOT EXISTS events (
+            id INT NOT NULL AUTO_INCREMENT,
+            userEmail VARCHAR(255),
+            title VARCHAR(50) NULL,
+            description VARCHAR(500) NULL,
+            startDate DATETIME NULL,
+            endDate DATETIME NULL,
+            PRIMARY KEY (id)
+        );`;
+
         const createUserTablePromise = util.promisify(this.db.query).call(this.db, createUsersTableSQL); 
         const createCourseTablePromise = util.promisify(this.db.query).call(this.db, createCoursesTableSQL); 
         const createDeckTablePromise = util.promisify(this.db.query).call(this.db, createDeckTableSQL); 
         const createCardTablePromise = util.promisify(this.db.query).call(this.db, createCardTableSQL); 
-
+        const createEventTablePromise = util.promisify(this.db.query).call(this.db, createEventTableSQL);
 
         return createUserTablePromise
                 .then(createCourseTablePromise)
                 .then(createDeckTablePromise)
                 .then(createCardTablePromise)
+                .then(createEventTablePromise)
                 .catch(() => {
                     console.log("Unable to initialize database tables! Aborting server start up with error: " + error.message);
                     throw error;

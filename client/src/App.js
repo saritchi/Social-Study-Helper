@@ -13,7 +13,7 @@ import AddCourse from './components/AddCourse';
 import CreateDeck from './components/CreateDeck';
 import DeckDisplay from './components/DeckDisplay';
 import ViewCards from './components/ViewCards';
-import UserCalendar from './components/UserCalendar';
+import AddEvent from './components/AddEvent';
 import User from './User';
 
 const userStorageKey = 'user';
@@ -101,11 +101,11 @@ class App extends Component {
                 )}
               />
               <Route
-                path="/calendar"
+                path="/addEvent"
                 exact
                 render={props => (
                   <React.Fragment>
-                    <UserCalendar />
+                    <AddEvent></AddEvent>
                   </React.Fragment>
                 )}
               />

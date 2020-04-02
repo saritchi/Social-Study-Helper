@@ -69,7 +69,9 @@ class Home extends Component {
             <div>
                 <div id="user">
                     <h1>Welcome {this.state.username}!</h1>
-                    <UserCalendar></UserCalendar>
+                </div>
+                <div>
+                    <UserCalendar user={this.props.user}></UserCalendar>
                 </div>
                 <div>
                     <Nav>

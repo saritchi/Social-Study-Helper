@@ -1,7 +1,44 @@
-.CalendarWrapper{
-    height: 350pt; 
-    width: 85%;
-    margin: auto;
+#CalendarWrapper{
+    height: 400pt; 
+    width: 79.8%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 5%;
 }
 
+#newEvent{
+    margin-top: 1%;
+    float: right;
+}
+
+.rbc-event{
+    background-color: #007bff;
+}
+
+.modal-body>h6{
+    width: 100%;
+    margin-bottom: -.25rem;
+}
+
+
+.modal-body>p,h6{
+    padding-left: 2%;
+    float: left;
+    text-align: justify;
+    width: 100%;
+}
+
+#eventTitle{
+    text-align: left;
+    margin: auto;
+    font-size: 20pt;
+}
+
+#editEvent{
+    float: right;
+}
+
+.modal-title{
+    width: 100%;
+}
 
