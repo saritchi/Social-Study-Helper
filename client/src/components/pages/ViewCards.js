@@ -138,13 +138,16 @@ class ViewCards extends React.Component {
 
 
   markDifficulty = async (event, difficulty) => {
+    event.preventDefault()
     const difficulty_check = this.state.difficulty_selected
     const currentCard = this.state.cardIndex
     
     difficulty_check[currentCard] = true
     this.setState({ difficulty_selected: difficulty_check })
 
-    event.preventDefault()
+    this.increment_index()
+
+    
     const card_id = this.state.cards[currentCard].id
     const deck_id = this.state.cards[currentCard].deckId
 
@@ -162,7 +165,6 @@ class ViewCards extends React.Component {
     try {
       const response = await axios.post("/api/timestampCard", json)
       console.log(response)
-      this.props.showAlert(withAlert.successTheme, "Timestamp added to card!");
     } catch (error) {
       console.log(error);
       this.props.showAlert(withAlert.errorTheme, error.response.data.result);
@@ -170,8 +172,13 @@ class ViewCards extends React.Component {
 
   }
 
+  goBack = (e) => {
+    this.props.history.goBack();
+  }
+
   restartDeck = (e) => {
     this.setState({ cardIndex: 0, deck_end: false })
+    document.addEventListener("keydown", this.handleKeyDown);
   }
 
   handleClick = (e) => {
@@ -188,10 +195,10 @@ class ViewCards extends React.Component {
       this.setState({ cardIndex: this.state.cardIndex + 1 }, () => {
         if (this.state.cardIndex == this.state.cards.length) {
           this.setState({ deck_end: true })
+          document.removeEventListener("keydown", this.handleKeyDown);
         }
       })
     }
-    console.log(this.state.cardIndex)
   }
 
   decrement_index = () => {
@@ -238,17 +245,8 @@ class ViewCards extends React.Component {
               <h1>Great Work!</h1>
               <h3>You just studied {this.state.cards.length} card(s)!</h3>
               <Button onClick={this.restartDeck} block>Study Again!</Button>
-              <Button block>Finish</Button>
+              <Button onClick={this.goBack} block>Finish</Button>
             </Card>
-
-            <div className="switch-card-button">
-              <Button id="button-click" theme="secondary" onClick={() => { this.updateCard("BACK") }}>
-                <TiMediaPlayReverse size={30} />
-              </Button>
-              <Button id="button-click" theme="secondary" disabled onClick={() => { this.updateCard("NEXT") }}>
-                <TiMediaPlay size={30} />
-              </Button>
-            </div>
           </div>
         </div>
       );
