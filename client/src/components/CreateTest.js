@@ -1,6 +1,7 @@
 import React from 'react'
 import { Button, Modal, ModalBody, ModalHeader, Form, FormInput } from 'shards-react'
 import MultiSelect from "react-multi-select-component";
+import Axios from 'axios';
 
 export default class TestModal extends React.Component {
     constructor(props) {
@@ -14,7 +15,8 @@ export default class TestModal extends React.Component {
         };
 
         this.toggle = this.toggle.bind(this);
-        // this.handleSubmit = this.handleSubmit.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
+        
     }
 
     toggle() {
@@ -35,9 +37,47 @@ export default class TestModal extends React.Component {
 
 
 
-    onSubmit(e) {
-        console.log("Submitted");
-        e.preventDefault();
+    onSubmit = async event => {
+        event.preventDefault();
+        // console.log(this.state.testName);
+        // console.log(this.state.testDate);
+        // console.log(this.state.selected);
+        // console.log(this.props);
+
+        const testName = this.state.testName;
+        const courseId = this.props.courseId;
+        const testDate = this.state.testDate;
+        const userEmail = "placeholder@test.com"
+        const decklist = {};
+        this.state.selected.map(function (item) {
+            decklist[item.value] = item.label;
+        });
+
+        const json = {
+            name: testName,
+            courseId: courseId,
+            testDate: testDate,
+            decklist: decklist,
+            userEmail: userEmail
+        };
+
+        console.log(json);
+
+        try {
+            const response = await Axios.post("api/addTest", json);
+            console.log(response.status);
+            this.setState (
+                {
+                    selected: [],
+                    options: [],
+                    testName: '',
+                    testDate: "2020-01-01T00:00"
+                }
+            );
+        } catch (error){
+            console.log(error);
+        }
+        console.log("Test Submitted");
     }
 
     render() {
@@ -58,7 +98,7 @@ export default class TestModal extends React.Component {
                     <Modal size="lg" open={open} toggle={this.toggle}>
                         <ModalHeader>{header}</ModalHeader>
                         <ModalBody>
-                            <Form onSubmit={this.handleSubmit}>
+                            <Form onSubmit={this.onSubmit}>
                                 <FormInput name="testName" value={this.state.testName} onChange={this.onInputChange} placeholder="Test Name" />
                                 <br />
                                 <MultiSelect

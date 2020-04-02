@@ -6,7 +6,7 @@ import './DeckDisplay.css';
 import * as withAlert from "./HOC/ComponentWithAlert";
 import withMenu from './HOC/ComponentWithMenu';
 import CardDisplay from './CardDisplay';
-import TestModal from './TestModal';
+import TestModal from './CreateTest';
 
 
 class DeckDisplay extends Component {
@@ -75,7 +75,7 @@ class DeckDisplay extends Component {
                 <Button id="newDeck" onClick={this.addDeck}>Add New Deck</Button>
                 <div id = "newTest">
 
-                <TestModal isExam={false} coursename={this.state.coursename} options={this.state.decklist}></TestModal>
+                <TestModal isExam={false} coursename={this.state.coursename} courseId={this.props.location.state.id} options={this.state.decklist}></TestModal>
                 </div>
             </div>
         )

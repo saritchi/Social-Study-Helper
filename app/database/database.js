@@ -105,16 +105,33 @@ class Database {
             PRIMARY KEY (id)
         );`;
 
+        const createTestTableSQL = `CREATE TABLE IF NOT EXISTS Tests(
+            id INT PRIMARY KEY AUTO_INCREMENT,
+            name VARCHAR(255) NOT NULL,
+            courseId INT NOT NULL,
+            decklist JSON NOT NULL,
+            testDate DATETIME,
+            userEmail VARCHAR(255),
+            FOREIGN KEY (courseId)
+                REFERENCES Courses(id)
+                ON DELETE CASCADE,
+            FOREIGN KEY (userEmail)
+                REFERENCES user(email)
+                ON DELETE CASCADE
+        );`;
+
         const createUserTablePromise = util.promisify(this.db.query).call(this.db, createUsersTableSQL); 
         const createCourseTablePromise = util.promisify(this.db.query).call(this.db, createCoursesTableSQL); 
         const createDeckTablePromise = util.promisify(this.db.query).call(this.db, createDeckTableSQL); 
         const createCardTablePromise = util.promisify(this.db.query).call(this.db, createCardTableSQL); 
+        const createTestTablePromise = util.promisify(this.db.query).call(this.db, createTestTableSQL); 
 
 
         return createUserTablePromise
                 .then(createCourseTablePromise)
                 .then(createDeckTablePromise)
                 .then(createCardTablePromise)
+                .then(createTestTablePromise)
                 .catch(() => {
                     console.log("Unable to initialize database tables! Aborting server start up with error: " + error.message);
                     throw error;
