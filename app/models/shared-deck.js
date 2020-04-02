@@ -12,6 +12,12 @@ class SharedDeck {
         this.id = id;
     }
 
+    async exists() {
+        const query = `SELECT * FROM SharedDecks where fromUser = ? AND toUser = ? AND deckId = ? `;
+        const result = await database.runQuery(query, [this.fromUser, this.toUser, this.deckId]);
+        return result.length !== 0;
+    }
+
     async create() {
         const addCourseSQL = `INSERT INTO SharedDecks(toUser, fromUser, deckId) VALUES(?, ?, ?)`;
         return (await database.runQuery(addCourseSQL, [this.toUser, this.fromUser, this.deckId])).insertId;
@@ -51,13 +57,24 @@ module.exports.getDecksForUser = async function getDecksForUser(email) {
     })
 }
 
-
 /**
- * Delete a deck with a given id
- * @param {*} id of the course to delete
+ * Delete a SharedDeck with a given id
+ * @param {*} id of the SharedDeck to delete
  */
 module.exports.deleteWithId = async function deleteWithId(id) {
     var getSharedCoursesSQL = `DELETE FROM SharedDecks WHERE id = ?`;
     return database.runQuery(getSharedCoursesSQL, id);
 }
+
+/**
+ * Delete a SharedDeck with a fromUser and toUser Email and a deckId
+ * @param {*} fromUser a string that represents the user that shared the deck
+ * @param {*} toEmail a string that represents the user had  the deck shared to
+ * @param {*} id of the deckId
+ */
+module.exports.deleteWithEmailsAndId = async function deleteWithEmailsAndId(fromUser, toUser, id) {
+    var getSharedCoursesSQL = `DELETE FROM SharedDecks WHERE fromUser = ? AND toUser = ? AND deckId = ?`;
+    return database.runQuery(getSharedCoursesSQL, [fromUser, toUser, id]);
+}
+
 

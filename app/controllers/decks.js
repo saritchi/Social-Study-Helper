@@ -52,7 +52,7 @@ async function getDeckData(req, res) {
     try {
         const cards = await Card.getAllFromDeckId(deckId);
         console.log(cards)
-        const deck = await Deck.getNamefromDeckId(deckId);
+        const deck = await Deck.getFromId(deckId);
         console.log(deck)
         
         res.status(200).json({result_cards: cards, result_names: deck});

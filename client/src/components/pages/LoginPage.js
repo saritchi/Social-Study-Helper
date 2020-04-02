@@ -12,10 +12,9 @@ import axios from "axios";
         this.state = {user: new User()};
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this); 
-        this.responseGoogle = this.responseGoogle.bind(this);      
     }
     
-   async responseGoogle(response){
+    responseGoogle = async response =>{
 
         var fname=response.getBasicProfile().getGivenName();
         var lname=response.getBasicProfile().getFamilyName()

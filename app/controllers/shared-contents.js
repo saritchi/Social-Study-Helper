@@ -4,14 +4,13 @@ var SharedCourse = require('../models/shared-course')
 var SharedDeck = require('../models/shared-deck')
 var Course = require('../models/course');
 var Deck = require('../models/deck');
+var runTransaction = require('../database/helper');
 
 var UserDoesNotExistError = require('../errors/UserDoesNotExistError')
 var DeckDoesNotExistError = require('../errors/DeckDoesNotExistError')
 
-
 var requireLogin = require('../middleware/authentication');
 
-//TODO error check that the content hasn't already been shared
 async function shareCourse(req, res) {
     console.log("Sharing course")
     var body = req.body;
@@ -26,21 +25,26 @@ async function shareCourse(req, res) {
     }
 
     try {
-        const sharedCoursesPromises = toEmails.map(async (toEmail) => {
-            const user = new User(toEmail)
-            const userExists = await user.exists();
-            if(!userExists) {
-                console.log(`User does not exist. Not sharing course with ${toEmail}.`);
-                throw new UserDoesNotExistError(toEmail, `User ${toEmail} does not exist.`);
-            }
+        var sharedCourses;
+        await runTransaction(async () => {
+            const sharedCoursesPromises = toEmails.map(async (toEmail) => {
+                const user = new User(toEmail)
+                const userExists = await user.exists();
+                if(!userExists) {
+                    console.log(`User does not exist. Not sharing course with ${toEmail}.`);
+                    throw new UserDoesNotExistError(toEmail, `User ${toEmail} does not exist.`);
+                }
+                
+                var sharedCourse = new SharedCourse(toEmail, fromEmail, courseId);
+                sharedCourse.id = await sharedCourse.create();
 
-            var sharedCourse = new SharedCourse(toEmail, fromEmail, courseId);
-            sharedCourse.id = await sharedCourse.create();
-            return sharedCourse;
+                await shareDecksFromCourseId(toEmail, fromEmail, courseId);
+                return sharedCourse;
+            })
+            sharedCourses = await Promise.all(sharedCoursesPromises)
         })
-        const sharedCourses = await Promise.all(sharedCoursesPromises)
         console.log(sharedCourses);
-        res.status(200).json({result: sharedCourses});
+        res.status(200).json({result: sharedCourses});    
     } catch (error) {
         if (error instanceof UserDoesNotExistError) {
             console.log(`Unable to share course with id: ${courseId} from ${fromEmail} to users ${toEmails}. Error: ${error.message}`)
@@ -52,7 +56,22 @@ async function shareCourse(req, res) {
     }    
 }
 
-//TODO error check that the content hasn't already been shared
+async function shareDecksFromCourseId(toEmail, fromEmail, courseId) {
+    console.log("Sharing decks from course with id: " + courseId);
+    const decks = await Deck.getDecksFromCourseId(courseId);
+    decks.forEach(async (deck) => {
+        console.log("Sharing deck: " + deck.name + " with courseId: " + courseId);
+        const sharedDeck = new SharedDeck(toEmail, fromEmail, deck.id);
+        //if the user has already shared the deck and is now sharing the course we don't create a new entry for it.
+        if(await sharedDeck.exists()) {
+            console.log("ShareDeck entry already exists for this deck. Skipping.");
+            return;
+        }
+
+        await sharedDeck.create();
+    })
+}
+
 async function shareDeck(req, res) {
     console.log("Sharing deck")
     var body = req.body;
@@ -163,7 +182,10 @@ async function deleteSharedCourse(req, res) {
     var sharedCourseId = req.query.id
     console.log("Deleting course with id " + sharedCourseId);
     try {
-        await SharedCourse.deleteWithId(sharedCourseId);
+        await runTransaction(async () => {
+            await deleteSharedDecksFromSharedCourseId(sharedCourseId);
+            await SharedCourse.deleteWithId(sharedCourseId);
+        })
         res.sendStatus(200)
     } catch(error) {
         console.log(`Unable to delete shared course from the database. Error: ${error.message}`)
@@ -171,6 +193,14 @@ async function deleteSharedCourse(req, res) {
     }
 }
 
+async function deleteSharedDecksFromSharedCourseId(sharedCourseId) {
+    console.log("Deleting shared decks associated with sharedCourseId: " + sharedCourseId)
+    const sharedCourse = await SharedCourse.getSharedCourseFromId(sharedCourseId);
+    const decks = await Deck.getDecksFromCourseId(sharedCourse.courseId);
+    return decks.map(async (deck) => {
+        await SharedDeck.deleteWithEmailsAndId(sharedCourse.fromUser, sharedCourse.toUser, deck.id);
+    })
+}
 
 async function deleteSharedDeck(req, res) {
     var deckId = req.query.id
@@ -179,7 +209,7 @@ async function deleteSharedDeck(req, res) {
         await SharedDeck.deleteWithId(deckId);
         res.sendStatus(200)
     } catch(error) {
-        console.log(`Unable to delete shared course from the database. Error: ${error.message}`)
+        console.log(`Unable to delete shared deck from the database. Error: ${error.message}`)
         res.status(500).json({result: "An error occurred while attempting to remove the shared user. Please try again later."})
     }
 }

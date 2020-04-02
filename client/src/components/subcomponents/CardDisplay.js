@@ -9,10 +9,7 @@ const CardDisplay = (props) => {
                                                        id={cardInfo.id} 
                                                        info={cardInfo.name}
                                                        sharedWithUsers={cardInfo.sharedWith}
-                                                       changePage={props.changePage}
-                                                       options={props.options}
-                                                       shareContentCallback={props.shareContentCallback}
-                                                       removeSharedContentCallback={props.removeSharedContentCallback}
+                                                       {...props}
                                             />)}
         </div>
     )

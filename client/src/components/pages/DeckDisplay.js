@@ -136,6 +136,13 @@ class DeckDisplay extends Component {
         this.props.history.push("/viewCards", {deckId});
     }
 
+    /**
+     * @param {*} deckId id of the deck the user wants to edit
+     */
+    editDeckView = (deckId) => {
+        this.props.history.push("/editDeck", {deckId})
+    }
+
     render() {
         const coursename = this.props.location?.state?.name || '';
         return (
@@ -151,9 +158,10 @@ class DeckDisplay extends Component {
                     </Nav>
                 </div>
                 <CardDisplay changePage={this.cardView} options={true}
-                             shareContentCallback={this.shareDeckCallback}
+                             sharedContentCallback={this.shareDeckCallback}
                              removeSharedContentCallback={this.removeSharedDeckCallback}
-                             cardsInfo={this.state.decklist} />
+                             cardsInfo={this.state.decklist}
+                             editCallback={this.editDeckView} />
                 <Button id="newDeck" onClick={this.addDeck}>Add New Deck</Button>
             </div>
         )

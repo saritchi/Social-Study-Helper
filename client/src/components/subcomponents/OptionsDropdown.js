@@ -15,21 +15,18 @@ export default class OptionsDropdown extends Component {
   toggleShareMenu = () => this.setState({openShareMenu: !this.state.openShareMenu})
 
   render() {
+    console.log(this.props.id);
     return (
       <div>
         <ShareModal key={this.props.sharedWithUsers}
-                    open={this.state.openShareMenu} 
-                    name={this.props.name} 
-                    id={this.props.id} 
-                    sharedContentCallback={this.props.shareContentCallback}
-                    removeSharedContentCallback={this.props.removeSharedContentCallback}
-                    sharedWithUsers={this.props.sharedWithUsers}
+                    open={this.state.openShareMenu}
                     toggle={this.toggleShareMenu}
+                    {...this.props}
           />
         <Dropdown open={this.state.openMenu} toggle={this.toggle}>
           <FiMoreVertical onClick={this.toggle}/>
           <DropdownMenu>
-            <DropdownItem>Edit</DropdownItem>
+            <DropdownItem onClick={() => this.props.editCallback(this.props.id)}>Edit</DropdownItem>
             <DropdownItem>Delete</DropdownItem>
             <DropdownItem onClick={this.toggleShareMenu}>Share</DropdownItem>
           </DropdownMenu>

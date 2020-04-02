@@ -41,10 +41,9 @@ module.exports.getDecksFromCourseId = async function getDecksFromCourseId(course
     })
 }
 
-module.exports.getNamefromDeckId = async function getNamefromDeckId(deckId) {
+module.exports.getFromId = async function getDeckFromId(deckId) {
     const getDeckSQL = `SELECT * FROM Decks WHERE id = ?`;
     const results = await database.runQuery(getDeckSQL, deckId);
-    return results.map((result) => {
-        return new Deck(result.name, result.midterm, result.final, result.courseId, result.id, result.lastAccess, result.lastStudy);
-    })
+    const result = results[0]
+    return new Deck(result.name, result.midterm, result.final, result.courseId, result.id, result.lastAccess, result.lastStudy);
 }
