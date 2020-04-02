@@ -67,8 +67,20 @@ function isValidCourseRequest(coursename, decks) {
     return coursename && !emptyDecks;
 }
 
+async function deleteCourse(req, res) {
+    const courseId = req.query.id;
+    try {
+        await Course.deleteWithId(courseId);
+        res.sendStatus(200);
+    } catch(error) {
+        console.log(`Unable to delete course with id: ${courseId}. Error: ${error.message}`)
+        res.status(500).json({result: "An error occurred while attempting to remove that course. Please try again later."})
+    }
+}
+
 
 router.get('/courses', requireLogin, getCourses)
 router.post('/addCourse', requireLogin, addCourse)
+router.delete('/deleteCourse', requireLogin, deleteCourse);
 
 module.exports = router;

@@ -50,3 +50,14 @@ module.exports.getFromId = async function getDeckFromId(courseId) {
     const result = results[0]
     return new Course(result.name, result.midterm, result.final, result.userEmail, result.id, result.lastAccess);
 }
+
+
+/**
+ * Delete a course associated with a given courseId
+ * @param {*} courseId a course's id
+ */
+module.exports.deleteWithId = async function deleteWithId(courseId) {
+    const deleteCourseQuery = `DELETE FROM Courses WHERE id = ?`;
+    //TODO: check affectedRows === 1 if not throw error and rollback;
+    return database.runQuery(deleteCourseQuery, courseId);
+}
