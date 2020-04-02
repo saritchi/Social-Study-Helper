@@ -59,7 +59,6 @@ class DeckDisplay extends Component {
     }
 
     render() {
-        // const coursename = this.props.location?.state?.name || '';
         return (
             <div>
                 <div id="courseName">
@@ -76,7 +75,7 @@ class DeckDisplay extends Component {
                 <Button id="newDeck" onClick={this.addDeck}>Add New Deck</Button>
                 <div id = "newTest">
 
-                <TestModal isExam={false} coursename={this.state.coursename}></TestModal>
+                <TestModal isExam={false} coursename={this.state.coursename} options={this.state.decklist}></TestModal>
                 </div>
             </div>
         )

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Modal, ModalBody, ModalHeader, FormInput } from 'shards-react'
+import { Button, Modal, ModalBody, ModalHeader, Form, FormInput } from 'shards-react'
 import MultiSelect from "react-multi-select-component";
 
 export default class TestModal extends React.Component {
@@ -8,11 +8,13 @@ export default class TestModal extends React.Component {
         this.state = {
             open: false,
             selected: [],
-            setSelected: []
+            options: [],
+            testName: '',
+            testDate: "2020-01-01T00:00"
         };
-        var coursename = null;
-        const isExam = true;
+
         this.toggle = this.toggle.bind(this);
+        // this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     toggle() {
@@ -21,20 +23,33 @@ export default class TestModal extends React.Component {
         });
     }
 
+    onInputChange = event => {
+        if (event.target.name === "testName") {
+            this.setState({ testName: event.target.value });
+            console.log(this.state.testName);
+        } else if (event.target.name === "testDate") {
+            this.setState({ testDate: event.target.value });
+            console.log(this.state.testDate);
+        }
+    }
 
-    
+
+
+    onSubmit(e) {
+        console.log("Submitted");
+        e.preventDefault();
+    }
+
     render() {
         const { open } = this.state;
         const isExam = this.props.isExam;
-        const options = [
-            { label: "test1", value: "T1"},
-            { label: "test2", value: "T2"},
-            { label: "test3", value: "T3"},
-            { label: "test4", value: "T4"},
-        ];
-
-        var header = (isExam) ? "New Test" : "New Test for " + this.props.coursename;
-        console.log(header);
+        const options = this.props.options.map(function (item) {
+            return {
+                label: item.name,
+                value: item.id
+            }
+        });
+        var header = (isExam) ? "New Exam" : "New Test for " + this.props.coursename;
         if (!isExam) {
 
             return (
@@ -43,17 +58,20 @@ export default class TestModal extends React.Component {
                     <Modal size="lg" open={open} toggle={this.toggle}>
                         <ModalHeader>{header}</ModalHeader>
                         <ModalBody>
-                            <pre>{JSON.stringify(this.state.selected)}</pre>
-                            <MultiSelect
-                                options={options}
-                                value={this.state.selected}
-                                onChange={(temp) => {this.setState({selected: temp})}}
-                                labelledBy={"Select Decks for test"}>
-                            </MultiSelect>
-                            <FormInput type="datetime-local" >
-                                
-
-                            </FormInput>
+                            <Form onSubmit={this.handleSubmit}>
+                                <FormInput name="testName" value={this.state.testName} onChange={this.onInputChange} placeholder="Test Name" />
+                                <br />
+                                <MultiSelect
+                                    options={options}
+                                    value={this.state.selected}
+                                    onChange={(val) => this.setState({ selected: val })}
+                                    labelledBy={"Select"}
+                                    overrideStrings={{ 'selectSomeItems': "Select Decks for Test" }} />
+                                <br />
+                                <FormInput name="testDate" value={this.state.testDate} onChange={this.onInputChange} type="datetime-local" />
+                                <br />
+                                <Button type="submit">Submit</Button>
+                            </Form>
                         </ModalBody>
                     </Modal>
                 </>
