@@ -17,6 +17,7 @@ class Home extends Component {
             sharedDecks: [],
         };
         this.displayLimit = 9
+        this.orderBy = 'lastAccess'
     }
 
     async componentDidMount() {
@@ -42,19 +43,22 @@ class Home extends Component {
         const coursesResponse = await axios.get('/api/courses', {
             params: {
                 email: this.props.user.email,
-                limit: this.displayLimit
+                limit: this.displayLimit,
+                orderBy: this.orderBy
             }
         });
         const sharedCoursesResponse = await axios.get('/api/sharedCourses', {
             params: {
                 email: this.props.user.email,
-                limit: this.displayLimit
+                limit: this.displayLimit,
+                orderBy: this.orderBy
             }
         })
         const sharedDecksResponse = await axios.get('/api/sharedDecks', {
             params: {
                 email: this.props.user.email,
-                limit: this.displayLimit
+                limit: this.displayLimit,
+                orderBy: this.orderBy
             }
         })
 
@@ -99,8 +103,14 @@ class Home extends Component {
             const users = toEmails.join(', ')
             this.props.showAlert(withAlert.successTheme, `Shared ${courseName} with ${users}.` )
         } catch (error) {
-            console.error(error);
-            this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+            if(error.response?.status === 401) {
+                this.props.history.replace("/");
+            }
+            else {
+                console.error(error);
+                const errorMessage = error.response?.data.result ? error.response.data.result : "An error has occured. Please try again later."
+                this.props.showAlert(withAlert.errorTheme, errorMessage);
+            }
         }
     }
 
@@ -127,8 +137,14 @@ class Home extends Component {
             })
             return true;
         } catch (error) {
-            console.error(error);
-            this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+            if(error.response?.status === 401) {
+                this.props.history.replace("/");
+            }
+            else {
+                console.error(error);
+                const errorMessage = error.response?.data.result ? error.response.data.result : "An error has occured. Please try again later."
+                this.props.showAlert(withAlert.errorTheme, errorMessage);
+            }
         }
 
         return false;
@@ -143,14 +159,35 @@ class Home extends Component {
      * @param {*} courseId id of the course the user is clicking
      * @param {*} courseName name of the course the user is clicking
      */
-    courseView = (courseId, courseName) => {
-        this.props.history.push({
-            pathname: '/decks',
-            state: {
-                id: courseId,
-                name: courseName
+    courseView = async (courseId, courseName) => {
+        var course = this.state.courses.filter((course) => course.id == courseId)[0];
+        //By default the Javascript Date Object uses ISO8601 which is not a valid DateTime in MYSQL
+        //This https://stackoverflow.com/questions/20083807/javascript-date-to-sql-date-object offers a solution for converting
+        //DateTime objects into a format MySQL accepts.
+        course.lastAccess = new Date().toISOString().slice(0, 19).replace('T', ' ');
+        try {
+            await axios.post('api/updateCourse', {
+                params: {
+                    course: course
+                }
+            })
+            this.props.history.push({
+                pathname: '/decks',
+                state: {
+                    id: courseId,
+                    name: courseName
+                }
+            });
+        } catch (error) {
+            if(error.response?.status === 401) {
+                this.props.history.replace("/");
             }
-        });
+            else {
+                console.error(error);
+                const errorMessage = error.response?.data.result ? error.response.data.result : "An error has occured. Please try again later."
+                this.props.showAlert(withAlert.errorTheme, errorMessage);
+            }
+        }
     }
 
     /**

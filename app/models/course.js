@@ -18,6 +18,11 @@ class Course {
         const addCourseSQL = `INSERT INTO Courses(name, midterm, final, userEmail) VALUES(?, ?, ?, ?)`;
         return (await database.runQuery(addCourseSQL, [this.name, this.midterm, this.final, this.userEmail])).insertId;
     }
+
+    async update() {
+        const updateCourseSQL = 'UPDATE Courses SET ? WHERE id = ?'
+        return database.runQuery(updateCourseSQL, [this, this.id]);
+    }
 }
 
 module.exports = Course;
@@ -25,10 +30,16 @@ module.exports = Course;
  * Get courses associated with a given user's email 
  * @param {*} email a user's email
  * @param {*} limit number of courses to retrieve
+ * @param {*} sortBy the value to sort the colums by
  * @returns An array of Course objects
  */
-module.exports.getCoursesFourUser = async function getCoursesFourUser(email, limit = null) {
+module.exports.getCoursesFourUser = async function getCoursesFourUser(email, limit = null, orderBy = null) {
     var addCourseSQL = `SELECT * FROM Courses WHERE userEmail = ?`;
+    
+    if (orderBy) {
+        addCourseSQL += ' ORDER BY ' + orderBy + ' DESC';
+    }
+
     if (limit) {
         addCourseSQL += ' LIMIT ' + parseInt(limit)
     }
