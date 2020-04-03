@@ -1,6 +1,6 @@
 import React from 'react'
 import './InfoCard.css';
-import { Card, CardBody, CardHeader, CardTitle } from 'shards-react'
+import { Button, Card, CardBody, CardHeader, CardTitle } from 'shards-react'
 import OptionsDropdown from './OptionsDropdown'
 
 const InfoCard = (props) => {

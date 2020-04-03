@@ -1,7 +1,7 @@
 import React from 'react';
 import { withRouter } from "react-router-dom"
 import ReactCardFlip from 'react-card-flip';
-import { Button, Card, Progress } from 'shards-react';
+import { Button, Card, Progress, ButtonGroup, Popover, PopoverBody, PopoverHeader} from 'shards-react';
 import { TiMediaPlay, TiMediaPlayReverse } from 'react-icons/ti';
 import './ViewCards.css';
 import * as withAlert from "../HOC/ComponentWithAlert";
@@ -13,10 +13,14 @@ class ViewCards extends React.Component {
     super(props);
     this.state = {
       isFlipped: false,
-      cardIndex: 0,
-      cards: [],
+      view_all: false,
       deck_end: false,
-      difficulty_selected: []
+      cardIndex: 0,
+      all_cards: [],
+      today_cards: [],
+      cards: [],
+      difficulty_selected: [],
+      open_toggle: false
     };
   }
 
@@ -34,14 +38,19 @@ class ViewCards extends React.Component {
       });
 
       const flashcards = cardResponse.data.result;
-      if(this.firsttime_study(flashcards)){
-        this.setState({cards: flashcards});
+      if(this.has_studied(flashcards)){
+        this.setState({all_cards: flashcards, cards: flashcards, today_cards: flashcards});
       }
       else{
         this.extract_cards_today(flashcards)
       }
 
+      if(this.state.cards.length == 0){
+        this.setState({cards: this.state.all_cards, view_all: true});
+      }
+
       document.addEventListener("keydown", this.handleKeyDown);
+      console.log(this.state.all_cards)
 
     } catch (error) {
       if (error.response.status === 401) {
@@ -117,28 +126,35 @@ class ViewCards extends React.Component {
       }
 
     })
-    this.setState({ cards: results , difficulty_selected: difficulty_check});
+    this.setState({ all_cards: flashcards, cards: results , today_cards: results, difficulty_selected: difficulty_check});
   }
 
-  firsttime_study = (flashcards) => {
-    var viewed = true;
+  has_studied = (flashcards) => {
+    var not_studied = true;
     var difficulty_check = this.state.difficulty_selected
     flashcards.forEach((card) => {
       difficulty_check.push(false)
       if(card.nextStudyTime != null){
         console.log("Cards have been viewed before")
-        viewed = false
+        not_studied = false
       }
     })
-    if(viewed == true){
+    if(not_studied == true){
       this.setState({ difficulty_selected: difficulty_check })
     }
-    return viewed
+    return not_studied
+  }
+
+  toggle = () => {
+    this.setState({ open_toggle: !this.state.open_toggle });
   }
 
 
   markDifficulty = async (event, difficulty) => {
     event.preventDefault()
+    if(this.state.view_all == true){
+      return;
+    }
     const difficulty_check = this.state.difficulty_selected
     const currentCard = this.state.cardIndex
     
@@ -187,7 +203,7 @@ class ViewCards extends React.Component {
 
   increment_index = () => {
     const difficulty_check = this.state.difficulty_selected;
-    if(difficulty_check[this.state.cardIndex] == false){
+    if(difficulty_check[this.state.cardIndex] == false && this.state.view_all == false){
       this.props.showAlert(withAlert.errorTheme, "Please select a difficulty for the card!");
       return;
     }
@@ -232,6 +248,20 @@ class ViewCards extends React.Component {
     }
   }
 
+  viewToday = () => {
+    console.log("Viewing Today's cards...")
+    if(this.state.today_cards == 0){
+      this.toggle()
+      return;
+    }
+    this.setState({ view_all: false, cardIndex: 0, cards: this.state.today_cards})
+  }
+
+  viewAll = () => {
+    console.log("Viewing All cards...")
+    this.setState({ view_all: true, cardIndex: 0, cards: this.state.all_cards})
+  }
+
   render() {
     if (this.state.deck_end == true) {
       return (
@@ -259,6 +289,25 @@ class ViewCards extends React.Component {
             <Progress theme="primary" value={((this.state.cardIndex + 1)  / this.state.cards.length) * 100} />
             <p>{this.state.cardIndex + 1 + "/" + this.state.cards.length}</p>
           </div>
+          <div id="button-group">
+            <ButtonGroup >
+              <Button id="popover-2" onClick={this.viewToday} outline={this.state.view_all}>Today</Button>
+                <Popover
+                  placement="bottom"
+                  open={this.state.open_toggle}
+                  toggle={this.toggle}
+                  target="#popover-2"
+                >
+                  <PopoverHeader>Oh no!</PopoverHeader>
+                  <PopoverBody>
+                    It looks like you have studied all the required cards for today.
+                    Come back another day to get your practice in! You can still choose
+                    to view all cards.
+                  </PopoverBody>
+                </Popover>
+              <Button onClick={this.viewAll} outline={!this.state.view_all}>All</Button>
+            </ButtonGroup>
+          </div>
 
           <div className="flash-container">
 
@@ -281,7 +330,7 @@ class ViewCards extends React.Component {
             </div>
           </div>
           <div>
-            <div className="difficulty-button-container">
+            <div className="difficulty-button-container" style={{ visibility: this.state.view_all ? 'hidden' : 'visible'}}>
               <Button className="difficulty-button" size="lg" theme="success" onClick={(e) => this.markDifficulty(e, "EASY")}>Easy</Button>
               <Button className="difficulty-button" size="lg" onClick={(e) => this.markDifficulty(e, "MEDIUM")}>Medium</Button>
               <Button className="difficulty-button" size="lg" theme="danger" onClick={(e) => this.markDifficulty(e, "HARD")}>Hard</Button>
