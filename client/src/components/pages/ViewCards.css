@@ -1,17 +1,70 @@
+
+#progress-bar {
+  margin: auto;
+  width: 90%;
+}
+
+#deck-complete {
+  width: 450px;
+  margin: auto;
+  margin-top: 10%;
+}
+
+.flashcard-done {
+  border-radius: 3px; 
+  box-shadow: none;
+  width: 40%;
+  height: 500px; 
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  cursor: pointer;
+}
+
 .flashcard {
     border: 1px solid rgb(238, 238, 238);
     border-radius: 3px; 
-    width:800px;
-    height: 400px;  
+    width: 800px;
+    height: 500px; 
     align-items: center;
     justify-content: center;
     margin: auto;
-  }
+    cursor: pointer;
+}
   
-  .flash-container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-right: -50%;
-    transform: translate(-50%, -50%)
-  }
+.flash-container {
+  margin: auto;
+  width: 800px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 70%;
+  transform: translate(-50%, -50%)
+}
+
+.switch-card-button {
+  margin-top: 15px;
+}
+
+#button-click{
+  margin-top: 50%;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  margin-left: 50px;
+  margin-right: 50px;
+}
+
+.difficulty-button-container {
+  margin-top: 39%;
+  /* height: 50%; */
+}
+
+
+.difficulty-button {
+  margin-left: 10px;
+  margin-right: 10px;
+}

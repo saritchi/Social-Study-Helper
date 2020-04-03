@@ -1,6 +1,6 @@
 import React from 'react'
 import './InfoCard.css';
-import { Card, CardBody, CardHeader } from 'shards-react'
+import { Card, CardBody, CardHeader, CardTitle } from 'shards-react'
 import OptionsDropdown from './OptionsDropdown'
 
 const InfoCard = (props) => {
@@ -14,7 +14,7 @@ const InfoCard = (props) => {
                 </CardHeader>
             }
             <CardBody onClick={() => props.changePage(props.id, props.info)}>
-                <p>{props.info}</p>
+                <CardTitle>{props.info}</CardTitle>
             </CardBody>
         </Card>
     ); 
