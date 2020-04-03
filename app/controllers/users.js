@@ -1,4 +1,5 @@
 var router = require('express').Router();
+var requireLogin = require('../middleware/authentication');
 var User = require('../models/user');
 
 async function authenticateUser(req, res) {
@@ -39,8 +40,43 @@ async function registerUser(req, res) {
         res.status(500).json({result: "An error occured while attempting to register. Please try again later."});
     }
 }
+    
+async function registerGoogleUser(req, res) {
+    let post = req.body;
+    let email = post.email;
+    let password = post.password;
+    let firstname = post.fname;
+    let lastname = post.lname;
+
+
+    const newUser = new User(email, password, firstname, lastname);
+    try { 
+        const userExists = await newUser.exists();
+        if (userExists) {
+            delete newUser.password;
+            req.session.user = newUser;
+            res.sendStatus(200);
+            return;
+        }
+        await newUser.create();
+        delete newUser.password;
+        req.session.user = newUser;
+        res.sendStatus(200);
+     } catch (error) {
+        console.log(error);
+        res.status(500).json({result: "An error occured while attempting to register Google User. Please try again later."});
+    }
+}
+
+function logoutUser(req, res) {
+    console.log("Resetting user session")
+    req.session.reset();
+    res.sendStatus(200);
+}
 
 router.post('/auth', authenticateUser)
 router.post('/register', registerUser)
+router.get('/logout', requireLogin, logoutUser);
+router.post('/google/register', registerGoogleUser)
 
 module.exports = router;

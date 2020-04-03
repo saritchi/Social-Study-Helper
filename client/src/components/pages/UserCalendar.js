@@ -6,7 +6,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import './UserCalendar.css';
 import moment from 'moment';
 import axios from 'axios';
-import * as withAlert from "./HOC/ComponentWithAlert";
+import * as withAlert from "../HOC/ComponentWithAlert";
 
 const localizer = momentLocalizer(moment)
 

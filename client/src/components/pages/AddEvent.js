@@ -3,7 +3,8 @@ import { withRouter } from "react-router-dom"
 import { Button, Form, FormInput, FormTextarea, DatePicker, Container, Row, Col} from "shards-react";
 import './AddEvent.css';
 import axios from "axios";
-import * as withAlert from "./HOC/ComponentWithAlert";
+import * as withAlert from "../HOC/ComponentWithAlert";
+import withMenu from '../HOC/ComponentWithMenu';
 import moment from 'moment';
 //import { TiDelete } from 'react-icons/ti';
 
@@ -34,7 +35,7 @@ class AddEvent extends Component {
             this.setState({
                 startDate: date
             })
-        }
+        } 
     }
 
     endDateChange(date){

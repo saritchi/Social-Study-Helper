@@ -4,7 +4,7 @@ const database = require('../database/database')(process.env);
  * User model that communicates with the database
  */
 class User {
-    constructor(email, password, fname = '', lname = '') {
+    constructor(email, password = '', fname = '', lname = '') {
         this.email = email;
         this.password = password;
         this.fname = fname;
@@ -15,11 +15,7 @@ class User {
     async exists() {
         const query = `Select * from user where email = ?`;
         const result = await database.runQuery(query, [this.email]);
-        if(result.length == 0){ 
-            return false;
-        }
-        
-        return true;
+        return result.length !== 0;
     }
 
     async create() {
@@ -45,6 +41,7 @@ class User {
         }
         
     }
+
 }
 
 module.exports = User;
