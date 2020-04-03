@@ -1,5 +1,6 @@
 var router = require('express').Router();
 var Card = require('../models/card');
+var runTransaction = require('../database/helper');
 var requireLogin = require('../middleware/authentication');
 
 async function viewCards(req, res) {
@@ -16,6 +17,29 @@ async function viewCards(req, res) {
     }
 }
 
+async function update_study_time(req, res) {
+    console.log("Adding timestamp to a card...")
+    var body = req.body;
+    var card_id = body.card_id;
+    var deck_id = body.deck_id;
+    var datetime = body.datetime;
+    var difficulty = body.difficulty;
+
+    const card = new Card(null, null, deck_id, card_id, datetime);
+    try{
+        await runTransaction(async () => {
+            await card.update_difficulty()
+        })
+        res.sendStatus(200);
+    } catch (error) {
+        console.log(`Unable to update card with difficulty ${difficulty} to database. Error: ${error.message}`)
+        res.status(500).json({result: "An error has occured while attempting to update the studytime to the database. Please try again later."})
+   
+    }
+
+}
+
 router.get('/viewCards', requireLogin, viewCards)
+router.post('/timestampCard', requireLogin, update_study_time)
 
 module.exports = router;

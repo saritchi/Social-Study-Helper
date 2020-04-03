@@ -14,9 +14,9 @@ import AddCourse from './components/pages/AddCourse';
 import CreateDeck from './components/pages/CreateDeck';
 import DeckDisplay from './components/pages/DeckDisplay';
 import ViewCards from './components/pages/ViewCards';
-import AllSharedContent from './components/pages/AllSharedContent'
 import EditDeck from './components/pages/EditDeck';
 import EditCourse from './components/pages/EditCourse';
+import AllSharedContent from './components/pages/AllSharedContent'
 import User from './User';
 
 const userStorageKey = 'user';
