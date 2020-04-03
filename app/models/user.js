@@ -51,8 +51,8 @@ module.exports = User;
  * @returns A User object
  */
 module.exports.getUserFromEmail = async function getUserFromEmail(email) {
-    const query = 'SELECT FROM user WHERE email = ?';
-    const result = await database.runQuery(query, email);
-
+    const query = 'SELECT * FROM user WHERE email = ?';
+    const results = await database.runQuery(query, email);
+    const result = results[0];
     return new User(result.email, result.password, result.fname, result.lname);
 }

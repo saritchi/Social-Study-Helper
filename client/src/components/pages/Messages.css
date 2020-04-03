@@ -1,0 +1,15 @@
+#title {
+    margin: 1em;
+}
+
+#messagesGroup{
+    text-align: left;
+    min-height: 80%;
+    margin: 7%;
+}
+
+#newMessage {
+    margin: 3em;
+    bottom: 0;
+    float: right;
+}
