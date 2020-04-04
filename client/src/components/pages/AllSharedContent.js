@@ -21,7 +21,7 @@ class AllCourses extends Component {
         }
 
         try {
-            const {sharedCourses, sharedDecks} = this.getPageContent();
+            const {sharedCourses, sharedDecks} = await this.getPageContent();
             this.setState({sharedCourses: sharedCourses, sharedDecks: sharedDecks})
         } catch(error) {
             if(error.response.status === 401) {
