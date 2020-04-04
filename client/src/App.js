@@ -15,6 +15,7 @@ import CreateDeck from './components/pages/CreateDeck';
 import DeckDisplay from './components/pages/DeckDisplay';
 import ViewCards from './components/pages/ViewCards';
 import EditDeck from './components/pages/EditDeck';
+import EditCourse from './components/pages/EditCourse';
 import AllSharedContent from './components/pages/AllSharedContent'
 import Messages from './components/pages/Messages'
 import User from './User';
@@ -127,6 +128,15 @@ class App extends Component {
                 render={props => (
                   <React.Fragment>
                     <Messages  user={this.state.user} setUser={this.setUser}/>
+                  </React.Fragment>
+                )}
+              />
+              <Route
+                path="/editCourse"
+                exact
+                render={props => (
+                  <React.Fragment>
+                    <EditCourse  user={this.state.user}/>
                   </React.Fragment>
                 )}
               />

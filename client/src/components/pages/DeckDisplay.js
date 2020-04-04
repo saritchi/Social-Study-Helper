@@ -121,6 +121,27 @@ class DeckDisplay extends Component {
         return false;
     }
 
+    deleteCourseCallback = async (deckId) => {
+        try {
+            await axios.delete('api/deleteDeck', {
+                params: {
+                    id: deckId
+                }
+            })
+            var decks = this.state.decklist;
+            const indexToDelete = decks.findIndex((deck) => deck.id === deckId);
+            decks.splice(indexToDelete, 1);
+            this.setState({decklist: decks});
+        } catch (error) {
+            if(error.response?.status === 401) {
+                this.props.history.replace("/");
+            } else {
+                console.error(error);
+                this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+            }
+        }
+    }
+
     addDeck = () => {
         this.props.history.push(
         {
@@ -145,6 +166,7 @@ class DeckDisplay extends Component {
 
     render() {
         const coursename = this.props.location?.state?.name || '';
+        const showOptions = !this.props.location?.state?.shared;
         return (
             <div>
                 <div id="courseName">
@@ -157,10 +179,11 @@ class DeckDisplay extends Component {
                         </NavItem>
                     </Nav>
                 </div>
-                <CardDisplay changePage={this.cardView} options={true}
+                <CardDisplay changePage={this.cardView} options={showOptions}
                              sharedContentCallback={this.shareDeckCallback}
                              removeSharedContentCallback={this.removeSharedDeckCallback}
                              cardsInfo={this.state.decklist}
+                             deleteCallback={this.deleteCourseCallback}
                              editCallback={this.editDeckView} />
                 <Button id="newDeck" onClick={this.addDeck}>Add New Deck</Button>
             </div>
