@@ -155,9 +155,6 @@ class ViewCards extends React.Component {
   // it will increment cardIndex and submit query.  
   markDifficulty = async (event, difficulty) => {
     event.preventDefault()
-    // if(this.state.view_all == true){
-    //   return;
-    // }
     const difficulty_check = this.state.difficulty_selected
     const currentCard = this.state.cardIndex
     const card_id = this.state.cards[currentCard].id
@@ -318,7 +315,6 @@ class ViewCards extends React.Component {
                               view={this.state.view_all}/>
           
           <div className="flash-container">
-
             <ReactCardFlip isFlipped={this.state.isFlipped} flipDirection="vertical">
               <Card className="flashcard" onClick={this.handleClick}>
                 {this.renderPrompt(this.state.cardIndex)}
@@ -329,18 +325,15 @@ class ViewCards extends React.Component {
             </ReactCardFlip>
 
             <ChangeCardButtons passedFunction={this.updateCard} index={this.state.cardIndex} view={this.state.view_all}/>
-
           </div>
           <div>
             <DifficultButtons passedFunction={this.markDifficulty} view={this.state.view_all}/>
           </div>
 
         </div>
-
       );
     }
   }
-
 }
 
 export default withMenu(withRouter(withAlert.withAlert(ViewCards)));
