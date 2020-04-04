@@ -14,9 +14,7 @@ import axios from "axios";
             fname:'',
             lname:'',
             role:'',
-            registered: false,
-            teacher:false,
-            student:false
+            registered: false
         };
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
@@ -29,12 +27,7 @@ import axios from "axios";
 
     userType(e,role){
         this.setState({role:role});
-        if(role =='teacher'){
-            this.setState({teacher:true,student:false});
-        }
-        if(role =='student'){
-            this.setState({student:true,teacher:false});
-        }
+
     }
     
    async onSubmit(e) {
@@ -57,6 +50,8 @@ import axios from "axios";
     }
     render() {
         //TODO: redirect to home after value registration
+        const isTeacher = this.state.role === 'teacher' ? true : false;
+        const isStudent = this.state.role === 'student' ? true : false;
         if (this.state.registered) {
             return(
                 <div>
@@ -92,8 +87,8 @@ import axios from "axios";
                     <FormInput type="text" name="lname" onChange = {this.onChange}></FormInput>
                     </FormGroup>
                     <p style={{textAlign:"left",marginTop:'30px',fontSize:"larger"}}>User type:</p>
-                    <FormCheckbox  checked={this.state.teacher} onChange={e => this.userType(e, "teacher")}>Teacher</FormCheckbox>
-                    <FormCheckbox  checked={this.state.student} onChange={e => this.userType(e, "student")}>Student</FormCheckbox>
+                    <FormCheckbox  checked={isTeacher} onChange={e => this.userType(e, "teacher")}>Teacher</FormCheckbox>
+                    <FormCheckbox  checked={isStudent} onChange={e => this.userType(e, "student")}>Student</FormCheckbox>
                     <FormInput type="submit" value="SignUp"></FormInput>
                 </Form> 
             </div>

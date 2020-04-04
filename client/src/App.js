@@ -123,6 +123,7 @@ class App extends Component {
                   </React.Fragment>
                 )}
              />
+             <Route
                 path="/editDeck"
                 exact
                 render={props => (
