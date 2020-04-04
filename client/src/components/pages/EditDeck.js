@@ -122,7 +122,6 @@ class EditDeck extends React.Component {
             // query currently does not insert new rows, it currently only updates
             const response = await axios.post("/api/editDeck", json);
             console.log(response.status);
-            this.props.showAlert(withAlert.successTheme, "Deck Updated!");
             this.props.history.goBack();
         } catch (error){
             console.log(error);
@@ -135,7 +134,7 @@ class EditDeck extends React.Component {
         const deckname = this.state.deckname;
         
         if (!deckname) {
-          this.props.showAlert(withAlert.errorTheme, "Error. Deckname is required. Please remove or fill empty forms.")
+          this.props.showAlert(withAlert.errorTheme, "Error. Deckname is required.")
           return false;
         }
         else if(deckname.length > 50){
