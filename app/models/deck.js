@@ -28,6 +28,7 @@ class Deck {
 }
 //
 module.exports = Deck;
+
 /**
  * Get all decks associated with a given courseId
  * @param {*} courseId 
@@ -41,9 +42,24 @@ module.exports.getDecksFromCourseId = async function getDecksFromCourseId(course
     })
 }
 
+/**
+ * Get a decks associated with a given id
+ * @param {*} deckId a deck's id 
+ * @returns A deck object
+ */
 module.exports.getFromId = async function getDeckFromId(deckId) {
     const getDeckSQL = `SELECT * FROM Decks WHERE id = ?`;
     const results = await database.runQuery(getDeckSQL, deckId);
     const result = results[0]
     return new Deck(result.name, result.midterm, result.final, result.courseId, result.id, result.lastAccess, result.lastStudy);
+}
+
+/**
+ * Delete a deck associated with a given id
+ * @param {*} deckId a deck's id
+ */
+module.exports.deleteWithId = async function deleteWithId(deckId) {
+    const deleteDeckQuery = `DELETE FROM Decks WHERE id = ?`;
+    //TODO: check affectedRows === 1 if not throw error and rollback;
+    return database.runQuery(deleteDeckQuery, deckId);
 }

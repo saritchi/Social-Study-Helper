@@ -23,6 +23,11 @@ class Course {
         const updateCourseSQL = 'UPDATE Courses SET ? WHERE id = ?'
         return database.runQuery(updateCourseSQL, [this, this.id]);
     }
+
+    async update() {
+        const updateCourseSQL = `UPDATE Courses SET name = ?, midterm = ?, final = ?, userEmail = ? WHERE id = ?`;
+        return database.runQuery(updateCourseSQL, [this.name, this.midterm, this.final, this.userEmail, this.id])
+    }
 }
 
 module.exports = Course;
@@ -60,4 +65,15 @@ module.exports.getFromId = async function getDeckFromId(courseId) {
     const results = await database.runQuery(getCourseSQL, courseId);
     const result = results[0]
     return new Course(result.name, result.midterm, result.final, result.userEmail, result.id, result.lastAccess);
+}
+
+
+/**
+ * Delete a course associated with a given courseId
+ * @param {*} courseId a course's id
+ */
+module.exports.deleteWithId = async function deleteWithId(courseId) {
+    const deleteCourseQuery = `DELETE FROM Courses WHERE id = ?`;
+    //TODO: check affectedRows === 1 if not throw error and rollback;
+    return database.runQuery(deleteCourseQuery, courseId);
 }

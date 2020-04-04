@@ -113,6 +113,27 @@ class AllCourses extends Component {
         return false;
     }
 
+    deleteCourseCallback = async (courseId) => {
+        try {
+            await axios.delete('api/deleteCourse', {
+                params: {
+                    id: courseId
+                }
+            })
+            var courses = this.state.courses;
+            const indexToDelete = courses.findIndex((course) => course.id === courseId);
+            courses.splice(indexToDelete, 1);
+            this.setState({courses: courses});
+        } catch (error) {
+            if(error.response?.status === 401) {
+                this.props.history.replace("/");
+            } else {
+                console.error(error);
+                this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+            }
+        }
+    }
+
     addCourse = () => {
         this.props.history.push("/addCourse");
     }
@@ -147,6 +168,10 @@ class AllCourses extends Component {
             }
         }
     }
+
+    editCourseView = (courseId) => {
+        this.props.history.push("/editCourse", {courseId});
+    }
     
     render() {
         return (
@@ -157,6 +182,8 @@ class AllCourses extends Component {
                 <CardDisplay changePage={this.courseView} options={true} 
                              sharedContentCallback={this.shareCourseCallback}
                              removeSharedContentCallback={this.removeSharedCourseCallback}
+                             deleteCallback={this.deleteCourseCallback}
+                             editCallback={this.editCourseView}
                              cardsInfo={this.state.courses}
                 />
                 <Button id="newCourse" onClick={this.addCourse}>Add New Course</Button>

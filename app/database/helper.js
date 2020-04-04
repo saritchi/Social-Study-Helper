@@ -11,7 +11,7 @@ module.exports = async function runTransaction(transaction) {
         await database.commit();
         console.log("Finished transaction");
     } catch (error) {
-        console.log("Rolling back transaction")
+        console.log("Rolling back transaction because of error: " + error)
         await database.rollback();
         throw error;
     }
