@@ -3,6 +3,8 @@ import React from 'react'
 import { Button, Modal, ModalBody, ModalHeader, Form, FormInput } from 'shards-react'
 import MultiSelect from "react-multi-select-component";
 import Axios from 'axios';
+import './CreateTest.css';
+
 
 export default class TestModal extends React.Component {
     constructor(props) {
@@ -89,28 +91,28 @@ export default class TestModal extends React.Component {
         var header = "New Test for " + this.props.coursename;
 
         return (
-            <>
+            <div>
                 <Button onClick={this.toggle}>Add New Test</Button>
                 <Modal size="lg" open={open} toggle={this.toggle}>
                     <ModalHeader>{header}</ModalHeader>
                     <ModalBody>
                         <Form onSubmit={this.onSubmit}>
                             <FormInput name="testName" value={this.state.testName} onChange={this.onInputChange} placeholder="Test Name" />
-                            <br />
+                            <br/>
                             <MultiSelect
+                                
                                 options={options}
                                 value={this.state.selected}
                                 onChange={(val) => this.setState({ selected: val })}
-                                labelledBy={"Select"}
-                                overrideStrings={{ 'selectSomeItems': "Select Decks for Test" }} />
-                            <br />
+                                overrideStrings={{ 'selectSomeItems': "Select Decks for Test" }} />  
+                            <br/>                          
                             <FormInput name="testDate" value={this.state.testDate} onChange={this.onInputChange} type="datetime-local" />
-                            <br />
+                            <br/>
                             <Button type="submit">Submit</Button>
                         </Form>
                     </ModalBody>
                 </Modal>
-            </>
+            </div>
         );
     }
 }

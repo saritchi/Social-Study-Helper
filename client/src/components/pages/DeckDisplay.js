@@ -6,13 +6,16 @@ import './DeckDisplay.css';
 import * as withAlert from "../HOC/ComponentWithAlert";
 import withMenu from '../HOC/ComponentWithMenu';
 import CardDisplay from '../subcomponents/CardDisplay';
+import TestModal from '../subcomponents/CreateTest';
+
 
 
 class DeckDisplay extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            decklist: []
+            decklist: [],
+            coursename:  this.props.location?.state?.name || ''
         };
     }
 
@@ -144,11 +147,10 @@ class DeckDisplay extends Component {
     }
 
     render() {
-        const coursename = this.props.location?.state?.name || '';
         return (
             <div>
                 <div id="courseName">
-                    <h1>{coursename}</h1>
+                    <h1>{this.state.coursename}</h1>
                 </div>
                 <div>
                     <Nav>
@@ -163,6 +165,15 @@ class DeckDisplay extends Component {
                              cardsInfo={this.state.decklist}
                              editCallback={this.editDeckView} />
                 <Button id="newDeck" onClick={this.addDeck}>Add New Deck</Button>
+                <div id = "newTest">
+
+                <TestModal coursename={this.state.coursename} 
+                            courseId={this.props.location.state.id} 
+                            options={this.state.decklist} 
+                            userEmail={this.props.user.email}>
+
+                </TestModal>
+                </div>
             </div>
         )
     }
