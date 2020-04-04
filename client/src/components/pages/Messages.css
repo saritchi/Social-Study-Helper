@@ -3,12 +3,16 @@
 }
 
 #messagesGroup{
-    text-align: left;
-    min-height: 80%;
+    max-height: 70%;
     margin: 7%;
 }
 
-#newMessage {
+.messageThread{
+    cursor: pointer;
+    text-align: left;
+}
+
+#newMessageThread {
     margin: 3em;
     bottom: 0;
     float: right;

@@ -128,6 +128,7 @@ class Database {
             fromUser VARCHAR(100) NOT NULL,
             toUser VARCHAR(100) NOT NULL,
             message TEXT NOT NULL,
+            timeSent DATETIME NOT NULL,
             FOREIGN KEY (fromUser)
                 REFERENCES user(email),
             FOREIGN KEY (toUser)

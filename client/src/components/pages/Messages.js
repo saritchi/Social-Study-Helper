@@ -46,11 +46,17 @@ class Messages extends Component {
         const json = {
             toUser: recipientEmail,
             fromUser: this.props.user.email,
-            messageText: text 
+            message: text,
+            timeSent: new Date().toISOString().slice(0, 19).replace('T', ' ')
         }
 
         try {
-            await axios.post('/api/message', json)
+            const toUserResponse = await axios.post('/api/message', json)
+            const toUser = toUserResponse.data.result;
+            const users = this.state.users;
+            users.push(toUser);
+            console.log(users);
+            this.setState({users: users})
             this.props.showAlert(withAlert.successTheme, "Message Sent!");
         } catch (error) {
             if(error.response?.status === 401) {
@@ -70,23 +76,37 @@ class Messages extends Component {
         this.setState({openNewMessageModal: !this.state.openNewMessageModal})
     }
 
-    renderMessageItems = () => {
+    messageThreadView = (toUser) => {
+        console.log(this.props.user.email);
+        this.props.history.push({
+            pathname: '/messageThread',
+            state: {
+                otherUser: toUser,
+            }
+        });
+    }
+
+    renderMessageThreads = () => {
         console.log(this.state.users);
-        return this.state.users.map((user) => <ListGroupItem key={user.email}>{user.fname + ' ' + user.lname}</ListGroupItem>)
+        return this.state.users.map((user) => {
+            return <ListGroupItem key={user.email} className='messageThread' action={true} onClick={() => this.messageThreadView(user)}>
+                {user.fname + ' ' + user.lname}
+            </ListGroupItem>
+        })
     }
     
     render() {
         return (
             <div>
-                <h1 id='title'>Your Messages</h1>
-                <ListGroup id="messagesGroup">
+                <h1 id='title'>Your Chats</h1>
+                <ListGroup small={true} flush={true} id="messagesGroup">
                     <ListGroupItemHeading>Message Threads:</ListGroupItemHeading>
-                    {this.renderMessageItems()}
+                    {this.renderMessageThreads()}
                 </ListGroup>
                 <NewMessageModal open={this.state.openNewMessageModal}
                                  toggle={this.toggleNewMessageModal}
                                  sendMessage={this.sendNewMessage}/>
-                <Button id="newMessage" onClick={this.toggleNewMessageModal}>New Message</Button>
+                <Button id="newMessageThread" onClick={this.toggleNewMessageModal}>New Message</Button>
             </div>
         )
     }

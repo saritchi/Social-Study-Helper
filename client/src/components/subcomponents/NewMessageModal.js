@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Modal, Button, ModalBody, ModalHeader, FormGroup, FormTextarea, FormInput } from "shards-react";
+import './NewMessageModal.css'
 
 class NewMessageModal extends Component {
     state = { 
@@ -11,6 +12,8 @@ class NewMessageModal extends Component {
         this.setState({[e.target.name]: e.target.value})
     }
     
+
+    //TODO: update with multi-email
     render() {
         return (
             <div>
@@ -25,7 +28,7 @@ class NewMessageModal extends Component {
                             <FormTextarea id="message" name="message" onChange={this.onChange}/>
                         </FormGroup>
                     </ModalBody>
-                <Button onClick={() => this.props.sendMessage(this.state.recipientEmail, this.state.message)}>Send</Button>
+                <Button id='sendInitialMessage' onClick={() => this.props.sendMessage(this.state.recipientEmail, this.state.message)}>Send</Button>
                 </Modal>
             </div>
         );

@@ -8,12 +8,15 @@ async function sendMessage(req, res) {
     var body = req.body;
     var toUser = body.toUser;
     var fromUser = body.fromUser;
-    var messageText = body.messageText;
+    var messageText = body.message;
+    var timeSent = body.timeSent;
 
-    const message = new Message(toUser, fromUser, messageText);
+    const message = new Message(toUser, fromUser, messageText, timeSent);
+    console.log(message)
     try {
         await message.create();
-        res.sendStatus(200);
+        const sendToUser = await User.getUserFromEmail(toUser);
+        res.status(200).json({result: sendToUser});
     } catch(error) {
         console.log(`Unable to add message to the database. Error: ${error.message}`)
         res.status(500).json({result: "An error occurred while attempting to send the message. Please try again later."})
@@ -22,15 +25,14 @@ async function sendMessage(req, res) {
 
 async function getMessages(req, res) {
     console.log("Getting messages")
-    var body = req.body;
-    var userEmail = body.currentUser;
-    var messageThreadUserEmail = body.messageThreadUser;
+    var fromUser = req.query.currentUser;
+    var toUser = req.query.otherUser;
 
     try {
-        const messages = await Message.getAllBetweenUsers(userEmail, messageThreadUserEmail);
+        const messages = await Message.getAllBetweenUsers(fromUser, toUser);
         res.status(200).json({result: messages});
     } catch (error) {
-        console.log(`Unable to get messages from the database between ${userEmail} and ${messageThreadUserEmail}. Error: ${error.message}`)
+        console.log(`Unable to get messages from the database between ${toUser} and ${fromUser}. Error: ${error.message}`)
         res.status(500).json({result: "An error occurred while attempting to retreive your messages. Please try again later."})
     }
 }
@@ -42,7 +44,8 @@ async function getMessagedUsers(req, res) {
     try {
         const messages = await Message.getMessagesAssociatedWithUser(currentUser);
         const usersPromises = messages.map(async (message) => {
-            return User.getUserFromEmail(message.toUser)
+            const userEmail = currentUser === message.fromUser ? message.toUser : message.fromUser;
+            return User.getUserFromEmail(userEmail)
         })
         const users = await Promise.all(usersPromises);
         const userJSONSet = new Set(users.map((user) => JSON.stringify(user)));

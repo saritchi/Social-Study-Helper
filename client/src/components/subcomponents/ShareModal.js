@@ -39,7 +39,7 @@ class ShareModal extends Component {
 
     renderUserAccessList = () => {
         return this.state.sharedWithUsers.map((user) => {
-            return <ListGroupItem key={user.sharedId}>{user.email}<MdClear onClick={() => this.removeUser(user.sharedId)} className="removeUser"/></ListGroupItem>
+            return <ListGroupItem key={user.sharedId} className='sharedUser' >{user.email}<MdClear onClick={() => this.removeUser(user.sharedId)} className="removeUser"/></ListGroupItem>
         })
     }
 
@@ -63,7 +63,7 @@ class ShareModal extends Component {
             <Modal size="lg" open={this.props.open} toggle={this.props.toggle}>
             <ModalHeader>Share {this.props.name} with others</ModalHeader>
             <ModalBody>
-                <ListGroup>
+                <ListGroup class="access">
                     <ListGroupItemHeading>Who has access: </ListGroupItemHeading>
                     {this.renderUserAccessList()}
                 </ListGroup>

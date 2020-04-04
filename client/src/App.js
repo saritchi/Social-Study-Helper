@@ -17,6 +17,7 @@ import ViewCards from './components/pages/ViewCards';
 import EditDeck from './components/pages/EditDeck';
 import AllSharedContent from './components/pages/AllSharedContent'
 import Messages from './components/pages/Messages'
+import MessageThread from './components/pages/MessageThread'
 import User from './User';
 
 const userStorageKey = 'user';
@@ -90,7 +91,7 @@ class App extends Component {
                 exact               
                 render={props => (
                       <React.Fragment>
-                        <AllSharedContent user={this.state.user} />
+                        <AllSharedContent user={this.state.user} setUser={this.setUser} />
                       </React.Fragment>
                     )} 
               />
@@ -117,7 +118,7 @@ class App extends Component {
                 exact
                 render={props => (
                   <React.Fragment>
-                    <EditDeck  user={this.state.user}/>
+                    <EditDeck  user={this.state.user} setUser={this.setUser}/>
                   </React.Fragment>
                 )}
               />
@@ -126,7 +127,16 @@ class App extends Component {
                 exact
                 render={props => (
                   <React.Fragment>
-                    <Messages  user={this.state.user}/>
+                    <Messages  user={this.state.user} setUser={this.setUser}/>
+                  </React.Fragment>
+                )}
+              />
+               <Route
+                path="/messageThread"
+                exact
+                render={props => (
+                  <React.Fragment>
+                    <MessageThread  user={this.state.user} setUser={this.setUser}/>
                   </React.Fragment>
                 )}
               />
