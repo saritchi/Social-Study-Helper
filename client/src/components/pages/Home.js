@@ -149,6 +149,27 @@ class Home extends Component {
         return false;
     }
 
+    deleteCourseCallback = async (courseId) => {
+        try {
+            await axios.delete('api/deleteCourse', {
+                params: {
+                    id: courseId
+                }
+            })
+            var courses = this.state.courses;
+            const indexToDelete = courses.findIndex((course) => course.id === courseId);
+            courses.splice(indexToDelete, 1);
+            this.setState({courses: courses});
+        } catch (error) {
+            if(error.response?.status === 401) {
+                this.props.history.replace("/");
+            } else {
+                console.error(error);
+                this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+            }
+        }
+    }
+
 
     addCourse = () => {
         this.props.history.push("/addCourse");
@@ -174,7 +195,8 @@ class Home extends Component {
                 pathname: '/decks',
                 state: {
                     id: courseId,
-                    name: courseName
+                    name: courseName,
+                    shared: false
                 }
             });
         } catch (error) {
@@ -187,6 +209,25 @@ class Home extends Component {
                 this.props.showAlert(withAlert.errorTheme, errorMessage);
             }
         }
+    }
+
+      /**
+     * @param {*} courseId id of the course the user is clicking
+     * @param {*} courseName name of the course the user is clicking
+     */
+    sharedCourseView = (courseId, courseName) => {
+        this.props.history.push({
+            pathname: '/decks',
+            state: {
+                id: courseId,
+                name: courseName,
+                shared: true
+            }
+        });
+    }
+
+    editCourseView = (courseId) => {
+        this.props.history.push("/editCourse", {courseId});
     }
 
     /**
@@ -224,6 +265,8 @@ class Home extends Component {
                 <CardDisplay changePage={this.courseView} options={true} 
                              sharedContentCallback={this.shareCourseCallback}
                              removeSharedContentCallback={this.removeSharedCourseCallback}
+                             deleteCallback={this.deleteCourseCallback}
+                             editCallback={this.editCourseView}
                              cardsInfo={this.state.courses}
                 />
                 <Button id="newCourse" onClick={this.addCourse}>Add New Course</Button>
@@ -236,7 +279,7 @@ class Home extends Component {
                             <NavLink href='#' onClick={this.allSharedContentView}>View All Shared Content</NavLink>
                         </NavItem>
                     </Nav>
-                    <CardDisplay changePage={this.courseView} cardsInfo={this.state.sharedCourses}/>
+                    <CardDisplay changePage={this.sharedCourseView} cardsInfo={this.state.sharedCourses}/>
                 </div>
                 <div id="sharedDecks">
                     <Nav>
