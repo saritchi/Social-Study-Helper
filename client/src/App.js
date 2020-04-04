@@ -14,12 +14,9 @@ import AddCourse from './components/pages/AddCourse';
 import CreateDeck from './components/pages/CreateDeck';
 import DeckDisplay from './components/pages/DeckDisplay';
 import ViewCards from './components/pages/ViewCards';
-import AllSharedContent from './components/pages/AllSharedContent'
 import EditDeck from './components/pages/EditDeck';
-import AssignStudents from './components/pages/AssignStudents';
-import User from './User';
+import AllSharedContent from './components/pages/AllSharedContent'
 
-const userStorageKey = 'user';
 class App extends Component {
   //read the user object out of the browser sotrage to allow the page to be refreshed and not lose the user information
   state = {
