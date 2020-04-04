@@ -4,6 +4,7 @@ import { Form,FormGroup,FormInput,FormCheckbox} from "shards-react";
 import './Register.css'
 import * as withAlert from "../HOC/ComponentWithAlert";
 import axios from "axios";
+
  class Register extends Component {
     constructor(props){
         super(props);

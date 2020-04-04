@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import './App.css';
 import "bootstrap/dist/css/bootstrap.min.css";
-import "shards-ui/dist/css/shards.min.css"
+import "shards-ui/dist/css/shards.min.css";
 
 import Register from './components/pages/Register';
 import LoginPage from './components/pages/LoginPage';
@@ -16,7 +16,11 @@ import DeckDisplay from './components/pages/DeckDisplay';
 import ViewCards from './components/pages/ViewCards';
 import EditDeck from './components/pages/EditDeck';
 import EditCourse from './components/pages/EditCourse';
-import AllSharedContent from './components/pages/AllSharedContent'
+import AllSharedContent from './components/pages/AllSharedContent';
+import AssignStudents from './components/pages/AssignStudents';
+
+import User from './User';
+const userStorageKey = 'user';
 
 class App extends Component {
   //read the user object out of the browser sotrage to allow the page to be refreshed and not lose the user information
