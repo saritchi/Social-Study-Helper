@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Button } from "shards-react";
-import '../pages/ViewCards.css';
+import './DifficultyOptions.css';
 
 
 const DifficultyOptions = (props) => {

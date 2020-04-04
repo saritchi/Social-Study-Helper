@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import { Button } from "shards-react";
 import { TiMediaPlay, TiMediaPlayReverse } from 'react-icons/ti';
-import '../pages/ViewCards.css';
+import './ChangeCardButtons.css';
 
 
 const ChangeCardButtons = (props) => {
-    if(props.view == false){
+    if(!props.view){
         return(null);
     }
     else{

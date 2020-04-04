@@ -16,7 +16,6 @@ class ViewCards extends React.Component {
     this.state = {
       isFlipped: false,
       view_all: null,
-      deck_end: false,
       open_toggle: false,
       cardIndex: 0,
       all_cards: [],
@@ -48,7 +47,7 @@ class ViewCards extends React.Component {
         this.extract_cards_today(flashcards)
       }
 
-      if(this.state.cards.length == 0){
+      if(!this.state.cards.length){
         this.setState({cards: this.state.all_cards, view_all: true});
       }
 
@@ -145,7 +144,7 @@ class ViewCards extends React.Component {
         not_studied = false
       }
     })
-    if(not_studied == true){
+    if(not_studied){
       this.setState({ difficulty_selected: difficulty_check })
     }
     return not_studied
@@ -191,7 +190,7 @@ class ViewCards extends React.Component {
   }
 
   restartDeck = (e) => {
-    this.setState({ cardIndex: 0, deck_end: false })
+    this.setState({ cardIndex: 0})
     document.addEventListener("keydown", this.handleKeyDown);
   }
 
@@ -204,7 +203,6 @@ class ViewCards extends React.Component {
     if (this.state.cardIndex < this.state.cards.length) {
       this.setState({ cardIndex: this.state.cardIndex + 1 }, () => {
         if (this.state.cardIndex == this.state.cards.length) {
-          this.setState({ deck_end: true })
           document.removeEventListener("keydown", this.handleKeyDown);
         }
       })
@@ -213,11 +211,7 @@ class ViewCards extends React.Component {
 
   decrement_index = () => {
     if (this.state.cardIndex > 0) {
-      this.setState({ cardIndex: this.state.cardIndex - 1 }, () => {
-        if (this.state.cardIndex < this.state.cards.length) {
-          this.setState({ deck_end: false })
-        }
-      })
+      this.setState({ cardIndex: this.state.cardIndex - 1 })
     }
   }
 
@@ -240,10 +234,10 @@ class ViewCards extends React.Component {
     if (e.key === ' ' || e.key === 'ArrowUp' || e.key === 'ArrowDown') {
       this.setState(prevState => ({ isFlipped: !prevState.isFlipped }));
     }
-    else if (e.key === 'ArrowRight' && this.state.view_all == true) {
+    else if (e.key === 'ArrowRight' && this.state.view_all) {
       this.increment_index()
     }
-    else if (e.key === 'ArrowLeft' && this.state.view_all == true) {
+    else if (e.key === 'ArrowLeft' && this.state.view_all) {
       this.decrement_index()
     }
   }
@@ -282,7 +276,7 @@ class ViewCards extends React.Component {
   }
 
   render() {
-    if (this.state.deck_end == true) {
+    if (this.state.cardIndex == this.state.cards.length) {
       return (
         <div>
           <div id="progress-bar">

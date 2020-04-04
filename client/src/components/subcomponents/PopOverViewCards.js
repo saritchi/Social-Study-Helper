@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import { Button, ButtonGroup, Popover, PopoverHeader, PopoverBody } from "shards-react";
-import '../pages/ViewCards.css';
 
 
 const PopOverViewCards = (props) => {
         return(
-            <div id="button-group">
+            <div>
             <ButtonGroup >
             <Button id="popover" onClick={props.function_today} outline={props.view}>Today</Button>
                 <Popover
