@@ -92,7 +92,7 @@ class AddCourse extends Component {
 
     console.log(json);
     try {
-      await axios.post("/api/updateCourse", json);
+      await axios.post("/api/editCourse", json);
         this.props.showAlert(withAlert.successTheme, "Updated Course");
     } catch (error) {
       if(error.response.status === 401) {

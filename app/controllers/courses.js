@@ -11,9 +11,10 @@ async function getCourses(req, res) {
     console.log("Getting courses....");
     var userEmail = req.query.email;
     var limit = req.query.limit
+    var orderBy = req.query.orderBy;
 
     try {
-        const courses = await Course.getCoursesFourUser(userEmail, limit);
+        const courses = await Course.getCoursesFourUser(userEmail, limit, orderBy);
         console.log(courses);
         res.status(200).json({result: courses});
     } catch (error) {
@@ -43,6 +44,7 @@ async function addCourse(req, res) {
     var coursename = body.coursename;
     var decks = body.decks;
     var userEmail = body.email;
+    var lastAccess = body.lastAccess
 
 
     if(!isValidCourseRequest(coursename, decks)) {
@@ -56,7 +58,7 @@ async function addCourse(req, res) {
     var final = false;
     var midterm = false;
 
-    const course = new Course(coursename, midterm, final, userEmail);
+    const course = new Course(coursename, midterm, final, userEmail, null, lastAccess);
     try {
         await runTransaction(async () => {
             const courseId = await course.create();
@@ -86,7 +88,7 @@ function isValidCourseRequest(coursename, decks) {
     return coursename && !emptyDecks;
 }
 
-async function updateCourse(req, res) {
+async function editCourse(req, res) {
     var body = req.body;
     const courseId = body.id;
     var coursename = body.coursename;
@@ -167,10 +169,28 @@ async function deleteAllassociatedSharedDecks(deckId) {
     return sharedDecks.map(async (sharedDeck) => await SharedDeck.deleteWithId(sharedDeck.id))
 }
 
+async function updateCourse(req, res) {
+    var body = req.body;
+    var courseInfo = body.params.course;
+
+    const course = new Course(courseInfo.name, courseInfo.midterm, courseInfo.final, 
+                              courseInfo.userEmail, courseInfo.id, courseInfo.lastAccess)
+    try {
+        await course.update();
+        res.sendStatus(200);
+    } catch (error) {
+        console.log(`Unable to update course with id: ${courseInfo.id}. Error: ${error.message}`)
+        res.status(500).json({result: "An error occurred. Please try again later."})
+    }
+
+}
+
+
 router.get('/courses', requireLogin, getCourses)
 router.get('/course', requireLogin, getCourse);
 
 router.post('/addCourse', requireLogin, addCourse)
+router.post('/editCourse', requireLogin, editCourse)
 router.post('/updateCourse', requireLogin, updateCourse)
 
 router.delete('/deleteCourse', requireLogin, deleteCourse);

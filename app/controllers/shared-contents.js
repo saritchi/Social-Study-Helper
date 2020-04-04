@@ -224,6 +224,7 @@ router.get('/sharedCourseContent', requireLogin, getUsersForSharedCourse)
 router.get('/sharedDeckContent', requireLogin, getUsersForSharedDeck)
 
 router.delete('/sharedCourse', requireLogin, deleteSharedCourse) 
-router.delete('/sharedDeck', requireLogin, deleteSharedDeck) 
+router.delete('/sharedDeck', requireLogin, deleteSharedDeck)
+
 
 module.exports = router;
