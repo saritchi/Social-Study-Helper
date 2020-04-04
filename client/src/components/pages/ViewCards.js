@@ -15,12 +15,13 @@ class ViewCards extends React.Component {
       isFlipped: false,
       view_all: false,
       deck_end: false,
+      open_toggle: false,
       cardIndex: 0,
       all_cards: [],
       today_cards: [],
       cards: [],
       difficulty_selected: [],
-      open_toggle: false
+
     };
   }
 
@@ -50,7 +51,6 @@ class ViewCards extends React.Component {
       }
 
       document.addEventListener("keydown", this.handleKeyDown);
-      console.log(this.state.all_cards)
 
     } catch (error) {
       if (error.response.status === 401) {
@@ -67,6 +67,8 @@ class ViewCards extends React.Component {
     document.removeEventListener("keydown", this.handleKeyDown);
   }
 
+  // Returns the current date. If a difficulty button is pressed
+  // it adds a corresponding value to the days depending on difficulty
   get_date = (difficulty = null) => {
     var year = new Date().getFullYear()
     var month = new Date().getMonth()
@@ -94,6 +96,7 @@ class ViewCards extends React.Component {
     return datetime
   }
 
+  // Extract cards from query where nextStudyTime is 'today'
   extract_cards_today = (flashcards) => {
     var datetime = this.get_date()
     var results = this.state.cards
@@ -105,7 +108,6 @@ class ViewCards extends React.Component {
     flashcards.forEach((card) => {
       // Splice studytime from query and reconstruct the string
       console.log(card)
-      
       if(card.nextStudyTime != null){
         var studyTime = card.nextStudyTime
         var study_year = studyTime.slice(0, 4)
@@ -129,13 +131,15 @@ class ViewCards extends React.Component {
     this.setState({ all_cards: flashcards, cards: results , today_cards: results, difficulty_selected: difficulty_check});
   }
 
+  // Checks to see if cards have been studied yet. Used to determine
+  // if all cards have nextStudyTime == null. If all null all cards need to be studied.
   has_studied = (flashcards) => {
     var not_studied = true;
     var difficulty_check = this.state.difficulty_selected
     flashcards.forEach((card) => {
       difficulty_check.push(false)
       if(card.nextStudyTime != null){
-        console.log("Cards have been viewed before")
+        console.log("Deck has been viewed before")
         not_studied = false
       }
     })
@@ -145,11 +149,8 @@ class ViewCards extends React.Component {
     return not_studied
   }
 
-  toggle = () => {
-    this.setState({ open_toggle: !this.state.open_toggle });
-  }
-
-
+  // Updates nextStudyTime is Cards table. When a difficulty button is pressed
+  // it will increment cardIndex and submit query.  
   markDifficulty = async (event, difficulty) => {
     event.preventDefault()
     if(this.state.view_all == true){
@@ -157,18 +158,15 @@ class ViewCards extends React.Component {
     }
     const difficulty_check = this.state.difficulty_selected
     const currentCard = this.state.cardIndex
+    const card_id = this.state.cards[currentCard].id
+    const deck_id = this.state.cards[currentCard].deckId
     
     difficulty_check[currentCard] = true
     this.setState({ difficulty_selected: difficulty_check })
 
     this.increment_index()
 
-    
-    const card_id = this.state.cards[currentCard].id
-    const deck_id = this.state.cards[currentCard].deckId
-
     var datetime = this.get_date(difficulty);
-
     datetime = datetime.getFullYear() + "-" + (datetime.getMonth() + 1) + "-" + datetime.getDate()
 
     const json = {
@@ -188,6 +186,7 @@ class ViewCards extends React.Component {
 
   }
 
+  // Return to previous page
   goBack = (e) => {
     this.props.history.goBack();
   }
@@ -197,16 +196,12 @@ class ViewCards extends React.Component {
     document.addEventListener("keydown", this.handleKeyDown);
   }
 
-  handleClick = (e) => {
-    this.setState(prevState => ({ isFlipped: !prevState.isFlipped }));
-  }
-
   increment_index = () => {
     const difficulty_check = this.state.difficulty_selected;
     if(difficulty_check[this.state.cardIndex] == false && this.state.view_all == false){
-      this.props.showAlert(withAlert.errorTheme, "Please select a difficulty for the card!");
       return;
     }
+
     if (this.state.cardIndex < this.state.cards.length) {
       this.setState({ cardIndex: this.state.cardIndex + 1 }, () => {
         if (this.state.cardIndex == this.state.cards.length) {
@@ -236,6 +231,12 @@ class ViewCards extends React.Component {
     }
   }
 
+  // Flip Flashcard if clicked
+  handleClick = (e) => {
+    this.setState(prevState => ({ isFlipped: !prevState.isFlipped }));
+  }
+
+  // Hotkeys to change/flip flashcard
   handleKeyDown = (e) => {
     if (e.key === ' ' || e.key === 'ArrowUp' || e.key === 'ArrowDown') {
       this.setState(prevState => ({ isFlipped: !prevState.isFlipped }));
@@ -248,18 +249,37 @@ class ViewCards extends React.Component {
     }
   }
 
+  toggle_popover = () => {
+    this.setState({ open_toggle: !this.state.open_toggle });
+  }
+
+  // Show flashcards required for studying today
   viewToday = () => {
     console.log("Viewing Today's cards...")
     if(this.state.today_cards == 0){
-      this.toggle()
+      this.toggle_popover()
       return;
     }
     this.setState({ view_all: false, cardIndex: 0, cards: this.state.today_cards})
   }
 
+  // Show all flashcards
   viewAll = () => {
     console.log("Viewing All cards...")
     this.setState({ view_all: true, cardIndex: 0, cards: this.state.all_cards})
+  }
+
+  renderPrompt = (index) => {
+    return (
+      this.state.cards.slice(index, index + 1).map(card => <h3>{card.prompt}</h3>)
+    );
+
+  }
+
+  renderAnswer = (index) => {
+    return (
+      this.state.cards.slice(index, index + 1).map(card => <h3>{card.answer}</h3>)
+    );
   }
 
   render() {
@@ -267,13 +287,13 @@ class ViewCards extends React.Component {
       return (
         <div>
           <div id="progress-bar">
-            <Progress theme="primary" value={(this.state.cardIndex + 1 / this.state.cards.length) * 100} />
+            <Progress theme="primary" value={100} />
             <p>Done!</p>
           </div>
           <div className="flash-container">
             <Card className="flashcard-done">
-              <h1>Great Work!</h1>
-              <h3>You just studied {this.state.cards.length} card(s)!</h3>
+              <h2>Great Work!</h2>
+              <h4>You just studied {this.state.cards.length} card(s)!</h4>
               <Button onClick={this.restartDeck} block>Study Again!</Button>
               <Button onClick={this.goBack} block>Finish</Button>
             </Card>
@@ -284,21 +304,21 @@ class ViewCards extends React.Component {
     else {
       return (
         <div>
-          
           <div id="progress-bar">
             <Progress theme="primary" value={((this.state.cardIndex + 1)  / this.state.cards.length) * 100} />
             <p>{this.state.cardIndex + 1 + "/" + this.state.cards.length}</p>
           </div>
+          
           <div id="button-group">
             <ButtonGroup >
-              <Button id="popover-2" onClick={this.viewToday} outline={this.state.view_all}>Today</Button>
+              <Button id="popover" onClick={this.viewToday} outline={this.state.view_all}>Today</Button>
                 <Popover
                   placement="bottom"
                   open={this.state.open_toggle}
-                  toggle={this.toggle}
-                  target="#popover-2"
+                  toggle={this.toggle_popover}
+                  target="#popover"
                 >
-                  <PopoverHeader>Oh no!</PopoverHeader>
+                  <PopoverHeader>Done required cards!</PopoverHeader>
                   <PopoverBody>
                     It looks like you have studied all the required cards for today.
                     Come back another day to get your practice in! You can still choose
@@ -320,7 +340,7 @@ class ViewCards extends React.Component {
               </Card>
             </ReactCardFlip>
 
-            <div className="switch-card-button">
+            <div className="switch-card-button" style={{ visibility: this.state.view_all ? 'visible' : 'hidden'}}>
               <Button id="button-click" theme="secondary" disabled={this.state.cardIndex == 0} onClick={() => { this.updateCard("BACK") }}>
                 <TiMediaPlayReverse size={30} />
               </Button>
@@ -331,6 +351,7 @@ class ViewCards extends React.Component {
           </div>
           <div>
             <div className="difficulty-button-container" style={{ visibility: this.state.view_all ? 'hidden' : 'visible'}}>
+              <h5>How difficult is this card?</h5>
               <Button className="difficulty-button" size="lg" theme="success" onClick={(e) => this.markDifficulty(e, "EASY")}>Easy</Button>
               <Button className="difficulty-button" size="lg" onClick={(e) => this.markDifficulty(e, "MEDIUM")}>Medium</Button>
               <Button className="difficulty-button" size="lg" theme="danger" onClick={(e) => this.markDifficulty(e, "HARD")}>Hard</Button>
@@ -341,19 +362,6 @@ class ViewCards extends React.Component {
 
       );
     }
-  }
-
-  renderPrompt = (index) => {
-    return (
-      this.state.cards.slice(index, index + 1).map(card => <h3>{card.prompt}</h3>)
-    );
-
-  }
-
-  renderAnswer = (index) => {
-    return (
-      this.state.cards.slice(index, index + 1).map(card => <h3>{card.answer}</h3>)
-    );
   }
 
 }

@@ -60,7 +60,7 @@
 
 .difficulty-button-container {
   margin-top: 35%;
-  /* height: 50%; */
+  visibility: hidden;
 }
 
 
