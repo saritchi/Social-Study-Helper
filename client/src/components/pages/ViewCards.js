@@ -2,10 +2,12 @@ import React from 'react';
 import { withRouter } from "react-router-dom"
 import ReactCardFlip from 'react-card-flip';
 import { Button, Card, Progress, ButtonGroup, Popover, PopoverBody, PopoverHeader} from 'shards-react';
-import { TiMediaPlay, TiMediaPlayReverse } from 'react-icons/ti';
 import './ViewCards.css';
 import * as withAlert from "../HOC/ComponentWithAlert";
 import withMenu from '../HOC/ComponentWithMenu';
+import DifficultButtons from "../subcomponents/DifficultyOptions"
+import ChangeCardButtons from "../subcomponents/ChangeCardButtons"
+import PopOverButtonGroup from "../subcomponents/PopOverViewCards"
 import axios from 'axios';
 
 class ViewCards extends React.Component {
@@ -13,7 +15,7 @@ class ViewCards extends React.Component {
     super(props);
     this.state = {
       isFlipped: false,
-      view_all: false,
+      view_all: null,
       deck_end: false,
       open_toggle: false,
       cardIndex: 0,
@@ -308,27 +310,13 @@ class ViewCards extends React.Component {
             <Progress theme="primary" value={((this.state.cardIndex + 1)  / this.state.cards.length) * 100} />
             <p>{this.state.cardIndex + 1 + "/" + this.state.cards.length}</p>
           </div>
-          
-          <div id="button-group">
-            <ButtonGroup >
-              <Button id="popover" onClick={this.viewToday} outline={this.state.view_all}>Today</Button>
-                <Popover
-                  placement="bottom"
-                  open={this.state.open_toggle}
-                  toggle={this.toggle_popover}
-                  target="#popover"
-                >
-                  <PopoverHeader>Done required cards!</PopoverHeader>
-                  <PopoverBody>
-                    It looks like you have studied all the required cards for today.
-                    Come back another day to get your practice in! You can still choose
-                    to view all cards.
-                  </PopoverBody>
-                </Popover>
-              <Button onClick={this.viewAll} outline={!this.state.view_all}>All</Button>
-            </ButtonGroup>
-          </div>
 
+          <PopOverButtonGroup function_today={this.viewToday} 
+                              function_all={this.viewAll} 
+                              function_toggle={this.toggle_popover} 
+                              open={this.state.open_toggle}
+                              view={this.state.view_all}/>
+          
           <div className="flash-container">
 
             <ReactCardFlip isFlipped={this.state.isFlipped} flipDirection="vertical">
@@ -340,22 +328,11 @@ class ViewCards extends React.Component {
               </Card>
             </ReactCardFlip>
 
-            <div className="switch-card-button" style={{ visibility: this.state.view_all ? 'visible' : 'hidden'}}>
-              <Button id="button-click" theme="secondary" disabled={this.state.cardIndex == 0} onClick={() => { this.updateCard("BACK") }}>
-                <TiMediaPlayReverse size={30} />
-              </Button>
-              <Button id="button-click" theme="secondary" onClick={() => { this.updateCard("NEXT") }}>
-                <TiMediaPlay size={30} />
-              </Button>
-            </div>
+            <ChangeCardButtons passedFunction={this.updateCard} index={this.state.cardIndex} view={this.state.view_all}/>
+
           </div>
           <div>
-            <div className="difficulty-button-container" style={{ visibility: this.state.view_all ? 'hidden' : 'visible'}}>
-              <h5>How difficult is this card?</h5>
-              <Button className="difficulty-button" size="lg" theme="success" onClick={(e) => this.markDifficulty(e, "EASY")}>Easy</Button>
-              <Button className="difficulty-button" size="lg" onClick={(e) => this.markDifficulty(e, "MEDIUM")}>Medium</Button>
-              <Button className="difficulty-button" size="lg" theme="danger" onClick={(e) => this.markDifficulty(e, "HARD")}>Hard</Button>
-            </div>
+            <DifficultButtons passedFunction={this.markDifficulty} view={this.state.view_all}/>
           </div>
 
         </div>
