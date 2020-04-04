@@ -75,11 +75,11 @@ class EditDeck extends React.Component {
                     
                     <Row>
                         <Col>
-                            <label htmlFor={index}>Card Prompt:</label>
+                            <label htmlFor={index}><h6>Prompt:</h6></label>
                             <FormTextarea id={index} onChange={this.onInputChange} defaultValue={this.state.cards[index].prompt} name="card_prompt"/>
                         </Col>
                         <Col>
-                            <label htmlFor={index}>Card Answer:</label>
+                            <label htmlFor={index}><h6>Answer:</h6></label>
                             <FormTextarea id={index} onChange={this.onInputChange} defaultValue={this.state.cards[index].answer} name="card_answer"/>
                             
                         </Col>
@@ -99,8 +99,7 @@ class EditDeck extends React.Component {
         event.preventDefault();
 
         if (!this.isValidInput()) {
-            this.props.showAlert(withAlert.errorTheme, "Error. Deckname is required. Please remove or fill empty forms.")
-            return;
+            return false;
         }
 
         const deckname = this.state.deckname;
@@ -124,20 +123,44 @@ class EditDeck extends React.Component {
             const response = await axios.post("/api/editDeck", json);
             console.log(response.status);
             this.props.showAlert(withAlert.successTheme, "Deck Updated!");
+            this.props.history.goBack();
         } catch (error){
             console.log(error);
             this.props.showAlert(withAlert.errorTheme, error.response.data.result);
         }
+        return true
     }
+
     isValidInput() {
-        var validInput = true;
         const deckname = this.state.deckname;
         
         if (!deckname) {
-          validInput = false;
+          this.props.showAlert(withAlert.errorTheme, "Error. Deckname is required. Please remove or fill empty forms.")
+          return false;
         }
-        
-        return validInput;
+        else if(deckname.length > 50){
+            this.props.showAlert(withAlert.errorTheme, "Error. Deckname can't be longer then 50 characters. Please choose a different name.")
+            return false;
+        }
+
+        const cardSet = this.state.cards;
+
+        for(var i = 0; i < cardSet.length; i++){
+            if(cardSet[i].prompt){
+                if(cardSet[i].prompt.length > 2000){
+                    this.props.showAlert(withAlert.errorTheme, "Error. Card Prompt and Card Answer can't be longer then 2000 characters.")
+                    return false;
+                }
+            }
+            else if(cardSet[i].answer){
+                if(cardSet[i].answer.length > 2000){
+                    this.props.showAlert(withAlert.errorTheme, "Error. Card Prompt and Card Answer can't be longer then 2000 characters.")
+                    return false;
+                }
+            }
+        }
+
+        return true;
       }
 
     onInputChange = (event) => {
@@ -161,13 +184,13 @@ class EditDeck extends React.Component {
                 <Form id="deck">
                     
                     <Container>
-                        <label htmlFor="deckName">Deck Name:</label>
+                        <label htmlFor="deckName"><h5>Deck Name:</h5></label>
                         <FormInput id="deckName" name="deckname" onChange={this.onInputChange} value={this.state.deckname} placeholder="Deck Name"/>
                     </Container>
                     {this.renderCardInputs()}
-                    <Button id="addCard" onClick={this.addCard}>Add Card</Button>
+                    <Button id="addCard" onClick={this.addCard} size="lg">Add Card</Button>
                     <br></br>
-                    <Button id="saveDeck" theme="danger" onClick={this.onSubmit}>Save</Button>
+                    <Button id="saveDeck" theme="success" onClick={this.onSubmit} size="lg">Done</Button>
                 </Form>
             </div>
         );

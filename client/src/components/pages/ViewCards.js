@@ -91,7 +91,7 @@ class ViewCards extends React.Component {
         break;
       case null:
         // Here to change which date set to view when PULLING cards from db
-        datetime.setDate(date+2)
+        datetime.setDate(date)
     }
 
     return datetime
@@ -271,7 +271,7 @@ class ViewCards extends React.Component {
 
   renderAnswer = (index) => {
     return (
-      this.state.cards.slice(index, index + 1).map(card => <h3>{card.answer}</h3>)
+      this.state.cards.slice(index, index + 1).map(card => <p>{card.answer}</p>)
     );
   }
 
@@ -296,7 +296,7 @@ class ViewCards extends React.Component {
     }
     else {
       return (
-        <div>
+        <div id="test">
           <div id="progress-bar">
             <Progress theme="primary" value={((this.state.cardIndex + 1)  / this.state.cards.length) * 100} />
             <p>{this.state.cardIndex + 1 + "/" + this.state.cards.length}</p>
@@ -317,7 +317,8 @@ class ViewCards extends React.Component {
                 {this.renderAnswer(this.state.cardIndex)}
               </Card>
             </ReactCardFlip>
-
+          </div>
+          <div>
             <ChangeCardButtons passedFunction={this.updateCard} index={this.state.cardIndex} view={this.state.view_all}/>
           </div>
           <div>
