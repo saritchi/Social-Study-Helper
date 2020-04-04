@@ -15,8 +15,8 @@ class Course {
     }
 
     async create() {
-        const addCourseSQL = `INSERT INTO Courses(name, midterm, final, userEmail) VALUES(?, ?, ?, ?)`;
-        return (await database.runQuery(addCourseSQL, [this.name, this.midterm, this.final, this.userEmail])).insertId;
+        const addCourseSQL = `INSERT INTO Courses(name, midterm, final, userEmail, lastAccess) VALUES(?, ?, ?, ?, ?)`;
+        return (await database.runQuery(addCourseSQL, [this.name, this.midterm, this.final, this.userEmail, this.lastAccess])).insertId;
     }
 
     async update() {

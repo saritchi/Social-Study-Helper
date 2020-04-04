@@ -25,6 +25,7 @@ async function addCourse(req, res) {
     var coursename = body.coursename;
     var decks = body.decks;
     var userEmail = body.email;
+    var lastAccess = body.lastAccess
 
 
     if(!isValidCourseRequest(coursename, decks)) {
@@ -38,7 +39,7 @@ async function addCourse(req, res) {
     var final = false;
     var midterm = false;
 
-    const course = new Course(coursename, midterm, final, userEmail);
+    const course = new Course(coursename, midterm, final, userEmail, null, lastAccess);
     try {
         await runTransaction(async () => {
             const courseId = await course.create();
