@@ -155,9 +155,9 @@ class ViewCards extends React.Component {
   // it will increment cardIndex and submit query.  
   markDifficulty = async (event, difficulty) => {
     event.preventDefault()
-    if(this.state.view_all == true){
-      return;
-    }
+    // if(this.state.view_all == true){
+    //   return;
+    // }
     const difficulty_check = this.state.difficulty_selected
     const currentCard = this.state.cardIndex
     const card_id = this.state.cards[currentCard].id
@@ -243,10 +243,10 @@ class ViewCards extends React.Component {
     if (e.key === ' ' || e.key === 'ArrowUp' || e.key === 'ArrowDown') {
       this.setState(prevState => ({ isFlipped: !prevState.isFlipped }));
     }
-    else if (e.key === 'ArrowRight') {
+    else if (e.key === 'ArrowRight' && this.state.view_all == true) {
       this.increment_index()
     }
-    else if (e.key === 'ArrowLeft') {
+    else if (e.key === 'ArrowLeft' && this.state.view_all == true) {
       this.decrement_index()
     }
   }
