@@ -117,14 +117,35 @@ class AllCourses extends Component {
         this.props.history.push("/addCourse");
     }
 
-    courseView = (courseId, courseName) => {
-        this.props.history.push({
-            pathname: '/decks',
-            state: {
-                id: courseId,
-                name: courseName
+    courseView = async (courseId, courseName) => {
+        var course = this.state.courses.filter((course) => course.id == courseId)[0];
+        //By default the Javascript Date Object uses ISO8601 which is not a valid DateTime in MYSQL
+        //This https://stackoverflow.com/questions/20083807/javascript-date-to-sql-date-object offers a solution for converting
+        //DateTime objects into a format MySQL accepts.
+        course.lastAccess = new Date().toISOString().slice(0, 19).replace('T', ' ');
+        try {
+            await axios.post('api/updateCourse', {
+                params: {
+                    course: course
+                }
+            })
+            this.props.history.push({
+                pathname: '/decks',
+                state: {
+                    id: courseId,
+                    name: courseName
+                }
+            });
+        } catch (error) {
+            if(error.response?.status === 401) {
+                this.props.history.replace("/");
             }
-        });
+            else {
+                console.error(error);
+                const errorMessage = error.response?.data.result ? error.response.data.result : "An error has occured. Please try again later."
+                this.props.showAlert(withAlert.errorTheme, errorMessage);
+            }
+        }
     }
     
     render() {
