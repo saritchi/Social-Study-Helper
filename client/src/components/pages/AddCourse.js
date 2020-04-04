@@ -74,6 +74,7 @@ class AddCourse extends Component {
       coursename: coursename,
       decks: decknames,
       email: this.props.user.email,
+      lastAccess: new Date().toISOString().slice(0, 19).replace('T', ' '),
     }
 
     console.log(json);
