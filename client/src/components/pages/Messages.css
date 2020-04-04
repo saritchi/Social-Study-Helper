@@ -2,14 +2,49 @@
     margin: 1em;
 }
 
-#messagesGroup{
-    max-height: 70%;
+#messageContainer {
+    margin-left: 4%;
+    margin-right: 4%;
+    width: 100%;
+}
+
+#newMessageForm {
+    width: 100%;
+}
+
+#messagesRow {
+    max-height: 35em;
+}
+
+#sendMessage{
+    margin-top: 2%;
+    margin-bottom: 2%;
+    margin-left: auto;
+    order: 2;
+}
+
+#messages {
+    width: 60%;
+    max-height: 22em;
+    margin-top: 10%;
+    overflow: auto;
+}
+
+#threads{
+    overflow: auto;
+    width: 100%;
+}
+
+#messageThreads{
+    max-height: 50%;
+    max-width: 20%;
     margin: 7%;
+    overflow: auto;
 }
 
 .messageThread{
     cursor: pointer;
-    text-align: left;
+    text-align: center;
 }
 
 #newMessageThread {

@@ -6,16 +6,19 @@ var requireLogin = require('../middleware/authentication');
 async function sendMessage(req, res) {
     console.log("Sending message")
     var body = req.body;
-    var toUser = body.toUser;
+    var toUsers = body.toUsers;
     var fromUser = body.fromUser;
     var messageText = body.message;
     var timeSent = body.timeSent;
 
-    const message = new Message(toUser, fromUser, messageText, timeSent);
-    console.log(message)
     try {
-        await message.create();
-        const sendToUser = await User.getUserFromEmail(toUser);
+        const sendToUsersPromises = toUsers.map(async (toUser) => {
+            const message = new Message(toUser, fromUser, messageText, timeSent);
+            await message.create();
+            return User.getUserFromEmail(toUser);
+        })
+
+        const sendToUser = await Promise.all(sendToUsersPromises);
         res.status(200).json({result: sendToUser});
     } catch(error) {
         console.log(`Unable to add message to the database. Error: ${error.message}`)
