@@ -13,6 +13,7 @@ export default (WrappedComponent) => {
                     <Menu id="menu" onStateChange={this.toggleMenu}>
                         <a id="home" className="menu-item" href="/home">Home</a>
                         <a id="allCourses" className="menu-item" onClick={this.allCoursesView} href="/allCourses">All Courses</a>
+                        <a id="allSharedContent" className="menu-item" onClick={this.allSharedContent} href="/allCourses">All Shared Content</a>
                         <a id="logout" className="menu-item" onClick={this.logout} href="/">Logout</a>
                     </Menu>
                     <WrappedComponent {...this.props}/>
@@ -36,6 +37,11 @@ export default (WrappedComponent) => {
                 pathname: '/allCourses',
                 state: { email: this.props.user.email }
             });
+        }
+
+        allSharedContent = (event) => {
+            event.preventDefault();
+            this.props.history.push('/allSharedContent')
         }
 
         logout = async (event) => {
