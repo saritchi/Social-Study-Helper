@@ -1,7 +1,7 @@
 import React from 'react';
 import { withRouter } from "react-router-dom"
 import ReactCardFlip from 'react-card-flip';
-import { Button, Card, Progress, ButtonGroup, Popover, PopoverBody, PopoverHeader} from 'shards-react';
+import { Button, Card, Progress} from 'shards-react';
 import './ViewCards.css';
 import * as withAlert from "../HOC/ComponentWithAlert";
 import withMenu from '../HOC/ComponentWithMenu';
@@ -91,7 +91,7 @@ class ViewCards extends React.Component {
         break;
       case null:
         // Here to change which date set to view when PULLING cards from db
-        datetime.setDate(date)
+        datetime.setDate(date+2)
     }
 
     return datetime
@@ -115,14 +115,14 @@ class ViewCards extends React.Component {
         var study_month = studyTime.slice(6, 7)
         var study_date1 = studyTime.slice(8, 9)
         var study_date2 = studyTime.slice(9, 10)
-        if (study_date1 == 0) {
+        if (study_date1 === '0') {
           studyTime = study_year + '-' + study_month + '-' + study_date2;
         }
         else {
           studyTime = study_year + '-' + study_month + '-' + study_date1 + study_date2;
         }
   
-        if (datetime == studyTime) {
+        if (datetime === studyTime) {
           results.push(card)
           difficulty_check.push(false)
         }
@@ -196,13 +196,13 @@ class ViewCards extends React.Component {
 
   increment_index = () => {
     const difficulty_check = this.state.difficulty_selected;
-    if(difficulty_check[this.state.cardIndex] == false && this.state.view_all == false){
+    if(difficulty_check[this.state.cardIndex] === false && this.state.view_all === false){
       return;
     }
 
     if (this.state.cardIndex < this.state.cards.length) {
       this.setState({ cardIndex: this.state.cardIndex + 1 }, () => {
-        if (this.state.cardIndex == this.state.cards.length) {
+        if (this.state.cardIndex === this.state.cards.length) {
           document.removeEventListener("keydown", this.handleKeyDown);
         }
       })
@@ -249,7 +249,7 @@ class ViewCards extends React.Component {
   // Show flashcards required for studying today
   viewToday = () => {
     console.log("Viewing Today's cards...")
-    if(this.state.today_cards == 0){
+    if(this.state.today_cards.length === 0){
       this.toggle_popover()
       return;
     }
@@ -276,7 +276,7 @@ class ViewCards extends React.Component {
   }
 
   render() {
-    if (this.state.cardIndex == this.state.cards.length) {
+    if (this.state.cardIndex === this.state.cards.length) {
       return (
         <div>
           <div id="progress-bar">

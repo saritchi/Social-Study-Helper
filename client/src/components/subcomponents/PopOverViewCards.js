@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { Button, ButtonGroup, Popover, PopoverHeader, PopoverBody } from "shards-react";
 
 
