@@ -153,4 +153,4 @@ class AddEvent extends Component {
     }
 }
 
-export default withRouter(withAlert.withAlert(AddEvent));
+export default withMenu(withRouter(withAlert.withAlert(AddEvent)));
