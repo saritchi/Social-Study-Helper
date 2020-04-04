@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import { withRouter } from "react-router-dom"
-import './AllCourses.css'
+import './AllSharedContent.css'
 import axios from "axios"
 import CardDisplay from '../subcomponents/CardDisplay';
 import * as withAlert from "../HOC/ComponentWithAlert";
