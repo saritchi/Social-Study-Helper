@@ -90,7 +90,7 @@ class App extends Component {
                 exact               
                 render={props => (
                       <React.Fragment>
-                        <AllSharedContent user={this.state.user} />
+                        <AllSharedContent user={this.state.user} setUser={this.setUser} />
                       </React.Fragment>
                     )} 
               />
@@ -117,7 +117,7 @@ class App extends Component {
                 exact
                 render={props => (
                   <React.Fragment>
-                    <EditDeck  user={this.state.user}/>
+                    <EditDeck  user={this.state.user} setUser={this.setUser}/>
                   </React.Fragment>
                 )}
               />
@@ -126,7 +126,7 @@ class App extends Component {
                 exact
                 render={props => (
                   <React.Fragment>
-                    <EditCourse  user={this.state.user}/>
+                    <EditCourse  user={this.state.user} setUser={this.setUser}/>
                   </React.Fragment>
                 )}
               />

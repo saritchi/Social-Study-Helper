@@ -2,6 +2,7 @@ var router = require('express').Router();
 var Deck = require('../models/deck');
 var Card = require('../models/card');
 var SharedDeck = require('../models/shared-deck')
+var SharedCourse = require('../models/shared-course')
 var runTransaction = require('../database/helper');
 var requireLogin = require('../middleware/authentication');
 
@@ -33,6 +34,15 @@ async function addDeck(req, res) {
     try {
         await runTransaction(async () => {
             const deckId = await deck.create();
+            const sharedCourses = await SharedCourse.getAllForCourseId(courseId);
+
+            //if the course the deck is in has been shared create shared decks entries for the deck.
+            const shareDeckForCoursesPromises = sharedCourses.map((sharedCourse) => {
+                const sharedDeck = new SharedDeck(sharedCourse.toUser, sharedCourse.fromUser, deckId);
+                return sharedDeck.create();
+            })
+            await Promise.all(shareDeckForCoursesPromises);
+
             const cardsPromises = cards.map((card) => {
                 const newCard = new Card(card.prompt, card.answer, deckId);
                 return newCard.create();

@@ -363,7 +363,7 @@ describe('share decks tests', () => {
                     toUser: 'test3@test.com',
                     fromUser: 'test@test.com',
                     deckId: 1,
-                    id: 1
+                    id: 4
                 }]
             })
     })
