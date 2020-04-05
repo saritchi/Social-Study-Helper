@@ -174,7 +174,7 @@ class DeckDisplay extends Component {
         const showOptions = !this.props.location?.state?.shared;
         return (
             <div>
-                <div id="courseName">
+                <div id="coursename-header">
                     <BackButton page="Home" goback={this.goBack} />
                     <h1>{coursename}</h1>
                 </div>

@@ -1,50 +1,35 @@
 #courseInfo {
-    display: grid;
-    grid-template-columns: 0.7fr 2fr 0.7fr;
     margin-left: 10%;
     margin-right: 10%;
-    margin-top: 3%;
-    padding: 2%;
-    padding-left: 4%;
-    padding-right: 4%;
+
+    margin-bottom: 3%;
+    padding: 5%;
     -moz-box-shadow: 0 0 3px #ccc;
     -webkit-box-shadow: 0 0 3px #ccc;
     box-shadow: 0 0 3px #ccc;
-    row-gap: 1em;
 }
-h1 {
-    grid-column: 1/4;
+
+#newCourseHeading{
+    padding-left: 0;
+    margin-left: 10%;
+    margin-top: 3%;
+    text-align: left;
 }
-h2 {
+
+#deck-inputs {
+    margin-top: 1%;
+    padding-top: 1%;
+    padding-bottom: 1%;
+}
+
+.deleteDeck{
+    margin-top: 3%
+}
+
+.input-headers {
     float: left;
-    grid-column: 1/4;
-    text-align: left;
-}
-
-label  {
-    grid-column: 1/4;
-    text-align: left;
-}
-
-.form-group{ 
-    grid-column: 1/4;
-    display: inherit;
-    grid-template-columns: 1fr 0.1fr;
-    column-gap: 1em;
-}
-
-input[id^="chapter"] {
-    grid-column: 0/1;
 }
 
 svg {
     cursor: pointer;
-}
-
-#addDeck {
-    grid-column: 1/2;
-}
-
-#addCourse {
-    grid-column: 3/4;
 }

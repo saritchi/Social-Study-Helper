@@ -1,10 +1,11 @@
 import React, {Component} from "react";
 import { withRouter } from "react-router-dom"
-import { Button, Form, FormInput, FormGroup } from "shards-react";
+import { Button, Container, Col, Form, FormInput, FormGroup, Row } from "shards-react";
 import './EditCourse.css';
 import axios from "axios";
 import * as withAlert from "../HOC/ComponentWithAlert";
 import withMenu from '../HOC/ComponentWithMenu';
+import BackButton from '../subcomponents/BackButton'
 import { TiDelete } from 'react-icons/ti';
 
 class AddCourse extends Component {
@@ -21,6 +22,8 @@ class AddCourse extends Component {
       //This stores data that the user types into the input fields
       //TODO: need to update when UI can select an midterm/final/test day.
       deckInfo: {},
+      giveWarning: false,
+      modal_open: false
     }
   }
   
@@ -53,19 +56,31 @@ class AddCourse extends Component {
     }
   }
 
+  goBack = () => {
+    this.props.history.goBack();
+  }
+
+  toggle_modal = () => {
+    this.setState({
+      modal_open: !this.state.modal_open
+    });
+  }
+
   renderAllDeckInputs = () => {
     const deckInfoKeys = Object.keys(this.state.deckInfo);
     return deckInfoKeys.map((deckInputKey) => {
       return (
         <FormGroup key={deckInputKey}>
-          <label htmlFor={deckInputKey}>{this.deckInputTitle}</label>
-          <FormInput id={deckInputKey} 
-                     name="deckInfo"
-                     value={this.state.deckInfo[deckInputKey]} 
-                     onChange={this.onInputChange}
-                     placeholder={this.deckInputToolTip}
-          />
-        </FormGroup>
+        <Container id="deck-inputs">
+          <Row>
+            <Col>
+              <label className="input-headers" htmlFor={deckInputKey}>{this.deckInputTitle}</label>
+              <FormInput id={deckInputKey} onChange={this.onInputChange} placeholder={this.deckInputToolTip} value={this.state.deckInfo[deckInputKey]} name="deckInfo"/>
+            </Col>
+            
+          </Row>
+        </Container>
+      </FormGroup>
       )
     });
   }
@@ -94,6 +109,7 @@ class AddCourse extends Component {
     try {
       await axios.post("/api/editCourse", json);
         this.props.showAlert(withAlert.successTheme, "Updated Course");
+        this.props.history.goBack();
     } catch (error) {
       if(error.response.status === 401) {
         this.props.history.replace("/");
@@ -136,6 +152,9 @@ class AddCourse extends Component {
   }
 
   onInputChange = e => {
+    if(this.state.giveWarning === false){
+      this.setState({giveWarning: true})
+    }
     if(e.target.name === "deckInfo") {
       const deckInfo = this.state.deckInfo;
       deckInfo[e.target.id] = e.target.value;
@@ -148,16 +167,24 @@ class AddCourse extends Component {
   render() {
     return (
       <div>
+        <div>
+          <BackButton page="Home" 
+                      goback={this.goBack} 
+                      toggle={this.toggle_modal} 
+                      open={this.state.modal_open} 
+                      warning={this.state.giveWarning}
+          />
+        </div>
+        <Container id="newCourseHeading"><h4>Course Information: </h4></Container>
         <Form id="courseInfo">
-        <h1>Course Information</h1>
-          <FormGroup id="courseNameGroup">
-            <label htmlFor={this.courseNameId}>Course Name:</label>
+          <Container>
+            <label className="input-headers" htmlFor={this.courseNameId}><h5>Course Name</h5></label>
             <FormInput id={this.courseNameId} name="coursename" onChange={this.onInputChange} value={this.state.coursename} placeholder="CMPT 470" />
-          </FormGroup>
+          </Container>
+          <hr id="course-hr"></hr>
 
-          <h2>Decks:</h2>
           {this.renderAllDeckInputs()}
-          <Button id="editCourse" onClick={this.onSubmit}>Edit Course</Button>
+          <Button id="editCourse" onClick={this.onSubmit} theme="success" size="lg">Done</Button>
         </Form>
       </div>
     );
