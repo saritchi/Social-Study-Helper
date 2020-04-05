@@ -81,8 +81,9 @@ export default class TestModal extends React.Component {
                 }
             );
             console.log(this.state);
+            this.props.submitCallback(0);
         } catch (error) {
-            console.log(error);
+            this.props.submitCallback(error);
         }
         this.toggle();
     }

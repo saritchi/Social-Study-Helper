@@ -2,7 +2,6 @@
 var Test = require('../models/test');
 var router = require('express').Router();
 
-var runTransaction = require('../database/helper');
 var requireLogin = require('../middleware/authentication');
 
 async function addTest(req, res) {
@@ -25,7 +24,33 @@ async function addTest(req, res) {
     }
 }
 
+async function getTests(req, res) {
+    console.log("Getting tests...");
+    try {
+        console.log(req.query.id);
+        const testList = await Test.getTestsByUser(req.query.userEmail);
+        console.log(testList);
+        res.status(200).json({result: testList});
+    } catch (error) {
+        console.log(`Unable to get tests from the database. Error: ${error.message}`)
+        res.status(500).json({result: "An error occured while attempting to get your tests. Please try again later."})
+    }
+}
+
+async function deleteTest(req, res) {
+    const testId = req.query.id;
+    try {
+        await Test.deleteWithId(testId);
+        res.sendStatus(200);
+    } catch(error) {
+        console.log(`Unable to delete test with id: ${testId}. Error: ${error.message}`)
+        res.status(500).json({result: "An error occured while attempting to remove test. Please try again later."})
+    }
+}
+
 router.post('/addTest', requireLogin, addTest)
+router.get('/getTests', requireLogin, getTests)
+router.delete('/deleteTest', requireLogin, deleteTest)
 
 
 module.exports = router;

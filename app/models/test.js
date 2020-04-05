@@ -18,6 +18,7 @@ class Test {
         const addTestSQL = `INSERT INTO Tests(name, courseId, decklist, testDate, userEmail) VALUES(?, ?, ?, ?, ?)`;
         return (await database.runQuery(addTestSQL, [this.name, this.courseId, this.decklist, this.testDate, this.userEmail])).insertId;
     }
+
 }
 
 module.exports = Test;
@@ -27,9 +28,15 @@ module.exports = Test;
  * @returns An array of Test objects
  */
 module.exports.getTestsByUser = async function getTestsByUser(userEmail) {
-    const getTestSQL = `SELECT * FROM Decks WHERE userEmail = ?`;
+    const getTestSQL = `SELECT * FROM Tests WHERE userEmail = ? ORDER BY testDate ASC`;
     const results = await database.runQuery(getTestSQL, userEmail);
     return results.map((result) => {
-        return new Test(result.name, result.courseId, result.decklist, result.testDate, result.id);
+        return new Test(result.name, result.courseId, result.decklist, result.testDate, result.userEmail, result.id);
     })
+}
+
+module.exports.deleteWithId = async function deleteWithId(testId) {
+    console.log(`Deleting test with id: ${testId}`);
+    const deleteTestQuery = `DELETE FROM Tests WHERE id = ?`;
+    return database.runQuery(deleteTestQuery, testId);
 }

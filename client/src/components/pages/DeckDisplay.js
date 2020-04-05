@@ -124,6 +124,17 @@ class DeckDisplay extends Component {
         return false;
     }
 
+    submitTest = (error) => {
+        if(error) {
+            console.log(error);
+            this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+        }
+        else {
+            this.props.showAlert(withAlert.successTheme, "Test Added!");
+        }
+
+    }
+
     addDeck = () => {
         this.props.history.push(
         {
@@ -170,7 +181,8 @@ class DeckDisplay extends Component {
                 <TestModal coursename={this.state.coursename} 
                             courseId={this.props.location.state.id} 
                             options={this.state.decklist} 
-                            userEmail={this.props.user.email}>
+                            userEmail={this.props.user.email}
+                            submitCallback={this.submitTest}>
 
                 </TestModal>
                 </div>
