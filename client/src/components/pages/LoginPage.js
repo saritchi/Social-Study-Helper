@@ -15,6 +15,7 @@ import axios from "axios";
     }
     
     responseGoogle = async response => {
+        console.log(response);
         if (response.error) {
             this.props.showAlert(withAlert.errorTheme, "Unable to login with Google. Please try again later.");
             return;
