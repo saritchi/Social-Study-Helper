@@ -23,8 +23,7 @@ import axios from "axios";
         var isAuthenticated = true;
         const user = new User(email,password,fname,lname,isAuthenticated);
         try {
-            //TODO: get a user object back from the server
-            const response = await axios.post('/api/google/register', user);
+            await axios.post('/api/google/register', user);
             this.props.setUser(user);
             this.setState({user: user});
         } catch (error) {

@@ -24,7 +24,6 @@ import axios from "axios";
     
    async onSubmit(e) {
         e.preventDefault();
-        //TODO: error check contents
         const user = {
             email: this.state.email,
             password: this.state.password,
@@ -32,15 +31,13 @@ import axios from "axios";
             lname: this.state.lname,
         };
         try {
-            //TODO: get a user object back from the server
-            const response = await axios.post('/api/register', user);
+            await axios.post('/api/register', user);
             this.setState({registered: true});
         } catch (error) {
             this.props.showAlert(withAlert.errorTheme, error.response.data.result);
         }
     }
     render() {
-        //TODO: redirect to home after value registration
         if (this.state.registered) {
             return(
                 <div>

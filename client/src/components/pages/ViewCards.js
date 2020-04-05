@@ -90,7 +90,7 @@ class ViewCards extends React.Component {
         console.log("Hard button pressed")
         datetime.setDate(date + 1)
         break;
-      case null:
+      default:
         // Here to change which date set to view when PULLING cards from db
         datetime.setDate(date)
     }
@@ -265,14 +265,14 @@ class ViewCards extends React.Component {
 
   renderPrompt = (index) => {
     return (
-      this.state.cards.slice(index, index + 1).map(card => <h3>{card.prompt}</h3>)
+      this.state.cards.slice(index, index + 1).map(card => <h3 key={'prompt' + index}>{card.prompt}</h3>)
     );
 
   }
 
   renderAnswer = (index) => {
     return (
-      this.state.cards.slice(index, index + 1).map(card => <p>{card.answer}</p>)
+      this.state.cards.slice(index, index + 1).map(card => <p key={'answer' + index}>{card.answer}</p>)
     );
   }
 
