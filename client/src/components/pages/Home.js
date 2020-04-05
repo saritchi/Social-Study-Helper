@@ -252,6 +252,7 @@ class Home extends Component {
                 <div id="user">
                     <h1>Welcome {username}!</h1>
                 </div>
+                    
                 <div>
                     <Nav>
                         <NavItem id="recentCourses">
@@ -269,8 +270,10 @@ class Home extends Component {
                              editCallback={this.editCourseView}
                              cardsInfo={this.state.courses}
                 />
-                <Button id="newCourse" onClick={this.addCourse}>Add New Course</Button>
+                <Button id="newCourse-home" onClick={this.addCourse} theme="info">Create New Course</Button>
+                
                 <div id="sharedCourses">
+                    <hr></hr>
                     <Nav>
                         <NavItem id="recentSharedCourses">
                             <h3>Shared Courses Preview: </h3>
@@ -282,6 +285,7 @@ class Home extends Component {
                     <CardDisplay changePage={this.sharedCourseView} cardsInfo={this.state.sharedCourses}/>
                 </div>
                 <div id="sharedDecks">
+                <hr></hr>
                     <Nav>
                         <NavItem id="recentSharedDecks">
                                 <h3>Shared Decks Preview: </h3>
