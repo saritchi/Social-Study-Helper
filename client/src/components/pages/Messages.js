@@ -179,7 +179,7 @@ class Messages extends Component {
                             </ListGroup>
                         </Col>
                         <Col sm="12" lg="8" className="col2">
-                            <div><h5>{this.props.user.fname + " " + this.props.user.lname}</h5></div>
+                            {this.state.threadUser && <div><h5>{this.state.threadUser.fname + " " + this.state.threadUser.lname}</h5></div>}
                             <MessageThread messages={this.state.threadMessages} user={this.props.user} />
                             <Form id="newMessageForm">
                                 <FormTextarea value={this.state.newMessage} onChange={this.onMessageChange}/>
