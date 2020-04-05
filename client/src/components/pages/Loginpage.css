@@ -3,18 +3,13 @@
     margin:auto;
     padding-top: 2%;
 }
-#loginnav{
-    background-color: black;
-    padding: 10px;
-    margin-bottom: 40px;
-    text-align: right;
-}
+
 #link{
    font-size: 17px;
    color:rgb(47, 123, 255);
 }
 #header{
-    margin-top: 5%;
+    margin-top: 2%;
 }
 
 #login-text {
@@ -24,7 +19,6 @@
 
 #sign-up {
     margin-top: 3%;
-    margin-bottom: 2%;
 }
 
 #button-signin {
@@ -32,7 +26,7 @@
 }
 
 #google-signin {
-    margin-top: 0%;
+    margin-top: 1%;
 }
 
 #login-card {
