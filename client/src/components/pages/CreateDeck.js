@@ -4,6 +4,7 @@ import { Form, FormGroup, FormTextarea, FormInput, Button, Container, Row, Col} 
 import { TiDelete } from 'react-icons/ti';
 import * as withAlert from "../HOC/ComponentWithAlert";
 import withMenu from '../HOC/ComponentWithMenu';
+import BackButton from '../subcomponents/BackButton'
 import Axios from 'axios';
 import './CreateDeck.css';
 
@@ -13,6 +14,8 @@ class CreateDeck extends React.Component {
         this.state = {
             deckname: '',
             cards: [],
+            giveWarning: false,
+            modal_open: false
         }
     }
     
@@ -23,6 +26,16 @@ class CreateDeck extends React.Component {
         }
 
         this.addCard();
+    }
+
+    goBack = () => {
+        this.props.history.goBack();
+    }
+
+    toggle_modal = () => {
+        this.setState({
+          modal_open: !this.state.modal_open
+        });
     }
 
     addCard = () => {
@@ -142,19 +155,28 @@ class CreateDeck extends React.Component {
         const card = this.state.cards;
         if(event.target.name === "card_prompt") {
             card[event.target.id].prompt = event.target.value;
-            this.setState({cards: card});
+            this.setState({cards: card, giveWarning: true});
         }else if(event.target.name === "card_answer"){
             card[event.target.id].answer = event.target.value;
-            this.setState({cards: card});
+            this.setState({cards: card, giveWarning: true});
         }else{
-            this.setState({[event.target.name]: event.target.value});
+            this.setState({[event.target.name]: event.target.value, giveWarning: true});
         }
     }
 
 
     render(){  
         return(
+            
             <div>
+                <div>
+                    <BackButton page="Decks" 
+                                goback={this.goBack} 
+                                toggle={this.toggle_modal} 
+                                open={this.state.modal_open} 
+                                warning={this.state.giveWarning}
+                    />
+                </div>
                 <Container id="newDeckHeading"><h4>Create New Deck: </h4></Container>
                 <Form id="deck">
                     

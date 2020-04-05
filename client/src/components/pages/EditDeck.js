@@ -4,6 +4,7 @@ import { Container, Row, Col } from "shards-react";
 import { TiDelete } from 'react-icons/ti';
 import * as withAlert from "../HOC/ComponentWithAlert";
 import withMenu from '../HOC/ComponentWithMenu';
+import BackButton from '../subcomponents/BackButton'
 import axios from 'axios';
 import './CreateDeck.css';
 
@@ -14,7 +15,9 @@ class EditDeck extends React.Component {
             deckname: '',
             cards: [],
             deckId: 0,
-            courseId: 0
+            courseId: 0,
+            giveWarning: false,
+            modal_open: false
         }
     }
     
@@ -47,6 +50,16 @@ class EditDeck extends React.Component {
             this.props.showAlert(withAlert.errorTheme, error.response.data.result);
         }
 
+    }
+
+    goBack = () => {
+        this.props.history.goBack();
+    }
+
+    toggle_modal = () => {
+        this.setState({
+          modal_open: !this.state.modal_open
+        });
     }
 
     addCard = () => {
@@ -166,12 +179,12 @@ class EditDeck extends React.Component {
         const card = this.state.cards;
         if(event.target.name === "card_prompt") {
             card[event.target.id].prompt = event.target.value;
-            this.setState({cards: card});
+            this.setState({cards: card, giveWarning: true});
         }else if(event.target.name === "card_answer"){
             card[event.target.id].answer = event.target.value;
-            this.setState({cards: card});
+            this.setState({cards: card, giveWarning: true});
         }else if(event.target.name === "deckname"){
-            this.setState({deckname: event.target.value});
+            this.setState({deckname: event.target.value, giveWarning: true});
         }
     }
 
@@ -179,6 +192,14 @@ class EditDeck extends React.Component {
     render(){  
         return(
             <div>
+                <div>
+                <BackButton page="Decks" 
+                                goback={this.goBack} 
+                                toggle={this.toggle_modal} 
+                                open={this.state.modal_open} 
+                                warning={this.state.giveWarning}
+                    />
+                </div>
                 <Container id="newDeckHeading"><h4>Edit Deck: </h4></Container>
                 <Form id="deck">
                     
