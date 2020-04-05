@@ -17,7 +17,7 @@ import ViewCards from './components/pages/ViewCards';
 import EditDeck from './components/pages/EditDeck';
 import EditCourse from './components/pages/EditCourse';
 import AllSharedContent from './components/pages/AllSharedContent';
-import AssignStudents from './components/pages/AssignStudents';
+import AssignedStudents from './components/pages/AssignedStudents';
 
 import User from './User';
 const userStorageKey = 'user';
@@ -92,7 +92,7 @@ class App extends Component {
                 exact               
                 render={props => (
                       <React.Fragment>
-                        <AllSharedContent user={this.state.user} />
+                        <AllSharedContent user={this.state.user} setUser={this.setUser} />
                       </React.Fragment>
                     )} 
               />
@@ -115,11 +115,11 @@ class App extends Component {
                 )}
               />
               <Route
-                path="/assignStudents"
+                path="/assignedStudents"
                 exact
                 render={props => (
                   <React.Fragment>
-                    <AssignStudents/>
+                    <AssignedStudents user={this.state.user} setUser={this.setUser}/>
                   </React.Fragment>
                 )}
              />
@@ -128,7 +128,7 @@ class App extends Component {
                 exact
                 render={props => (
                   <React.Fragment>
-                    <EditDeck  user={this.state.user}/>
+                    <EditDeck user={this.state.user} setUser={this.setUser}/>
                   </React.Fragment>
                 )}
               />
@@ -137,7 +137,7 @@ class App extends Component {
                 exact
                 render={props => (
                   <React.Fragment>
-                    <EditCourse  user={this.state.user}/>
+                    <EditCourse  user={this.state.user} setUser={this.setUser}/>
                   </React.Fragment>
                 )}
               />

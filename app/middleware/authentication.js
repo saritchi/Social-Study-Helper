@@ -14,7 +14,7 @@ module.exports.requireLogin = function requireLogin(req, res, next) {
 
 module.exports.requireTeacherRole = function requireTeacherRole(req, res, next) {
     if (req.user.role !== 'teacher') {
-        console.log("Unauthenticated api access. Returning 401 status code");
+        console.log("Attempting to access teacher resource as non teacher. Returning 401 status code");
         res.sendStatus(401);
         return;
     }
