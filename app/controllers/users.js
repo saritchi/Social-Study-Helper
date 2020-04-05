@@ -29,7 +29,12 @@ async function registerUser(req, res) {
 
 
     const newUser = new User(email, password, firstname, lastname, role);
-    try { 
+    try {
+
+        if(! await newUser.isValidRole()){
+            res.status('400').json({result: "An error occured while attempting to register since no valid role selected."});
+            return;
+        }
         const userExists = await newUser.exists();
         if (userExists) {
             res.status('409').json({result: "An error occured while attempting to register since Username already Exists."});
@@ -53,6 +58,10 @@ async function registerGoogleUser(req, res) {
 
     const newUser = new User(email, password, firstname, lastname, role);
     try { 
+        if(! await newUser.isValidRole()){
+            res.status('400').json({result: "An error occured while attempting to register since no valid role selected."});
+            return;
+        }
         const userExists = await newUser.exists();
         if (userExists) {
             delete newUser.password;

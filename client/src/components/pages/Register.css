@@ -10,9 +10,14 @@
 }
 #link{
     font-size: x-large;
-    color:greenyellow
+    color:greenyellow;
  }
  #header{
      margin-bottom: 25px;
+ }
+ #checkbox{
+    text-align:left;
+    margin-top:30px;
+    font-size:large;
  }
  

@@ -86,7 +86,7 @@ import axios from "axios";
                     <label>Last name: </label>
                     <FormInput type="text" name="lname" onChange = {this.onChange}></FormInput>
                     </FormGroup>
-                    <p style={{textAlign:"left",marginTop:'30px',fontSize:"larger"}}>User type:</p>
+                    <p id='checkbox'>User type:</p>
                     <FormCheckbox  checked={isTeacher} onChange={e => this.userType(e, "teacher")}>Teacher</FormCheckbox>
                     <FormCheckbox  checked={isStudent} onChange={e => this.userType(e, "student")}>Student</FormCheckbox>
                     <FormInput type="submit" value="SignUp"></FormInput>

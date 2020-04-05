@@ -60,6 +60,12 @@ class User {
         }
         return true;
     }
+    async isValidRole(){
+        if(this.role === 'teacher' || this.role === 'student'){ 
+            return true;
+        }
+        return false;
+    }
     async getAssignedStudents(){
         const query = 'SELECT student FROM assignStudent WHERE teacher = ?';
         let result = await database.runQuery(query, [this.email]);
