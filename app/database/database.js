@@ -106,7 +106,7 @@ class Database {
             PRIMARY KEY (id)
         );`;
 
-        const createAssignStudentTableSQL = `create table IF NOT EXISTS assignStudent(
+        const createAssignStudentTableSQL = `create table IF NOT EXISTS AssignedStudents(
             teacher VARCHAR(40) NOT NULL,
             student VARCHAR(40) NOT NULL,
             PRIMARY KEY(teacher,student),
@@ -131,6 +131,7 @@ class Database {
             FOREIGN KEY (deckId)
                 REFERENCES Decks(id)   
         );`;
+
 
         const createUserTablePromise = util.promisify(this.db.query).call(this.db, createUsersTableSQL); 
         const createCourseTablePromise = util.promisify(this.db.query).call(this.db, createCoursesTableSQL); 

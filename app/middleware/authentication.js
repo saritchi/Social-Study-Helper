@@ -3,8 +3,17 @@
 /**
  * Middleware that checks requests for user authentication.
  */
-module.exports = function requireLogin(req, res, next) {
+module.exports.requireLogin = function requireLogin(req, res, next) {
     if(!req.user) {
+        console.log("Unauthenticated api access. Returning 401 status code");
+        res.sendStatus(401);
+        return;
+    }
+    next();
+}
+
+module.exports.requireTeacherRole = function requireTeacherRole(req, res, next) {
+    if (req.user.role !== 'teacher') {
         console.log("Unauthenticated api access. Returning 401 status code");
         res.sendStatus(401);
         return;

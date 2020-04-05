@@ -1,7 +1,6 @@
 var router = require('express').Router();
-var requireLogin = require('../middleware/authentication');
+var authentication = require('../middleware/authentication');
 var User = require('../models/user');
-const database = require('../database/database')(process.env);
 
 async function authenticateUser(req, res) {
     let email = req.body.email;
@@ -117,7 +116,7 @@ function logoutUser(req, res) {
 
 router.post('/auth', authenticateUser)
 router.post('/register', registerUser)
-router.get('/logout', requireLogin, logoutUser)
+router.get('/logout', authentication.requireLogin, logoutUser)
 router.post('/google/register', registerGoogleUser)
 router.get('/allStudents', getAllStudents)
 router.get('/assignedStudents', getAssignedStudents)

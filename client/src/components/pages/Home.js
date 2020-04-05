@@ -20,9 +20,6 @@ class Home extends Component {
         this.coursesDisplayLimit = 9;
         this.sharedContentDisplayLimit = 3;
         this.orderBy = 'lastAccess';
-        this.assignStudentBtn = this.assignStudentBtn.bind(this);
-        this.ifTeacher = this.ifTeacher.bind(this);
-        this.displayAssignedStudents = this.displayAssignedStudents.bind(this);
     }
 
     async componentDidMount() {
@@ -256,30 +253,6 @@ class Home extends Component {
     allSharedContentView = () => {
         this.props.history.push('/allSharedContent')
     }
-
-    assignStudentBtn(e){
-        this.props.history.push({
-            pathname: '/assignStudents',
-            state: { teacherEmail: this.props.user.email }
-        });
-    }
-    ifTeacher(){
-        if(this.props.user.role === 'teacher'){
-            return <Button theme="dark" onClick={this.assignStudentBtn}>Assign Students</Button>
-        }
-    }
-
-    displayAssignedStudents(){
-        if(this.props.user.role === 'teacher'){
-            const students = this.state.assignedStudents.map(student => (
-                <Button key={student.email} outline theme="info" >{student.fname + ' ' + student.lname}</Button>
-            ));
-            return (<div style={{marginTop:'200px', textAlign:"left",marginLeft:'50px',marginBottom:'200px'}}>
-                <h1>Your Students</h1>
-                <ButtonGroup vertical>{students}</ButtonGroup>
-                </div>);
-        }
-    }
     
     render() {
         const username = this.props.user.fname + ' ' + this.props.user.lname;
@@ -287,7 +260,6 @@ class Home extends Component {
             <div>
                 <div id="user">
                     <h1>Welcome {username}!</h1>
-                    {this.ifTeacher()}
                 </div>
                 <div>
                     <Nav>
@@ -304,10 +276,10 @@ class Home extends Component {
                              removeSharedContentCallback={this.removeSharedCourseCallback}
                              deleteCallback={this.deleteCourseCallback}
                              editCallback={this.editCourseView}
+                             user={this.props.user}
                              cardsInfo={this.state.courses}
                 />
                 <Button id="newCourse" onClick={this.addCourse}>Add New Course</Button>
-                {this.displayAssignedStudents()}
                 <div id="sharedCourses">
                     <Nav>
                         <NavItem id="recentSharedCourses">

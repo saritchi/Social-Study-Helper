@@ -59,24 +59,39 @@ class ShareModal extends Component {
     }
 
     render() {
+        var headerText = 'Share ' + this.props.name + ' with others';
+        var listHeaderText = 'Who has access: ';
+        var userHeaderText = 'Add People';
+        var placeholderText = "Enter email addresses....";
+        var shareButtontext = 'Share';
+        
+        const isTeacher = this.props.user.role === 'teacher' ? true : false
+        if(isTeacher) {
+            headerText = 'Assign ' + this.props.name + ' to students'
+            listHeaderText = "Student's who have access: "
+            userHeaderText = 'Add Students'
+            placeholderText = "Enter student's email addresses...."
+            shareButtontext = 'Assign'
+        }
+
         return (
             <Modal size="lg" open={this.props.open} toggle={this.props.toggle}>
-            <ModalHeader>Share {this.props.name} with others</ModalHeader>
+            <ModalHeader>{headerText}</ModalHeader>
             <ModalBody>
                 <ListGroup>
-                    <ListGroupItemHeading>Who has access: </ListGroupItemHeading>
+                    <ListGroupItemHeading>{listHeaderText} </ListGroupItemHeading>
                     {this.renderUserAccessList()}
                 </ListGroup>
                 <div className="addUsers">
-                    <h4>Add People</h4>
+                    <h4>{userHeaderText}</h4>
                     <ReactMultiEmail
-                        placeholder="Enter email addresses...."
+                        placeholder={placeholderText}
                         emails={this.state.emails}
                         onChange={(enteredEmails) => this.setState({emails: enteredEmails})}
                         validateEmail={this.validateEmail}
                         getLabel={this.renderEmailItem}
                     />
-                    <Button className='shareContent' onClick={() => this.shareContent()}>Share</Button>
+                    <Button className='shareContent' onClick={() => this.shareContent()}>{shareButtontext}</Button>
                 </div>
             </ModalBody>
             </Modal>
