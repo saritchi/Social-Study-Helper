@@ -179,6 +179,13 @@ class DeckDisplay extends Component {
                     <BackButton page="Home" goback={this.goBack} />
                     <h1>{coursename}</h1>
                 </div>
+                <div>
+                    <Nav>
+                        <NavItem id="decklist">
+                            <h3>Decks: </h3>
+                        </NavItem>
+                    </Nav>
+                </div>
 
                 <CardDisplay changePage={this.cardView} options={showOptions}
                              sharedContentCallback={this.shareDeckCallback}
