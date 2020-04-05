@@ -1,0 +1,15 @@
+.switch-card-button {
+    margin-top: 2%;
+}
+
+#button-click{
+    margin-top: 50%;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    margin-left: 50px;
+    margin-right: 50px;
+}

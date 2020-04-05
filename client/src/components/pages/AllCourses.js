@@ -4,6 +4,7 @@ import { Button } from 'shards-react'
 import './AllCourses.css'
 import axios from "axios"
 import CardDisplay from '../subcomponents/CardDisplay';
+import BackButton from '../subcomponents/BackButton'
 import * as withAlert from "../HOC/ComponentWithAlert";
 import withMenu from '../HOC/ComponentWithMenu';
 
@@ -31,6 +32,10 @@ class AllCourses extends Component {
                 this.props.showAlert(withAlert.errorTheme, error.response.data.result);
             }
         }
+    }
+
+    goBack = () => {
+        this.props.history.goBack();
     }
 
     getPageContent = async() => {
@@ -113,29 +118,80 @@ class AllCourses extends Component {
         return false;
     }
 
+    deleteCourseCallback = async (courseId) => {
+        try {
+            await axios.delete('api/deleteCourse', {
+                params: {
+                    id: courseId
+                }
+            })
+            var courses = this.state.courses;
+            const indexToDelete = courses.findIndex((course) => course.id === courseId);
+            courses.splice(indexToDelete, 1);
+            this.setState({courses: courses});
+        } catch (error) {
+            if(error.response?.status === 401) {
+                this.props.history.replace("/");
+            } else {
+                console.error(error);
+                this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+            }
+        }
+    }
+
     addCourse = () => {
         this.props.history.push("/addCourse");
     }
 
-    courseView = (courseId, courseName) => {
-        this.props.history.push({
-            pathname: '/decks',
-            state: {
-                id: courseId,
-                name: courseName
+    courseView = async (courseId, courseName) => {
+        var course = this.state.courses.filter((course) => course.id == courseId)[0];
+        //By default the Javascript Date Object uses ISO8601 which is not a valid DateTime in MYSQL
+        //This https://stackoverflow.com/questions/20083807/javascript-date-to-sql-date-object offers a solution for converting
+        //DateTime objects into a format MySQL accepts.
+        course.lastAccess = new Date().toISOString().slice(0, 19).replace('T', ' ');
+        try {
+            await axios.post('api/updateCourse', {
+                params: {
+                    course: course
+                }
+            })
+            this.props.history.push({
+                pathname: '/decks',
+                state: {
+                    id: courseId,
+                    name: courseName
+                }
+            });
+        } catch (error) {
+            if(error.response?.status === 401) {
+                this.props.history.replace("/");
             }
-        });
+            else {
+                console.error(error);
+                const errorMessage = error.response?.data.result ? error.response.data.result : "An error has occured. Please try again later."
+                this.props.showAlert(withAlert.errorTheme, errorMessage);
+            }
+        }
+    }
+
+    editCourseView = (courseId) => {
+        this.props.history.push("/editCourse", {courseId});
     }
     
     render() {
         return (
             <div>
                 <div id="user">
+                <BackButton page="Home" 
+                                goback={this.goBack} 
+                    />
                     <h1>All Courses</h1>
                 </div>
                 <CardDisplay changePage={this.courseView} options={true} 
                              sharedContentCallback={this.shareCourseCallback}
                              removeSharedContentCallback={this.removeSharedCourseCallback}
+                             deleteCallback={this.deleteCourseCallback}
+                             editCallback={this.editCourseView}
                              cardsInfo={this.state.courses}
                 />
                 <Button id="newCourse" onClick={this.addCourse}>Add New Course</Button>

@@ -3,11 +3,20 @@ import { Alert } from "shards-react";
 
 export const withAlert = (WrappedComponent) => {
     class WithAlert extends Component {
-        state = { 
-            theme: 'danger',
-            message: '',
-            visible: false 
+        constructor(props){
+            super(props);
+
+            this.interval = null;
+            this.state = { 
+                theme: 'danger',
+                message: '',
+                visible: false,
+                countdown: 0,
+                timeUntilDismissed: 5
+            }
         }
+        
+
 
         render() {
             return (
@@ -20,11 +29,29 @@ export const withAlert = (WrappedComponent) => {
             );
         }
 
-        showAlert = (theme, message) => this.setState({theme: theme, message: message, visible:true})
-        
-        
+        showAlert = (theme, message) => {
+            this.clearInterval();
+            this.setState({theme: theme, message: message, visible:true, countdown: 0, timeUntilDismissed: 5})
+            this.interval = setInterval(this.handleTimeChange, 1000);
+        }
 
-        dismiss = () => this.setState({visible: false});
+        handleTimeChange = () => {
+            if (this.state.countdown < this.state.timeUntilDismissed - 1) {
+                this.setState({
+                  ...this.state,
+                  ...{ countdown: this.state.countdown + 1 }
+                });
+                return;
+              }
+          
+              this.setState({ ...this.state, ...{ visible: false } });
+              this.clearInterval();           
+        }
+        
+        clearInterval = () => {
+            clearInterval(this.interval);
+            this.interval = null;
+        }
         
     }
 

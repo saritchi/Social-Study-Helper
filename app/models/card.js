@@ -36,6 +36,11 @@ class Card {
         const deleteNullString = 'DELETE FROM Cards WHERE prompt IS NULL AND answer IS NULL OR deckId IS NULL'
         await database.runQuery(deleteNullString)
     }
+
+    async update_difficulty () {
+        const updateNextStudy = 'UPDATE Cards SET nextStudyTime = ? WHERE id = ? AND deckId = ?'
+        await database.runQuery(updateNextStudy, [this.nextStudyTime, this.id, this.deckId])
+    }
 }
 
 module.exports = Card;
@@ -52,4 +57,3 @@ module.exports.getAllFromDeckId = async function getAllFromDeckId(deckId) {
         return new Card(result.prompt, result.answer, result.deckId, result.id, result.nextStudyTime);
     })
 }
-

@@ -27,7 +27,7 @@ export default class OptionsDropdown extends Component {
           <FiMoreVertical onClick={this.toggle}/>
           <DropdownMenu>
             <DropdownItem onClick={() => this.props.editCallback(this.props.id)}>Edit</DropdownItem>
-            <DropdownItem>Delete</DropdownItem>
+            <DropdownItem onClick={() => this.props.deleteCallback(this.props.id)}>Delete</DropdownItem>
             <DropdownItem onClick={this.toggleShareMenu}>Share</DropdownItem>
           </DropdownMenu>
         </Dropdown>

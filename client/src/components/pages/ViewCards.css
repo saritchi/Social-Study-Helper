@@ -1,17 +1,38 @@
+#progress-bar {
+  margin: auto;
+  width: 90%;
+}
+
+#deck-complete {
+  width: 450px;
+  margin: auto;
+  margin-top: 10%;
+}
+
+.flashcard-done {
+  border-radius: 3px; 
+  box-shadow: none;
+  width: 40%;
+  height: 500px; 
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  cursor: pointer;
+}
+
 .flashcard {
     border: 1px solid rgb(238, 238, 238);
     border-radius: 3px; 
-    width:800px;
-    height: 400px;  
+    width: 50%;
+    height: 27em;
     align-items: center;
-    justify-content: center;
     margin: auto;
-  }
+    justify-content: center;
+    cursor: pointer;
+}
+
+.flash-container {
+  margin-top: 2%;
+  min-height: 100%;
+}
   
-  .flash-container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-right: -50%;
-    transform: translate(-50%, -50%)
-  }
