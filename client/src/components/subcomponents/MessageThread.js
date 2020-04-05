@@ -1,10 +1,12 @@
 import React from 'react'
-import { ListGroup, ListGroupItem } from 'shards-react'
+import { ListGroup, ListGroupItem, ListGroupItemHeading } from 'shards-react'
 import './MessageThread.css'
 
 const MessageThread = (props) => {
+    console.log(props.user)
     return (
         <ListGroup small={true} flush={true} id="messages">
+            
             {
                 props.messages.map((messageObj, index) => {
                     var userMessage = '';

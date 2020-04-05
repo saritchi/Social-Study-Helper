@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import { withRouter } from "react-router-dom"
-import { Button, ListGroup, ListGroupItemHeading, ListGroupItem, Container, Row, Form, FormTextarea } from 'shards-react'
+import { Button, Col, ListGroup, ListGroupItemHeading, ListGroupItem, Container, Row, Form, FormTextarea } from 'shards-react'
 import axios from 'axios';
 import * as withAlert from "../HOC/ComponentWithAlert";
 import withMenu from '../HOC/ComponentWithMenu';
@@ -40,6 +40,7 @@ class Messages extends Component {
             }
             
             this.setState({threadUsers: messagedUsers, threadUser: messagedUsers[0]}, () => {this.selectMessageThread(0)})
+            document.addEventListener("keydown", this.handleKeyDown);
 
         } catch(error) { 
             if(error.response?.status === 401) {
@@ -80,6 +81,9 @@ class Messages extends Component {
     }
 
     sendNewChatMessage = async() => {
+        if(this.state.newMessage.length === 0){
+            return;
+        }
         try {
             await this.sendNewMessage([this.state.threadUser.email], this.state.newMessage);
         } catch (error) {
@@ -150,6 +154,12 @@ class Messages extends Component {
             }
         }
     }
+
+    handleKeyDown = (e) => {
+        if (e.key === 'Enter' && this.state.newMessage.length > 0) {
+            this.sendNewChatMessage()
+        }
+      }
     
     render() {
         const sendDisabled = this.state.otherUser ? true : false;
@@ -158,23 +168,27 @@ class Messages extends Component {
                 <h1 id='title'>Your Chats</h1>
                 <Container id="messageContainer">
                     <Row id="messagesRow">
-                        <ListGroup small={true} flush={true} id="messageThreads">
-                            <ListGroupItemHeading>Message Threads:</ListGroupItemHeading>
-                            <div id="threads">
-                                {this.renderMessageThreads()}
-                            </div>
-                            <Button id="newMessageThread" onClick={this.toggleNewMessageModal}>New Chat</Button>
-                        </ListGroup>
-                        <MessageThread messages={this.state.threadMessages} user={this.props.user} />
+                        <Col sm="12" md="4" lg="3" className="col1">
+                            <ListGroup small={false} flush={true} id="messageThreads">
+                                <ListGroupItemHeading>Message Threads:</ListGroupItemHeading>
+                                <Button id="newMessageThread" onClick={this.toggleNewMessageModal}>New Chat</Button>
+                                <div id="threads">
+                                    {this.renderMessageThreads()}
+                                </div>
+                                
+                            </ListGroup>
+                        </Col>
+                        <Col sm="12" lg="8" className="col2">
+                            <div><h5>{this.props.user.fname + " " + this.props.user.lname}</h5></div>
+                            <MessageThread messages={this.state.threadMessages} user={this.props.user} />
+                            <Form id="newMessageForm">
+                                <FormTextarea value={this.state.newMessage} onChange={this.onMessageChange}/>
+                                <Button id="sendMessage" disabled={sendDisabled} onClick={this.sendNewChatMessage}>Send</Button>
+                            </Form>
+                            
+                        </Col> 
                     </Row>
-                    <Row>
-                        <Form id="newMessageForm">
-                            <FormTextarea value={this.state.newMessage} onChange={this.onMessageChange}/>
-                        </Form>
-                    </Row>
-                    <Row>
-                        <Button id="sendMessage" disabled={sendDisabled} onClick={this.sendNewChatMessage}>Send</Button>    
-                    </Row>
+                    {/* Text Area to type message */}
                 </Container>
                 <NewMessageModal open={this.state.openNewMessageModal}
                                  toggle={this.toggleNewMessageModal}
