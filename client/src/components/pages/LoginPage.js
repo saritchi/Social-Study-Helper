@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { FormGroup, Form,FormInput } from 'shards-react'
+import { Button, Card, FormGroup, Form,FormInput, CardHeader } from 'shards-react'
 import {Link,Redirect} from 'react-router-dom';
 import * as withAlert from "../HOC/ComponentWithAlert";
 import User from '../../User.js';
@@ -66,30 +66,39 @@ import axios from "axios";
         return (
             <div>
                 <br></br>
-                <h1 id="header">Welcome To Social Study Helper</h1>
-                <nav id="loginnav">
-                    <Link id="link"to="/register">SignUp</Link>
-                </nav>
-                <Form  id="loginform" onSubmit = {this.onSubmit}>
-                    <FormGroup>
-                    <label>email: </label>
-                    <FormInput type="text" name="email" onChange = {this.onChange}></FormInput>
-                    </FormGroup>
+                <h1 id="header">Social Study Helper</h1>
 
-                    <FormGroup>
-                    <label>Password: </label>
-                    <FormInput type="password" name="password" onChange = {this.onChange}></FormInput>
-                    </FormGroup>
+                <Card id="login-card">
+                    <CardHeader>Sign in</CardHeader>
+                    <Form  id="loginform" onSubmit = {this.onSubmit}>
+                        <FormGroup>
+                        <label id="login-text">Email </label>
+                        <FormInput type="text" name="email" onChange = {this.onChange}></FormInput>
+                        </FormGroup>
 
-                    <FormInput type="submit" value="Sign in" id ='SignIn'></FormInput><br></br>
-                </Form> 
-                <GoogleLogin
-                    clientId="450582683465-sa51lvh1nc8hcm86unoscffs8gcm8tsi.apps.googleusercontent.com"
-                    buttonText="Login with google"
-                    onSuccess={this.responseGoogle}
-                    onFailure={this.responseGoogle}
-                    cookiePolicy={'single_host_origin'}
-                />
+                        <FormGroup>
+                        <label id="login-text">Password </label>
+                        <FormInput type="password" name="password" onChange = {this.onChange}></FormInput>
+                        </FormGroup>
+
+                        <Button type="submit" id="button-signin" theme="info" size="lg" block>Sign In</Button><br></br>
+                    </Form> 
+                    <div id="google-signin">
+                        <GoogleLogin
+                            
+                            clientId="450582683465-sa51lvh1nc8hcm86unoscffs8gcm8tsi.apps.googleusercontent.com"
+                            buttonText="Login with google"
+                            onSuccess={this.responseGoogle}
+                            onFailure={this.responseGoogle}
+                            cookiePolicy={'single_host_origin'}
+                        />
+                    </div>
+
+                    <div id="sign-up">
+                        <h6>Don't have an account? <Link id="link"to="/register">Sign up here</Link> </h6>
+                    </div>
+                </Card>
+
             </div>
         )
     }
