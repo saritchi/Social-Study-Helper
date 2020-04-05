@@ -14,7 +14,11 @@ import axios from "axios";
         this.onSubmit = this.onSubmit.bind(this); 
     }
     
-    responseGoogle = async response =>{
+    responseGoogle = async response => {
+        if (response.error) {
+            this.props.showAlert(withAlert.errorTheme, "Unable to login with Google. Please try again later.");
+            return;
+        }
 
         var fname=response.getBasicProfile().getGivenName();
         var lname=response.getBasicProfile().getFamilyName()
@@ -54,7 +58,6 @@ import axios from "axios";
     }
     
     render() {
-        console.log(this.state);
         if(this.state.user.isAuthenticated){
             return(
                 <div>
@@ -86,7 +89,7 @@ import axios from "axios";
                         <GoogleLogin
                             
                             clientId="450582683465-sa51lvh1nc8hcm86unoscffs8gcm8tsi.apps.googleusercontent.com"
-                            buttonText="Login with google"
+                            buttonText="Login with Google"
                             onSuccess={this.responseGoogle}
                             onFailure={this.responseGoogle}
                             cookiePolicy={'single_host_origin'}
