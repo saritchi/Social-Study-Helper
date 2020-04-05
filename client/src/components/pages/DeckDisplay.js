@@ -6,6 +6,7 @@ import './DeckDisplay.css';
 import * as withAlert from "../HOC/ComponentWithAlert";
 import withMenu from '../HOC/ComponentWithMenu';
 import CardDisplay from '../subcomponents/CardDisplay';
+import BackButton from '../subcomponents/BackButton'
 
 
 class DeckDisplay extends Component {
@@ -34,6 +35,10 @@ class DeckDisplay extends Component {
                 this.props.showAlert(withAlert.errorTheme, error.response.data.result);
             }
         }
+    }
+
+    goBack = () => {
+        this.props.history.goBack();
     }
 
     getPageContent = async() => {
@@ -170,6 +175,7 @@ class DeckDisplay extends Component {
         return (
             <div>
                 <div id="courseName">
+                    <BackButton page="Home" goback={this.goBack} />
                     <h1>{coursename}</h1>
                 </div>
                 <div>

@@ -8,6 +8,7 @@ import withMenu from '../HOC/ComponentWithMenu';
 import DifficultButtons from "../subcomponents/DifficultyOptions"
 import ChangeCardButtons from "../subcomponents/ChangeCardButtons"
 import PopOverButtonGroup from "../subcomponents/PopOverViewCards"
+import BackButton from '../subcomponents/BackButton'
 import axios from 'axios';
 
 class ViewCards extends React.Component {
@@ -300,6 +301,9 @@ class ViewCards extends React.Component {
           <div id="progress-bar">
             <Progress theme="primary" value={((this.state.cardIndex + 1)  / this.state.cards.length) * 100} />
             <p>{this.state.cardIndex + 1 + "/" + this.state.cards.length}</p>
+          </div>
+          <div>
+            <BackButton page="Decks" goback={this.goBack} />
           </div>
 
           <PopOverButtonGroup function_today={this.viewToday} 

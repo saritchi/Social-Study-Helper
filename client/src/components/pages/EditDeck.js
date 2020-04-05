@@ -144,15 +144,16 @@ class EditDeck extends React.Component {
     }
 
     isValidInput() {
+        var validInput = true
         const deckname = this.state.deckname;
         
         if (!deckname) {
-          this.props.showAlert(withAlert.errorTheme, "Error. Deckname is required.")
-          return false;
+          this.props.showAlert(withAlert.errorTheme, "Error. Deckname is required")
+          validInput = false;
         }
         else if(deckname.length > 50){
             this.props.showAlert(withAlert.errorTheme, "Error. Deckname can't be longer then 50 characters. Please choose a different name.")
-            return false;
+            validInput = false;
         }
 
         const cardSet = this.state.cards;
@@ -161,30 +162,33 @@ class EditDeck extends React.Component {
             if(cardSet[i].prompt){
                 if(cardSet[i].prompt.length > 2000){
                     this.props.showAlert(withAlert.errorTheme, "Error. Card Prompt and Card Answer can't be longer then 2000 characters.")
-                    return false;
+                    validInput = false;
                 }
             }
             else if(cardSet[i].answer){
                 if(cardSet[i].answer.length > 2000){
                     this.props.showAlert(withAlert.errorTheme, "Error. Card Prompt and Card Answer can't be longer then 2000 characters.")
-                    return false;
+                    validInput = false;
                 }
             }
         }
 
-        return true;
-      }
+        return validInput;
+    }
 
     onInputChange = (event) => {
         const card = this.state.cards;
+        if(this.state.giveWarning === false){
+            this.setState({giveWarning: true})
+        }
         if(event.target.name === "card_prompt") {
             card[event.target.id].prompt = event.target.value;
-            this.setState({cards: card, giveWarning: true});
+            this.setState({cards: card});
         }else if(event.target.name === "card_answer"){
             card[event.target.id].answer = event.target.value;
             this.setState({cards: card, giveWarning: true});
         }else if(event.target.name === "deckname"){
-            this.setState({deckname: event.target.value, giveWarning: true});
+            this.setState({deckname: event.target.value});
         }
     }
 
