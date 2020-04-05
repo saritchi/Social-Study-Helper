@@ -132,6 +132,7 @@ class Messages extends Component {
     }
 
     selectMessageThread = async (index) => {
+        console.log("Getting messages...");
         try {
             const otherUser = this.state.threadUsers[index];
             const messagesResponse = await axios.get('/api/messages', {
@@ -143,6 +144,11 @@ class Messages extends Component {
             const messages = messagesResponse.data.result;
             console.log(messages);
             this.setState({threadMessages: messages});
+
+            if(this.interval) {
+                clearInterval(this.interval);
+            }
+            this.interval = setInterval(() => this.selectMessageThread(index), 30000);
         } catch(error) { 
             console.error(error);
             if(error.response?.status === 401) {
