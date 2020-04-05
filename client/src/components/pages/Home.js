@@ -5,7 +5,7 @@ import './Home.css'
 import axios from 'axios';
 import CardDisplay from '../subcomponents/CardDisplay';
 import TestView from '../subcomponents/TestView';
-import CreateTest from '../subcomponents/CreateTest';
+import TestModal from '../subcomponents/CreateTest';
 import * as withAlert from "../HOC/ComponentWithAlert";
 import withMenu from '../HOC/ComponentWithMenu';
 
@@ -157,6 +157,16 @@ class Home extends Component {
         }
 
         return false;
+    }
+
+    submitTest = (error) => {
+        if(error) {
+            console.log(error);
+            this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+        }
+        else {
+            this.props.showAlert(withAlert.successTheme, "Test Added!");
+        }
     }
 
     /**
@@ -321,6 +331,13 @@ class Home extends Component {
                               courses={this.state.courses}
                               handleDelete={this.removeTest}
                               dateParse={this.dateConverter}/>
+                    <TestModal isHome="true"
+                               courseOptions={this.state.courses}
+                               userEmail={this.props.user.email}
+                               submitCallback={this.submitTest}
+                               options={[]}>
+
+                    </TestModal>
                 </div>
                 <div id="sharedCourses">
                     <Nav>

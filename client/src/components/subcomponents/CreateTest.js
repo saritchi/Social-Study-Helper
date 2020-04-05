@@ -1,8 +1,7 @@
 import React from 'react'
-
-import { Button, Modal, ModalBody, ModalHeader, Form, FormInput } from 'shards-react'
+import { Button, Modal, ModalBody, ModalHeader, Form, FormInput, FormSelect } from 'shards-react'
 import MultiSelect from "react-multi-select-component";
-import Axios from 'axios';
+import axios from 'axios';
 import './CreateTest.css';
 
 
@@ -12,6 +11,8 @@ export default class TestModal extends React.Component {
         this.state = {
             open: false,
             selected: [],
+            courseOptions: [],
+            deckOptions: [],
             options: [],
             testName: '',
             testDate: ""
@@ -70,7 +71,7 @@ export default class TestModal extends React.Component {
             userEmail: userEmail
         };
         try {
-            const response = await Axios.post("api/addTest", json);
+            const response = await axios.post("api/addTest", json);
             console.log(response.status);
             this.setDate();
             this.setState(
@@ -88,15 +89,49 @@ export default class TestModal extends React.Component {
         this.toggle();
     }
 
-    render() {
-        const { open } = this.state;
-        const options = this.props.options.map(function (item) {
-            return {
-                label: item.name,
-                value: item.id
+    changeCourse = async event => {
+        const deckResponse = await axios.get('/api/decks',  {
+            params: {
+                id: event.target.value,
             }
         });
-        var header = "New Test for " + this.props.coursename;
+        this.setState({
+            deckOptions: deckResponse.data.result
+        })
+    }
+
+    getOptions = () => {
+            var options = this.props.deckOptions.map(function (item) {
+                return {
+                    label: item.name,
+                    value: item.id
+                }
+            });
+            this.setState({
+                options: options
+            })
+    }
+
+    render() {
+        const { open } = this.state;
+        // const options = this.props.options.map(function (item) {
+        //     return {
+        //         label: item.name,
+        //         value: item.id
+        //     }
+        // });
+        var header = this.props.isHome? "New Test" : "New Test for " + this.props.coursename;
+        let courseSelect;
+        if(this.props.isHome) {
+            courseSelect = <FormSelect onChange={this.changeCourse}>
+                            {this.props.courseOptions.map(courseInfo =>
+                                <option key={courseInfo.id} value={courseInfo.id}>{courseInfo.name}</option>)}
+                           </FormSelect>
+                           
+        }
+        else {
+            courseSelect = <></>
+        }
 
         return (
             <div>
@@ -105,11 +140,12 @@ export default class TestModal extends React.Component {
                     <ModalHeader>{header}</ModalHeader>
                     <ModalBody>
                         <Form onSubmit={this.onSubmit}>
+                            {courseSelect}
+                            <br/>
                             <FormInput name="testName" value={this.state.testName} onChange={this.onInputChange} placeholder="Test Name" />
                             <br/>
                             <MultiSelect
-                                
-                                options={options}
+                                options={this.state.options}
                                 value={this.state.selected}
                                 onChange={(val) => this.setState({ selected: val })}
                                 overrideStrings={{ 'selectSomeItems': "Select Decks for Test" }} />  
