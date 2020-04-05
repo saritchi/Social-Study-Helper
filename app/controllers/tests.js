@@ -6,6 +6,7 @@ var runTransaction = require('../database/helper');
 var requireLogin = require('../middleware/authentication');
 
 async function addTest(req, res) {
+    console.log("Adding test...");
     var body = req.body;
     var name = body.name;
     var courseId = body.courseId;
@@ -15,9 +16,7 @@ async function addTest(req, res) {
 
     const test = new Test(name, courseId, decklist, testDate, userEmail);
     try {
-        await runTransaction(async () => {
-            const testId = await test.create();
-        })
+        await test.create();
         res.sendStatus(200);
         
     } catch (error) {

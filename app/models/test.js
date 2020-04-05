@@ -21,3 +21,15 @@ class Test {
 }
 
 module.exports = Test;
+/**
+ * Get all tests associated with a user
+ * @param {*} userEmail 
+ * @returns An array of Test objects
+ */
+module.exports.getTestsByUser = async function getTestsByUser(userEmail) {
+    const getTestSQL = `SELECT * FROM Decks WHERE userEmail = ?`;
+    const results = await database.runQuery(getTestSQL, userEmail);
+    return results.map((result) => {
+        return new Test(result.name, result.courseId, result.decklist, result.testDate, result.id);
+    })
+}

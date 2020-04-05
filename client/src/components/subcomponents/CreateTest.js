@@ -14,27 +14,36 @@ export default class TestModal extends React.Component {
             selected: [],
             options: [],
             testName: '',
-            testDate: "2020-01-01T00:00"
+            testDate: ""
         };
 
         this.toggle = this.toggle.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
+        
 
     }
 
     toggle() {
+        this.setDate();
         this.setState({
             open: !this.state.open
+        });
+    }
+
+    setDate = () => {
+        var d = new Date();
+        d = d - (d.getTimezoneOffset() * 60000);
+        d = new Date(d);
+        this.setState({
+            testDate: d.toISOString().substr(0,19)
         });
     }
 
     onInputChange = event => {
         if (event.target.name === "testName") {
             this.setState({ testName: event.target.value });
-            console.log(this.state.testName);
         } else if (event.target.name === "testDate") {
             this.setState({ testDate: event.target.value });
-            console.log(this.state.testDate);
         }
     }
 
@@ -60,16 +69,15 @@ export default class TestModal extends React.Component {
             decklist: decklist,
             userEmail: userEmail
         };
-        console.log(json);
         try {
             const response = await Axios.post("api/addTest", json);
             console.log(response.status);
+            this.setDate();
             this.setState(
                 {
                     selected: [],
                     options: [],
                     testName: '',
-                    testDate: "2020-01-01T00:00"
                 }
             );
             console.log(this.state);
@@ -77,7 +85,6 @@ export default class TestModal extends React.Component {
             console.log(error);
         }
         this.toggle();
-        console.log("Test Submitted");
     }
 
     render() {
