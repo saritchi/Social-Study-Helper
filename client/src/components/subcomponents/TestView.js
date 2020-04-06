@@ -1,5 +1,6 @@
 import React from 'react'
 import { ListGroup, ListGroupItem, Container, Row, Col, Button } from 'shards-react'
+import { TiDelete } from 'react-icons/ti';
 import './TestView.css'
 
 export default class TestList extends React.Component {
@@ -22,7 +23,7 @@ export default class TestList extends React.Component {
                                     </ListGroupItem>
                                 </Col>
                                 <Col xs="auto">
-                                    <Button className="testDelete" theme="light" squared onClick={() => this.props.handleDelete(testInfo.id)}>Delete</Button>
+                                    <TiDelete  onClick={() => this.props.handleDelete(testInfo.id)}/>
                                 </Col>
                             </Row>
                         </Container>
