@@ -208,7 +208,7 @@ class DeckDisplay extends Component {
                              editCallback={this.editDeckView} />
                              
                 <Button id="newDeck" onClick={this.addDeck} theme="info" size="lg"><GoPlus size={30}/></Button>
-                <div id = "newTest">
+                {/* <div id = "newTest">
 
                 <TestModal coursename={this.state.coursename} 
                             courseId={this.props.location.state.id} 
@@ -217,7 +217,7 @@ class DeckDisplay extends Component {
                             submitCallback={this.submitTest}
                             isHome={false}>
                 </TestModal>
-                </div>
+                </div> */}
             </div>
         )
     }

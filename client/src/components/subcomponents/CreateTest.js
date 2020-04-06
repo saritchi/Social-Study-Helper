@@ -150,7 +150,7 @@ export default class TestModal extends React.Component {
 
         return (
             <div>
-                <Button onClick={this.toggle}>Add New Test</Button>
+                <Button onClick={this.toggle} theme="info">Add New Test</Button>
                 <Modal size="lg" open={open} toggle={this.toggle}>
                     <ModalHeader>{header}</ModalHeader>
                     <ModalBody>

@@ -23,18 +23,12 @@
     margin-bottom: 3%;
 }
 
-#link{
-    font-size: x-large;
-    color:greenyellow;
- }
-
  #back-login {
     margin-bottom: 3%;
  }
+
  .role {
-    text-align:left;
-    float: left;
-    margin-top: 3%;
+    margin:3%;
     font-size:large;
  }
  

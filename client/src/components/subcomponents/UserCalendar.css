@@ -21,11 +21,10 @@
 }
 
 
-.modal-body>p,h6{
+.modal-body>p .calender-text{
     padding-left: 2%;
     float: left;
     text-align: justify;
-    width: 100%;
 }
 
 #eventTitle{
@@ -60,4 +59,17 @@ label{
 
 .react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box ul.react-datepicker__time-list li.react-datepicker__time-list-item--selected{
     background-color: #007bff;
+}
+
+#calender-datepicker{
+    margin-left: 2%;
+    margin-right: 2%;
+}
+
+#datepicker {
+    width: 100%;
+}
+
+#date-end {
+    margin-top: 1em;
 }
