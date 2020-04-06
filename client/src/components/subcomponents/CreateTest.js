@@ -66,7 +66,7 @@ export default class TestModal extends React.Component {
         const testDate = this.state.testDate;
         const userEmail = this.props.userEmail;
         var decklist = {};
-        this.state.selected.map(function (item) {
+        this.state.selected.forEach(function (item) {
             decklist[item.value] = item.label;
         });
 

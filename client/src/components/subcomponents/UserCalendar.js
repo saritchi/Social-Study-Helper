@@ -68,7 +68,7 @@ class UserCalendar extends Component {
    deleteEvent = async e => {
         try {
             
-            let idx_event = this.state.events.findIndex(({id}) => id == this.state.eventId);
+            let idx_event = this.state.events.findIndex(({id}) => id === this.state.eventId);
             this.state.events.splice(idx_event, 1);
 
             this.setState({
@@ -270,7 +270,7 @@ class UserCalendar extends Component {
                                     ></DatePicker>
                                 </Col>
                                 <Col sm="1">
-                                    <h6></h6>
+                                    <br/>
                                     <h6>to</h6>
                                 </Col>
                                 <Col >

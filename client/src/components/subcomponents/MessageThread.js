@@ -1,5 +1,5 @@
 import React from 'react'
-import { ListGroup, ListGroupItem, ListGroupItemHeading } from 'shards-react'
+import { ListGroup, ListGroupItem } from 'shards-react'
 import './MessageThread.css'
 
 const MessageThread = (props) => {
