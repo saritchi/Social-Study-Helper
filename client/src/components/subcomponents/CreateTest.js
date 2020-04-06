@@ -1,5 +1,6 @@
 import React from 'react'
-import { Button, Modal, ModalBody, ModalHeader, Form, FormInput, FormSelect } from 'shards-react'
+import { Button, Modal, ModalBody, ModalHeader, Form, FormInput, FormSelect, DatePicker } from 'shards-react'
+import moment from 'moment';
 import MultiSelect from "react-multi-select-component";
 import axios from 'axios';
 import './CreateTest.css';
@@ -15,7 +16,7 @@ export default class TestModal extends React.Component {
             options: [],
             courseId: 0,
             testName: '',
-            testDate: "",
+            testDate: new Date(),
             invalidInput: false
         };
 
@@ -34,12 +35,6 @@ export default class TestModal extends React.Component {
     }
 
     initValues = async() => {
-        var d = new Date();
-        d = d - (d.getTimezoneOffset() * 60000);
-        d = new Date(d);
-        this.setState({
-            testDate: d.toISOString().substr(0, 19)
-        });
         if (!this.props.isHome) {
             await this.setState({
                 deckOptions: this.props.deckOptions
@@ -65,6 +60,7 @@ export default class TestModal extends React.Component {
         const courseId = this.state.courseId;
         const testDate = this.state.testDate;
         const userEmail = this.props.userEmail;
+        console.log(testDate);
         var decklist = {};
         this.state.selected.map(function (item) {
             decklist[item.value] = item.label;
@@ -82,7 +78,7 @@ export default class TestModal extends React.Component {
         const json = {
             name: testName,
             courseId: courseId,
-            testDate: testDate,
+            testDate: moment(testDate).format('YYYY-MM-DD HH:mm:ss').replace('T', ''),
             decklist: decklist,
             userEmail: userEmail
         };
@@ -166,7 +162,18 @@ export default class TestModal extends React.Component {
                                 onChange={(val) => this.setState({ selected: val })}
                                 overrideStrings={{ 'selectSomeItems': "Select Decks for Test" }} />
                             <br />
-                            <FormInput name="testDate" value={this.state.testDate} onChange={this.onInputChange} type="datetime-local" />
+                            {/* <FormInput name="testDate" value={this.state.testDate} onChange={this.onInputChange} type="datetime-local" /> */}
+                            <DatePicker
+                                name="testDate"
+                                selected={this.state.testDate}
+                                onChange={(val) => this.setState({testDate: val})}
+                                showTimeSelect
+                                timeFormat="HH:mm"
+                                timeIntervals={15}
+                                timeCaption="Time"
+                                dateFormat="MMMM d, yyyy h:mm aa">
+                            </DatePicker>
+                            <br/>
                             <br/>
                             <Button type="submit" theme="success">Submit</Button>
                         </Form>

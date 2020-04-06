@@ -110,7 +110,7 @@ class Database {
             name VARCHAR(255) NOT NULL,
             courseId INT NOT NULL,
             decklist VARCHAR(1020) NOT NULL,
-            testDate DATETIME,
+            testDate DATETIME NULL,
             userEmail VARCHAR(255),
             FOREIGN KEY (courseId)
                 REFERENCES Courses(id)
