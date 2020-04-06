@@ -22,8 +22,11 @@
     padding-bottom: 1%;
 }
 
-.deleteDeck{
-    margin-top: 3%
+#courseNameGroup { 
+    grid-column: 1/4;
+    display: inherit;
+    grid-template-columns: 1fr 0.1fr;
+    column-gap: 1em;
 }
 
 .input-headers {
