@@ -6,6 +6,8 @@ import './DeckDisplay.css';
 import * as withAlert from "../HOC/ComponentWithAlert";
 import withMenu from '../HOC/ComponentWithMenu';
 import CardDisplay from '../subcomponents/CardDisplay';
+import TestModal from '../subcomponents/CreateTest';
+
 import BackButton from '../subcomponents/BackButton'
 
 
@@ -13,7 +15,8 @@ class DeckDisplay extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            decklist: []
+            decklist: [],
+            coursename:  this.props.location?.state?.name || ''
         };
     }
 
@@ -126,6 +129,16 @@ class DeckDisplay extends Component {
         return false;
     }
 
+    submitTest = (error) => {
+        if(error) {
+            console.log(error);
+            this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+        }
+        else {
+            this.props.showAlert(withAlert.successTheme, "Test Added!");
+        }
+    }
+
     deleteCourseCallback = async (deckId) => {
         try {
             await axios.delete('api/deleteDeck', {
@@ -170,13 +183,12 @@ class DeckDisplay extends Component {
     }
 
     render() {
-        const coursename = this.props.location?.state?.name || '';
         const showOptions = !this.props.location?.state?.shared;
         return (
             <div>
                 <div id="courseName">
                     <BackButton page="Home" goback={this.goBack} />
-                    <h1>{coursename}</h1>
+                    <h1>{this.state.coursename}</h1>
                 </div>
                 <div>
                     <Nav>
@@ -190,8 +202,19 @@ class DeckDisplay extends Component {
                              removeSharedContentCallback={this.removeSharedDeckCallback}
                              cardsInfo={this.state.decklist}
                              deleteCallback={this.deleteCourseCallback}
+                             user={this.props.user}
                              editCallback={this.editDeckView} />
                 <Button id="newDeck" onClick={this.addDeck}>Add New Deck</Button>
+                <div id = "newTest">
+
+                <TestModal coursename={this.state.coursename} 
+                            courseId={this.props.location.state.id} 
+                            deckOptions={this.state.decklist} 
+                            userEmail={this.props.user.email}
+                            submitCallback={this.submitTest}
+                            isHome={false}>
+                </TestModal>
+                </div>
             </div>
         )
     }

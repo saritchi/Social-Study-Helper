@@ -3,6 +3,11 @@
     margin-right: 10%;
     float: right;
 }
+#newTest {
+    margin: 2%;
+    margin-left: 10%;
+    float: left;
+}
 
 #decklist {
     margin-left: 10%;

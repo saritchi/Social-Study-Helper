@@ -1,7 +1,7 @@
 var router = require('express').Router();
 var Message = require('../models/message');
 var User = require('../models/user');
-var requireLogin = require('../middleware/authentication');
+var authentication = require('../middleware/authentication');
 
 async function sendMessage(req, res) {
     console.log("Sending message")
@@ -60,8 +60,8 @@ async function getMessagedUsers(req, res) {
     }
 }
 
-router.post('/message', requireLogin, sendMessage)
-router.get('/messages', requireLogin, getMessages)
-router.get('/messagedUsers', requireLogin, getMessagedUsers)
+router.post('/message', authentication.requireLogin, sendMessage)
+router.get('/messages', authentication.requireLogin, getMessages)
+router.get('/messagedUsers', authentication.requireLogin, getMessagedUsers)
 
 module.exports = router;

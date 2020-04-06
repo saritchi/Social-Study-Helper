@@ -67,6 +67,7 @@ class Database {
             password VARCHAR(20) NOT NULL, 
             fname VARCHAR(20) NOT NULL,
             lname VARCHAR(20),
+            role VARCHAR(20),
             PRIMARY KEY(email)
         );`
         const createCoursesTableSQL = `CREATE TABLE IF NOT EXISTS Courses(
@@ -105,6 +106,20 @@ class Database {
             PRIMARY KEY (id)
         );`;
 
+        const createTestTableSQL = `CREATE TABLE IF NOT EXISTS Tests(
+            id INT PRIMARY KEY AUTO_INCREMENT,
+            name VARCHAR(255) NOT NULL,
+            courseId INT NOT NULL,
+            decklist VARCHAR(1020) NOT NULL,
+            testDate DATETIME,
+            userEmail VARCHAR(255),
+            FOREIGN KEY (courseId)
+                REFERENCES Courses(id)
+                ON DELETE CASCADE,
+            FOREIGN KEY (userEmail)
+                REFERENCES user(email)
+                ON DELETE CASCADE
+        );`;
         const createEventTableSQL = `CREATE TABLE IF NOT EXISTS Events (
             id INT NOT NULL AUTO_INCREMENT,
             title VARCHAR(50) NULL,
@@ -155,13 +170,15 @@ class Database {
         const createCardTablePromise = util.promisify(this.db.query).call(this.db, createCardTableSQL); 
         const createSharedCoursesTablePromise = util.promisify(this.db.query).call(this.db, createSharedCoursesTableSQL);
         const createSharedDecksTablePromise = util.promisify(this.db.query).call(this.db, createSharedDecksTableSQL);
-        const createMessagesTablePromise = util.promisify(this.db.query).call(this.db, createMessagesTableSQL);
+        const createTestTablePromise = util.promisify(this.db.query).call(this.db, createTestTableSQL); 
         const createEventTablePromise = util.promisify(this.db.query).call(this.db, createEventTableSQL);
+        const createMessagesTablePromise = util.promisify(this.db.query).call(this.db, createMessagesTableSQL);
 
         return createUserTablePromise
                 .then(createCourseTablePromise)
                 .then(createDeckTablePromise)
                 .then(createCardTablePromise)
+                .then(createTestTablePromise)
                 .then(createEventTablePromise)
                 .then(createSharedCoursesTablePromise)
                 .then(createSharedDecksTablePromise)

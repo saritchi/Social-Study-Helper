@@ -1,5 +1,5 @@
 var router = require('express').Router();
-var requireLogin = require('../middleware/authentication');
+var authentication = require('../middleware/authentication');
 var User = require('../models/user');
 
 async function authenticateUser(req, res) {
@@ -24,10 +24,16 @@ async function registerUser(req, res) {
     let password = post.password;
     let firstname = post.fname;
     let lastname = post.lname;
+    let role = post.role;
 
 
-    const newUser = new User(email, password, firstname, lastname);
-    try { 
+    const newUser = new User(email, password, firstname, lastname, role);
+    try {
+
+        if(! await newUser.isValidRole()){
+            res.status('400').json({result: "An error occured while attempting to register since no valid role selected."});
+            return;
+        }
         const userExists = await newUser.exists();
         if (userExists) {
             res.status('409').json({result: "An error occured while attempting to register since Username already Exists."});
@@ -47,10 +53,14 @@ async function registerGoogleUser(req, res) {
     let password = post.password;
     let firstname = post.fname;
     let lastname = post.lname;
+    let role = post.role;
 
-
-    const newUser = new User(email, password, firstname, lastname);
+    const newUser = new User(email, password, firstname, lastname, role);
     try { 
+        if(! await newUser.isValidRole()){
+            res.status('400').json({result: "An error occured while attempting to register since no valid role selected."});
+            return;
+        }
         const userExists = await newUser.exists();
         if (userExists) {
             delete newUser.password;
@@ -68,6 +78,36 @@ async function registerGoogleUser(req, res) {
     }
 }
 
+async function getAllStudents(req, res) {
+    try { 
+        const students = await User.getAllStudents();
+        res.status(200).json({result: students});
+     } catch (error) {
+         console.log(error);
+        res.status(500).json({result: "An error occured while attempting to get All students. Please try again later."});
+    }
+}
+
+async function getAssignedStudents(req, res) {
+    let post = JSON.parse(req.query.user);
+    let email = post.email;
+    let password = post.password;
+    let firstname = post.fname;
+    let lastname = post.lname;
+    let role = post.role;
+
+    const user = new User(email, password, firstname, lastname, role);
+    try { 
+        if(await user.isStudent()){
+            res.status(400).json({result: "Bad request you are not a teacher"});
+            return;
+        }
+        const students = await user.getAssignedStudents();
+        res.status(200).json({result:  students});
+     } catch (error) {
+        res.status(500).json({result: "An error occured while attempting to get assigned students. Please try again later."});
+    }
+}
 function logoutUser(req, res) {
     console.log("Resetting user session")
     req.session.reset();
@@ -76,7 +116,8 @@ function logoutUser(req, res) {
 
 router.post('/auth', authenticateUser)
 router.post('/register', registerUser)
-router.get('/logout', requireLogin, logoutUser);
+router.get('/logout', authentication.requireLogin, logoutUser)
 router.post('/google/register', registerGoogleUser)
-
+router.get('/allStudents', getAllStudents)
+router.get('/assignedStudents', getAssignedStudents)
 module.exports = router;
