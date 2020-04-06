@@ -2,27 +2,37 @@ import React from 'react'
 import { ListGroup, ListGroupItem, Container, Row, Col, Button } from 'shards-react'
 import './TestView.css'
 
-const TestList = (props) => {
-    return (
-        <div className="tests">
-            <ListGroup>
-                {props.testInfo.map(testInfo =>
-                    <Container className="testRow" key={testInfo.id}>
-                        <Row>
-                            <Col className="testCol" >
-                                <ListGroupItem key={testInfo.id}>
-                                    {props.courses[testInfo.courseId].name}:   {(testInfo.name)} on {props.dateParse(testInfo.testDate)}
-                                </ListGroupItem>
-                            </Col>
-                            <Col xs="auto">
-                                <Button className="testDelete" theme="light" squared onClick={() => props.handleDelete(testInfo.id)}>Delete</Button>
-                            </Col>
-                        </Row>
-                    </Container>
-                )}
-            </ListGroup>
-        </div>
-    )
-};
+export default class TestList extends React.Component {
+    constructor(props) {
+        super(props);
+        this.getIndex = this.getIndex.bind(this);
+    }
 
-export default TestList
+
+    render() {
+        return (
+            <div className="tests">
+                <ListGroup>
+                    {this.props.testInfo.map(testInfo =>
+                        <Container className="testRow" key={testInfo.id}>
+                            <Row>
+                                <Col className="testCol" >
+                                    <ListGroupItem key={testInfo.id}>
+                                        {this.props.courses[this.getIndex(testInfo.courseId)].name}:   {(testInfo.name)} on {this.props.dateParse(testInfo.testDate)}
+                                    </ListGroupItem>
+                                </Col>
+                                <Col xs="auto">
+                                    <Button className="testDelete" theme="light" squared onClick={() => this.props.handleDelete(testInfo.id)}>Delete</Button>
+                                </Col>
+                            </Row>
+                        </Container>
+                    )}
+                </ListGroup>
+            </div>
+        );
+    }
+    getIndex (courseId) {
+        var index = this.props.courses.findIndex(course => course.id === courseId);
+        return index;
+    }
+}
