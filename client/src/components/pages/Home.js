@@ -242,7 +242,7 @@ class Home extends Component {
      * @param {*} courseName name of the course the user is clicking
      */
     courseView = async (courseId, courseName) => {
-        var course = this.state.courses.filter((course) => course.id == courseId)[0];
+        var course = this.state.courses.filter((course) => course.id === courseId)[0];
         //By default the Javascript Date Object uses ISO8601 which is not a valid DateTime in MYSQL
         //This https://stackoverflow.com/questions/20083807/javascript-date-to-sql-date-object offers a solution for converting
         //DateTime objects into a format MySQL accepts.
