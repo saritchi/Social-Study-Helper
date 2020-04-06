@@ -292,12 +292,28 @@ class ViewCards extends React.Component {
             <Card className="flashcard-done">
               <h2>Great Work!</h2>
               <h4>You just studied {this.state.cards.length} card(s)!</h4>
-              <Button onClick={this.restartDeck} block>Study Again!</Button>
-              <Button onClick={this.goBack} block>Finish</Button>
+              <div id="end-deck-buttons">
+                <Button onClick={this.restartDeck} block theme="info">Study Again!</Button>
+                <Button onClick={this.goBack} block theme="success">Finish</Button>
+              </div>
             </Card>
           </div>
         </div>
       );
+    }
+    else if(this.state.cards.length && !this.state.cards[0].prompt && !this.state.cards[0].answer){
+      return(
+        <div>
+          <div className="flash-container">
+            <Card className="flashcard-done">
+              <h3>There are no cards in this deck...</h3>
+              <div id="end-deck-buttons">
+                <Button onClick={this.goBack} block theme="info">Go Back</Button>
+              </div>
+            </Card>
+          </div>
+        </div>
+      )
     }
     else {
       return (
