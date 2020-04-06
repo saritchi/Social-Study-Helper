@@ -60,7 +60,7 @@ class UserCalendar extends Component {
             }
             else {
                 console.error(error);
-                //this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+                this.props.displayError(error.response.data.result);
             }
         }
     }
@@ -88,7 +88,7 @@ class UserCalendar extends Component {
             }
             else {
                 console.error(error);
-                //this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+                this.props.displayError(error.response.data.result);
             }
         }
         
@@ -178,7 +178,7 @@ class UserCalendar extends Component {
 
         try{
             const eventId = await axios.post("/api/addEvent", json);
-            //this.props.showAlert(withAlert.successTheme, "Added Event");
+            this.props.displayEventPrompt("Added Event");
             this.setState(prevState => ({
                 events: [...prevState.events, {id: eventId, title: this.state.title, description: this.state.description, start: moment(this.state.startDate)._d, end: moment(this.state.endDate)._d}]
             }))
@@ -194,7 +194,7 @@ class UserCalendar extends Component {
                 this.props.history.replace("/");
             }else{
                 console.log(error);
-                //this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+                this.props.displayError(error.response.data.result);
             }
         }
 

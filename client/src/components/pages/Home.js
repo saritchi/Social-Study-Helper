@@ -288,6 +288,14 @@ class Home extends Component {
         });
     }
 
+    displayEventAdd = () => {
+        this.props.showAlert(withAlert.successTheme, "Added Event");
+    }
+
+    displayCalendarError = (error) => {
+        this.props.showAlert(withAlert.errorTheme, error);
+    }
+
     editCourseView = (courseId) => {
         this.props.history.push("/editCourse", {courseId});
     }
@@ -316,7 +324,7 @@ class Home extends Component {
                 </div>
                     
                 <div>
-                    <UserCalendar user={this.props.user}></UserCalendar>
+                    <UserCalendar user={this.props.user} displayError={this.displayCalendarError} displayEventPrompt={this.displayEventAdd} ></UserCalendar>
                 </div>
                 <div>
                     <Nav>
