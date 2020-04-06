@@ -71,7 +71,6 @@ class UserCalendar extends Component {
             let idx_event = this.state.events.findIndex(({id}) => id == this.state.eventId);
             this.state.events.splice(idx_event, 1);
 
-            //close modal
             this.setState({
                 eventOpen: !this.state.eventOpen
             })
@@ -120,7 +119,6 @@ class UserCalendar extends Component {
 
     //Add Event
     startDateChange(date){
-        //prevents setting a start date ahead of the end date
         if(date > this.state.endDate){
             this.setState({
                 endDate: date,
@@ -135,7 +133,6 @@ class UserCalendar extends Component {
 
     //Add Event
     endDateChange(date){
-        //prevents setting an end date before a start date
         if(date < this.state.startDate){
             this.setState({
                 endDate: date,
