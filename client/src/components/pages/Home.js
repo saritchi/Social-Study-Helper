@@ -342,9 +342,9 @@ class Home extends Component {
                               courses={this.state.courses}
                               handleDelete={this.removeTest}
                               dateParse={this.dateConverter}/>
-                    <TestModal isHome="true"
+                    <TestModal isHome={true}
                                courseOptions={this.state.courses}
-                            //    courseId={this.state.courses[0].id}
+                               courseId={0}
                                userEmail={this.props.user.email}
                                submitCallback={this.submitTest}
                                options={[]}>

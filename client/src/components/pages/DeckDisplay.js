@@ -210,8 +210,8 @@ class DeckDisplay extends Component {
                             courseId={this.props.location.state.id} 
                             deckOptions={this.state.decklist} 
                             userEmail={this.props.user.email}
-                            submitCallback={this.submitTest}>
-
+                            submitCallback={this.submitTest}
+                            isHome={false}>
                 </TestModal>
                 </div>
             </div>
