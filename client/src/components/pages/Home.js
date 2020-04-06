@@ -4,6 +4,8 @@ import { Button, Nav, NavItem, NavLink, CardBody, CardHeader } from 'shards-reac
 import './Home.css'
 import axios from 'axios';
 import CardDisplay from '../subcomponents/CardDisplay';
+import TestView from '../subcomponents/TestView';
+import TestModal from '../subcomponents/CreateTest';
 import * as withAlert from "../HOC/ComponentWithAlert";
 import withMenu from '../HOC/ComponentWithMenu';
 import UserCalendar from '../subcomponents/UserCalendar'
@@ -14,6 +16,7 @@ class Home extends Component {
         super(props);
         this.state = {
             courses: [],
+            tests: [],
             sharedCourses: [],
             sharedDecks: [],
         };
@@ -68,7 +71,14 @@ class Home extends Component {
             }
         })
 
+        const testsResponse = await axios.get('api/getTests', {
+            params: {
+                userEmail: this.props.user.email
+            }
+        })
+
         var courses = coursesResponse.data.result;
+        var tests = testsResponse.data.result;
         const sharedCourses = sharedCoursesResponse.data.result;
         const sharedDecks = sharedDecksResponse.data.result
         const sharedContent = sharedContentResponse.data.result;
@@ -82,7 +92,7 @@ class Home extends Component {
             });
             course['sharedWith'] = users;
         })
-        return {courses: courses, sharedCourses: sharedCourses, sharedDecks: sharedDecks}
+        return {courses: courses, sharedCourses: sharedCourses, sharedDecks: sharedDecks, tests: tests}
     }
 
     /**
@@ -150,6 +160,58 @@ class Home extends Component {
         return false;
     }
 
+    submitTest = async (error) => {
+        if(error) {
+            console.log(error);
+            this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+        }
+        else {
+            this.props.showAlert(withAlert.successTheme, "Test Added!");
+            try {
+                const testsResponse = await axios.get('api/getTests', {
+                   params: {
+                       userEmail: this.props.user.email
+                   }
+               })
+               this.setState({tests: testsResponse.data.result});
+            } catch(error) {
+               console.error(error);
+               this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+            }
+        }
+    }
+
+    /**
+     * Deletes test from database
+     * @param {*} testId id of course to delete
+     */
+
+     removeTest = async (testId) => {
+         try {
+             await axios.delete('api/deleteTest', {
+                 params: {
+                     id: testId
+                 }
+             })
+             const testsResponse = await axios.get('api/getTests', {
+                params: {
+                    userEmail: this.props.user.email
+                }
+            })
+            this.setState({tests: testsResponse.data.result});
+         } catch(error) {
+            console.error(error);
+            this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+         }
+     }
+
+     dateConverter = (testDate) => {
+         var datetime = new Date(testDate);
+         var date = datetime.toDateString();
+         var time = datetime.toTimeString().substr(0, 5);
+         var output = date + " @ " + time;
+         return output;
+     }
     deleteCourseCallback = async (courseId) => {
         try {
             await axios.delete('api/deleteCourse', {
@@ -274,6 +336,25 @@ class Home extends Component {
                              cardsInfo={this.state.courses}
                 />
                 <Button id="newCourse" onClick={this.addCourse}>Add New Course</Button>
+                <div id="testsView">
+                    <Nav>
+                        <NavItem id="upcomingTests">
+                            <h3>Upcoming Tests: </h3>
+                        </NavItem>
+                    </Nav>
+                    <TestView testInfo={this.state.tests} 
+                              courses={this.state.courses}
+                              handleDelete={this.removeTest}
+                              dateParse={this.dateConverter}/>
+                    <TestModal isHome={true}
+                               courseOptions={this.state.courses}
+                               courseId={0}
+                               userEmail={this.props.user.email}
+                               submitCallback={this.submitTest}
+                               options={[]}>
+
+                    </TestModal>
+                </div>
                 <div id="sharedCourses">
                     <Nav>
                         <NavItem id="recentSharedCourses">
