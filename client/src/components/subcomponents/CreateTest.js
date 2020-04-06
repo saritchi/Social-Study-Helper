@@ -127,7 +127,7 @@ export default class TestModal extends React.Component {
         var header = this.props.isHome? "New Test" : "New Test for " + this.props.coursename;
         let courseSelect;
         if(this.props.isHome) {
-            courseSelect = <FormSelect onChange={this.changeCourse}>
+            courseSelect = <FormSelect id="course-select"onChange={this.changeCourse}>
                             <option key={0} value={0}>Please select a course</option>
                             {this.props.courseOptions.map(courseInfo =>
                                 <option key={courseInfo.id} value={courseInfo.id}>{courseInfo.name}</option>)}
@@ -144,9 +144,10 @@ export default class TestModal extends React.Component {
                     <ModalHeader>{header}</ModalHeader>
                     <ModalBody>
                         <Form onSubmit={this.onSubmit}>
+                            <FormInput name="testName" value={this.state.testName} onChange={this.onInputChange} placeholder="Test Name" />
+                            <br/>
                             {courseSelect}
                             <br/>
-                            <FormInput name="testName" value={this.state.testName} onChange={this.onInputChange} placeholder="Test Name" />
                             <br/>
                             <MultiSelect
                                 options={this.state.options}
@@ -156,7 +157,7 @@ export default class TestModal extends React.Component {
                             <br/>                          
                             <FormInput name="testDate" value={this.state.testDate} onChange={this.onInputChange} type="datetime-local" />
                             <br/>
-                            <Button type="submit">Submit</Button>
+                            <Button type="submit" theme="success">Submit</Button>
                         </Form>
                     </ModalBody>
                 </Modal>
