@@ -134,7 +134,7 @@ class Database {
 
         );`;
         
-        const createSharedCoursesSQL = `CREATE TABLE  IF NOT EXISTS SharedCourses(
+        const createSharedCoursesTableSQL = `CREATE TABLE  IF NOT EXISTS SharedCourses(
             id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
             fromUser VARCHAR(2000) NOT NULL,
             toUser VARCHAR(2000) NOT NULL,
@@ -143,7 +143,7 @@ class Database {
                 REFERENCES Courses(id)  
         );`;
 
-        const createSharedDecksSQL = `CREATE TABLE  IF NOT EXISTS SharedDecks(
+        const createSharedDecksTableSQL = `CREATE TABLE  IF NOT EXISTS SharedDecks(
             id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
             fromUser VARCHAR(2000) NOT NULL,
             toUser VARCHAR(2000) NOT NULL,
@@ -152,16 +152,27 @@ class Database {
                 REFERENCES Decks(id)   
         );`;
 
+        const createMessagesTableSQL = `CREATE TABLE  IF NOT EXISTS Messages(
+            id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+            fromUser VARCHAR(100) NOT NULL,
+            toUser VARCHAR(100) NOT NULL,
+            message TEXT NOT NULL,
+            timeSent DATETIME NOT NULL,
+            FOREIGN KEY (fromUser)
+                REFERENCES user(email),
+            FOREIGN KEY (toUser)
+                REFERENCES user(email)
+        );`
 
         const createUserTablePromise = util.promisify(this.db.query).call(this.db, createUsersTableSQL); 
         const createCourseTablePromise = util.promisify(this.db.query).call(this.db, createCoursesTableSQL); 
         const createDeckTablePromise = util.promisify(this.db.query).call(this.db, createDeckTableSQL); 
         const createCardTablePromise = util.promisify(this.db.query).call(this.db, createCardTableSQL); 
-
+        const createSharedCoursesTablePromise = util.promisify(this.db.query).call(this.db, createSharedCoursesTableSQL);
+        const createSharedDecksTablePromise = util.promisify(this.db.query).call(this.db, createSharedDecksTableSQL);
         const createTestTablePromise = util.promisify(this.db.query).call(this.db, createTestTableSQL); 
         const createEventTablePromise = util.promisify(this.db.query).call(this.db, createEventTableSQL);
-        const createSharedCoursesTablePromise = util.promisify(this.db.query).call(this.db, createSharedCoursesSQL);
-        const createSharedDecksTablePromise = util.promisify(this.db.query).call(this.db, createSharedDecksSQL);
+        const createMessagesTablePromise = util.promisify(this.db.query).call(this.db, createMessagesTableSQL);
 
         return createUserTablePromise
                 .then(createCourseTablePromise)
@@ -171,6 +182,7 @@ class Database {
                 .then(createEventTablePromise)
                 .then(createSharedCoursesTablePromise)
                 .then(createSharedDecksTablePromise)
+                .then(createMessagesTablePromise)
                 .catch(() => {
                     console.log("Unable to initialize database tables! Aborting server start up with error: " + error.message);
                     throw error;

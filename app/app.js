@@ -30,6 +30,8 @@ app.use('/api', require('./controllers/assigned-courses'))
 app.use('/api', require('./controllers/tests'))
 app.use('/api', require('./controllers/events'))
 app.use('/api', require('./controllers/shared-contents'))
+app.use('/api', require('./controllers/messages'))
+
 
 
 //TODO: error handle pages/404 pages

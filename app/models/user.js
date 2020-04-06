@@ -44,28 +44,13 @@ class User {
         
     }
 
-    async isTeacher(){
-        const query = `SELECT * FROM user WHERE email = ? AND role = 'teacher'`;
-        const result = await database.runQuery(query, [this.email]);
-        if(result.length == 0){ 
-            return false;
-        }
-        return true;
-    }
-    async isStudent(){
-        const query = `SELECT * FROM user WHERE email = ? AND role = 'student'`;
-        const result = await database.runQuery(query, [this.email]);
-        if(result.length == 0){ 
-            return false;
-        }
-        return true;
-    }
     async isValidRole(){
         if(this.role === 'teacher' || this.role === 'student'){ 
             return true;
         }
         return false;
     }
+    
     async getAssignedStudents(){
         const query = 'SELECT student FROM assignStudent WHERE teacher = ?';
         let result = await database.runQuery(query, [this.email]);
@@ -86,8 +71,9 @@ module.exports = User;
  */
 module.exports.getUserFromEmail = async function getUserFromEmail(email) {
     const query = 'SELECT * FROM user WHERE email = ?';
-    const result = await database.runQuery(query, [email]);
-    return new User(result[0].email, result[0].password, result[0].fname, result[0].lname, result[0].role);
+    const results = await database.runQuery(query, email);
+    const result = results[0];
+    return new User(result.email, result.password, result.fname, result.lname);
 }
 
 module.exports.getAllStudents = async function getAllStudents(){

@@ -39,7 +39,7 @@ class ShareModal extends Component {
 
     renderUserAccessList = () => {
         return this.state.sharedWithUsers.map((user) => {
-            return <ListGroupItem key={user.sharedId}>{user.email}<MdClear onClick={() => this.removeUser(user.sharedId)} className="removeUser"/></ListGroupItem>
+            return <ListGroupItem key={user.sharedId} className='sharedUser' >{user.email}<MdClear onClick={() => this.removeUser(user.sharedId)} className="removeUser"/></ListGroupItem>
         })
     }
 
