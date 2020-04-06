@@ -74,12 +74,10 @@ class AssignedStudents extends Component {
         return (
             <>
                 <h1 id='assignedCourseTitle'>Assigned Content</h1>
-                <p id="info">
-                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac eleifend leo. Proin ultrices, purus et feugiat ullamcorper, 
-                 felis turpis feugiat neque, ac rhoncus mauris eros eu augue. Duis dictum mi in sem venenatis, ac aliquet ante varius. 
-                 Aenean vel ligula sapien. Pellentesque lacinia efficitur vulputate. Aliquam eleifend, quam sed malesuada efficitur, dui dui venenatis nisi, eget congue quam risus quis ex. 
-                 Donec gravida orci a ex mattis, eu lobortis libero tincidunt. 
-                </p>
+                
+                <div id="info">
+                    <p>Here you can see the courses you've shared with your students and which students are in your which courses you're managing.</p>
+                </div>
                 <ListGroup id='assignedCoursesGroup'>
                     <ListGroupItemHeading>Assigned Courses</ListGroupItemHeading>
                     {this.renderAssignedCourses()}

@@ -4,6 +4,7 @@ import { Button } from 'shards-react'
 import './AllCourses.css'
 import axios from "axios"
 import CardDisplay from '../subcomponents/CardDisplay';
+import BackButton from '../subcomponents/BackButton'
 import * as withAlert from "../HOC/ComponentWithAlert";
 import withMenu from '../HOC/ComponentWithMenu';
 
@@ -31,6 +32,10 @@ class AllCourses extends Component {
                 this.props.showAlert(withAlert.errorTheme, error.response.data.result);
             }
         }
+    }
+
+    goBack = () => {
+        this.props.history.goBack();
     }
 
     getPageContent = async() => {
@@ -177,6 +182,9 @@ class AllCourses extends Component {
         return (
             <div>
                 <div id="user">
+                <BackButton page="Home" 
+                                goback={this.goBack} 
+                    />
                     <h1>All Courses</h1>
                 </div>
                 <CardDisplay changePage={this.courseView} options={true} 
