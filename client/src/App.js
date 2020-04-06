@@ -5,7 +5,6 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './App.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "shards-ui/dist/css/shards.min.css"
-
 import Register from './components/pages/Register';
 import LoginPage from './components/pages/LoginPage';
 import Home from './components/pages/Home';

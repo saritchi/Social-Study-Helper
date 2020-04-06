@@ -119,6 +119,19 @@ class Database {
                 REFERENCES user(email)
                 ON DELETE CASCADE
         );`;
+        const createEventTableSQL = `CREATE TABLE IF NOT EXISTS Events (
+            id INT NOT NULL AUTO_INCREMENT,
+            title VARCHAR(50) NULL,
+            description VARCHAR(500) NULL,
+            startDate DATETIME NULL,
+            endDate DATETIME NULL,
+            userEmail VARCHAR(255),
+            PRIMARY KEY (id),
+            FOREIGN KEY (userEmail)
+                REFERENCES user(email)
+                ON DELETE CASCADE
+
+        );`;
         
         const createSharedCoursesSQL = `CREATE TABLE  IF NOT EXISTS SharedCourses(
             id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
@@ -143,6 +156,7 @@ class Database {
         const createDeckTablePromise = util.promisify(this.db.query).call(this.db, createDeckTableSQL); 
         const createCardTablePromise = util.promisify(this.db.query).call(this.db, createCardTableSQL); 
         const createTestTablePromise = util.promisify(this.db.query).call(this.db, createTestTableSQL); 
+        const createEventTablePromise = util.promisify(this.db.query).call(this.db, createEventTableSQL);
         const createSharedCoursesTablePromise = util.promisify(this.db.query).call(this.db, createSharedCoursesSQL);
         const createSharedDecksTablePromise = util.promisify(this.db.query).call(this.db, createSharedDecksSQL);
 
@@ -151,6 +165,7 @@ class Database {
                 .then(createDeckTablePromise)
                 .then(createCardTablePromise)
                 .then(createTestTablePromise)
+                .then(createEventTablePromise)
                 .then(createSharedCoursesTablePromise)
                 .then(createSharedDecksTablePromise)
                 .catch(() => {

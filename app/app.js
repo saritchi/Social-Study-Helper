@@ -27,6 +27,7 @@ app.use('/api', require('./controllers/decks'))
 app.use('/api', require('./controllers/courses'))
 app.use('/api', require('./controllers/users'))
 app.use('/api', require('./controllers/tests'))
+app.use('/api', require('./controllers/events'))
 app.use('/api', require('./controllers/shared-contents'))
 
 
