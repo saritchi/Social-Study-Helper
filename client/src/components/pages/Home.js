@@ -337,6 +337,7 @@ class Home extends Component {
                              cardsInfo={this.state.courses}
                 />
                 <Button id="newCourse-home" onClick={this.addCourse} theme="info">Create New Course</Button>
+                
                 <div id="testsView">
                     <Nav>
                         <NavItem id="upcomingTests">
@@ -356,6 +357,7 @@ class Home extends Component {
 
                     </TestModal>
                 </div>
+                
                 <div id="sharedCourses">
                     <hr></hr>
                     <Nav>
