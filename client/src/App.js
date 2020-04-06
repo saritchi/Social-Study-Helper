@@ -14,6 +14,7 @@ import CreateDeck from './components/pages/CreateDeck';
 import DeckDisplay from './components/pages/DeckDisplay';
 import ViewCards from './components/pages/ViewCards';
 import EditDeck from './components/pages/EditDeck';
+import EditCourse from './components/pages/EditCourse';
 import AllSharedContent from './components/pages/AllSharedContent'
 import User from './User';
 
@@ -119,16 +120,15 @@ class App extends Component {
                   </React.Fragment>
                 )}
               />
-
-              {/* <Route
-                path="/addEvent"
+              <Route
+                path="/editCourse"
                 exact
                 render={props => (
                   <React.Fragment>
-                    <AddEvent></AddEvent>
+                    <EditCourse  user={this.state.user}/>
                   </React.Fragment>
                 )}
-              /> */}
+              />
           </Switch>
       </div>
       </Router>

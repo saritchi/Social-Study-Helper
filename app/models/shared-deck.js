@@ -49,9 +49,23 @@ module.exports.getForUser = async function getForUser(email, limit) {
  * @returns An array of SharedDeck objects
  */
 module.exports.getDecksForUser = async function getDecksForUser(email) {
-    var getSharedCoursesSQL = `SELECT * FROM SharedDecks WHERE fromUser = ?`;
+    var getSharedDecksSQL = `SELECT * FROM SharedDecks WHERE fromUser = ?`;
 
-    const results = await database.runQuery(getSharedCoursesSQL, email);
+    const results = await database.runQuery(getSharedDecksSQL, email);
+    return results.map((result) => {
+        return new SharedDeck(result.toUser, result.fromUser, result.deckId, result.id);
+    })
+}
+
+/**
+ * Get all shared deck entries associated with a given deckId
+ * @param {*} deckId a decks id
+ * @returns An array of SharedDeck objects
+ */
+module.exports.getAllForDeckId = async function getAllForDeckId(deckId) {
+    var getSharedDecksSQL = `SELECT * FROM SharedDecks WHERE deckId = ?`;
+
+    const results = await database.runQuery(getSharedDecksSQL, deckId);
     return results.map((result) => {
         return new SharedDeck(result.toUser, result.fromUser, result.deckId, result.id);
     })
@@ -62,8 +76,8 @@ module.exports.getDecksForUser = async function getDecksForUser(email) {
  * @param {*} id of the SharedDeck to delete
  */
 module.exports.deleteWithId = async function deleteWithId(id) {
-    var getSharedCoursesSQL = `DELETE FROM SharedDecks WHERE id = ?`;
-    return database.runQuery(getSharedCoursesSQL, id);
+    var deleteSharedDecks = `DELETE FROM SharedDecks WHERE id = ?`;
+    return database.runQuery(deleteSharedDecks, id);
 }
 
 /**
@@ -73,8 +87,8 @@ module.exports.deleteWithId = async function deleteWithId(id) {
  * @param {*} id of the deckId
  */
 module.exports.deleteWithEmailsAndId = async function deleteWithEmailsAndId(fromUser, toUser, id) {
-    var getSharedCoursesSQL = `DELETE FROM SharedDecks WHERE fromUser = ? AND toUser = ? AND deckId = ?`;
-    return database.runQuery(getSharedCoursesSQL, [fromUser, toUser, id]);
+    var deleteSharedDecks = `DELETE FROM SharedDecks WHERE fromUser = ? AND toUser = ? AND deckId = ?`;
+    return database.runQuery(deleteSharedDecks, [fromUser, toUser, id]);
 }
 
 

@@ -1,18 +1,34 @@
-#form{
-    width:30%;
-    margin-left: 700px;
+#register-form{
+    width:90%;
+    margin:auto;
+    padding-top: 2%;
 }
-#nav{
-    background-color: black;
-    padding: 10px;
-    margin-bottom: 40px;
-    text-align: right;
+
+#register-card {
+    width: 35%;
+    margin: auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%)
 }
+
+#signup-text {
+    float: left;
+    font-size:20px;
+}
+
+#button-signup {
+    margin-top: 3%;
+    margin-bottom: 3%;
+}
+
 #link{
     font-size: x-large;
     color:greenyellow
  }
- #header{
-     margin-bottom: 25px;
+
+ #back-login {
+    margin-bottom: 3%;
  }
  

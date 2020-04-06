@@ -52,6 +52,21 @@ module.exports.getCoursesForUser = async function getCoursesForUser(email) {
 }
 
 /**
+ * Get all shared courses entries associated with a given courseId
+ * @param {*} courseId a course id
+ * @returns An array of SharedCourse objects
+ */
+module.exports.getAllForCourseId = async function getAllForCourseId(courseId) {
+    var getSharedCoursesSQL = `SELECT * FROM SharedCourses WHERE courseId = ?`;
+
+    const results = await database.runQuery(getSharedCoursesSQL, courseId);
+    return results.map((result) => {
+        return new SharedCourse(result.toUser, result.fromUser, result.deckId, result.id);
+    })
+}
+
+
+/**
  * Get a given SharedCourse Object from an id
  * @param {*} id the id of a SharedCourse entry
  * @returns A SharedCourse Object

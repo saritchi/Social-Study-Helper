@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import {Link,Redirect} from 'react-router-dom';
-import { Form,FormGroup,FormInput} from "shards-react";
+import { Button, Card, Form,FormGroup,FormInput, CardHeader} from "shards-react";
 import './Register.css'
 import * as withAlert from "../HOC/ComponentWithAlert";
 import axios from "axios";
@@ -51,33 +51,38 @@ import axios from "axios";
         return (
             <div>
                 <br></br>
-                <h1 id="header">Registering User</h1>
-                <nav id="nav">
-                    <Link id='link' to ="/" >Go Home Page</Link>
-                </nav>
-                <Form id='form' onSubmit = {this.onSubmit}>
-                    <FormGroup>
-                    <label>email: </label>
-                    <FormInput type="email" name="email" onChange = {this.onChange}></FormInput>
-                    </FormGroup>
+                <h1 id="header">Social Study Helper</h1>
+                <Card id="register-card">
+                    <CardHeader>Sign Up</CardHeader>
+                    <Form id='register-form' onSubmit = {this.onSubmit}>
+                        <FormGroup>
+                        <label id="signup-text">Email </label>
+                        <FormInput type="email" name="email" onChange = {this.onChange}></FormInput>
+                        </FormGroup>
 
-                    <FormGroup>
-                    <label>Password: </label>
-                    <FormInput type="password" name="password" onChange = {this.onChange}></FormInput>
-                    </FormGroup>
+                        <FormGroup>
+                        <label id="signup-text">Password </label>
+                        <FormInput type="password" name="password" onChange = {this.onChange}></FormInput>
+                        </FormGroup>
 
-                    <FormGroup>
-                    <label>First Name: </label>
-                    <FormInput type="text" name="fname" onChange = {this.onChange}></FormInput>
-                    </FormGroup>
+                        <FormGroup>
+                        <label id="signup-text">First Name </label>
+                        <FormInput type="text" name="fname" onChange = {this.onChange}></FormInput>
+                        </FormGroup>
 
-                    <FormGroup>
-                    <label>Last name: </label>
-                    <FormInput type="text" name="lname" onChange = {this.onChange}></FormInput>
-                    </FormGroup>
+                        <FormGroup>
+                        <label id="signup-text">Last Name </label>
+                        <FormInput type="text" name="lname" onChange = {this.onChange}></FormInput>
+                        </FormGroup>
 
-                    <FormInput type="submit" value="SignUp"></FormInput>
-                </Form> 
+                        <Button type="submit" id="button-signup" theme="info" size="lg" block>Sign Up</Button>
+                    </Form> 
+                    <div id="back-login">
+                        <Link id='link' to ="/" >Back To Login</Link>
+                    </div>
+                    
+                </Card>
+
             </div>
         )
     }

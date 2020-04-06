@@ -1,11 +1,10 @@
 import React, {Component} from "react";
 import { withRouter } from "react-router-dom"
 import { Button, Form, FormInput, FormGroup } from "shards-react";
-import './AddCourse.css';
+import './EditCourse.css';
 import axios from "axios";
 import * as withAlert from "../HOC/ComponentWithAlert";
 import withMenu from '../HOC/ComponentWithMenu';
-import BackButton from '../subcomponents/BackButton'
 import { TiDelete } from 'react-icons/ti';
 
 class AddCourse extends Component {
@@ -22,49 +21,50 @@ class AddCourse extends Component {
       //This stores data that the user types into the input fields
       //TODO: need to update when UI can select an midterm/final/test day.
       deckInfo: {},
-      giveWarning: false,
-      modal_open: false
     }
   }
   
-  componentDidMount() {
+  async componentDidMount() {
     if(!this.props.user.isAuthenticated) {
       this.props.history.replace("/");
       return;
     }
 
-    this.addDeckInput();
-  }
-
-  goBack = () => {
-    this.props.history.goBack();
-}
-
-  toggle_modal = () => {
-    this.setState({
-      modal_open: !this.state.modal_open
-    });
-}
-
-  addDeckInput = () => {
-    const currentKey = "deck" + Object.keys(this.state.deckInfo).length;
-    const newDeckInfo = this.state.deckInfo;
-    newDeckInfo[currentKey] = '';
-    this.setState({deckInfo: newDeckInfo});
+    try {
+        const courseResponse = await axios.get('/api/course', {
+            params: {
+                id: this.props.location.state.courseId,
+            }
+        })
+        const course = courseResponse.data.result;
+        const deckInfo = {}
+        course.decknames.forEach((deckname, index) => {
+            const key = "deck" + index;
+            deckInfo[key] = deckname;
+        })
+        this.setState({coursename: course.name, deckInfo: deckInfo})
+    } catch (error) {
+        if(error.response.status === 401) {
+            this.props.history.replace("/");
+        } else {
+            console.error(error);
+            this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+        }
+    }
   }
 
   renderAllDeckInputs = () => {
-    const deckInfoArray = Object.keys(this.state.deckInfo);
-    return deckInfoArray.map((deckInputKey, index) => {
+    const deckInfoKeys = Object.keys(this.state.deckInfo);
+    return deckInfoKeys.map((deckInputKey) => {
       return (
         <FormGroup key={deckInputKey}>
           <label htmlFor={deckInputKey}>{this.deckInputTitle}</label>
           <FormInput id={deckInputKey} 
-                     name="deckInfo" 
+                     name="deckInfo"
+                     value={this.state.deckInfo[deckInputKey]} 
                      onChange={this.onInputChange}
                      placeholder={this.deckInputToolTip}
           />
-          {index >= 1 && <TiDelete className="deleteDeck" id={index} onClick={(evt) => this.deleteChapter(evt, deckInputKey)} size={"2em"}/>}
         </FormGroup>
       )
     });
@@ -84,21 +84,16 @@ class AddCourse extends Component {
     const decknames = Object.keys(deckInfo).map((key) => deckInfo[key]);
 
     const json = {
+      id: this.props.location.state.courseId,
       coursename: coursename,
       decks: decknames,
       email: this.props.user.email,
-      lastAccess: new Date().toISOString().slice(0, 19).replace('T', ' '),
     }
 
     console.log(json);
     try {
-      await axios.post("/api/addCourse", json);
-      this.setState(
-        {
-          coursename: '', 
-          deckInfo: {}, 
-        }, this.addDeckInput);
-        this.props.showAlert(withAlert.successTheme, "Added Course");
+      await axios.post("/api/editCourse", json);
+        this.props.showAlert(withAlert.successTheme, "Updated Course");
     } catch (error) {
       if(error.response.status === 401) {
         this.props.history.replace("/");
@@ -141,9 +136,6 @@ class AddCourse extends Component {
   }
 
   onInputChange = e => {
-    if(this.state.giveWarning === false){
-      this.setState({giveWarning: true})
-    }
     if(e.target.name === "deckInfo") {
       const deckInfo = this.state.deckInfo;
       deckInfo[e.target.id] = e.target.value;
@@ -153,25 +145,9 @@ class AddCourse extends Component {
     }
   }
 
-  deleteChapter = (e, id) => {
-    console.log(e.target.id);
-    const updatedDeckNames = this.state.deckInfo;
-    //delete property for that chapter name
-    delete updatedDeckNames[id];
-    this.setState({[e.target.name]: updatedDeckNames});
-  }
-
   render() {
     return (
       <div>
-        <div>
-          <BackButton page="Home" 
-                      goback={this.goBack} 
-                      toggle={this.toggle_modal} 
-                      open={this.state.modal_open} 
-                      warning={this.state.giveWarning}
-          />
-        </div>
         <Form id="courseInfo">
         <h1>Course Information</h1>
           <FormGroup id="courseNameGroup">
@@ -181,8 +157,7 @@ class AddCourse extends Component {
 
           <h2>Decks:</h2>
           {this.renderAllDeckInputs()}
-          <Button id="addDeck" onClick={this.addDeckInput}>Add Deck</Button>
-          <Button id="addCourse" onClick={this.onSubmit}>Add Course</Button>
+          <Button id="editCourse" onClick={this.onSubmit}>Edit Course</Button>
         </Form>
       </div>
     );
