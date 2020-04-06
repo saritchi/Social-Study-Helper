@@ -3,6 +3,8 @@ import { Button, ButtonGroup, Popover, PopoverHeader, PopoverBody } from "shards
 
 
 const PopOverViewCards = (props) => {
+    console.log(props.user_role)
+    if(props.user_role != "teacher"){
         return(
             <div>
             <ButtonGroup >
@@ -24,6 +26,12 @@ const PopOverViewCards = (props) => {
             </ButtonGroup>
         </div>
         )
+    }else{
+        return(
+            <div></div>
+        )
+    }
+
 }
 
 export default PopOverViewCards;

@@ -7,10 +7,11 @@ var User = require('../models/user');
 module.exports = async function(req, res, next) {
     const session = req.session;
     if(session && session.user) {
-        const user = new User(session.user.email);
+        const user = new User(session.user.email, '', session.user.fname, session.user.lname, session.user.role)
         try {
             const userExists = await user.exists();
             if(userExists) {
+                
                 req.user = user;
                 req.session.user = user;
                 res.locals.user = user;
