@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import { withRouter } from "react-router-dom"
-import { Button, Form, FormInput, FormGroup } from "shards-react";
+import { Button, Col, Container, Form, FormInput, FormGroup, Row} from "shards-react";
 import './AddCourse.css';
 import axios from "axios";
 import * as withAlert from "../HOC/ComponentWithAlert";
@@ -58,13 +58,16 @@ class AddCourse extends Component {
     return deckInfoArray.map((deckInputKey, index) => {
       return (
         <FormGroup key={deckInputKey}>
-          <label htmlFor={deckInputKey}>{this.deckInputTitle}</label>
-          <FormInput id={deckInputKey} 
-                     name="deckInfo" 
-                     onChange={this.onInputChange}
-                     placeholder={this.deckInputToolTip}
-          />
-          {index >= 1 && <TiDelete className="deleteDeck" id={index} onClick={(evt) => this.deleteChapter(evt, deckInputKey)} size={"2em"}/>}
+          <Container id="deck-inputs">
+            <Row>
+              <Col>
+                <label className="input-headers" htmlFor={deckInputKey}>{this.deckInputTitle}</label>
+                <FormInput id={deckInputKey} onChange={this.onInputChange} placeholder={this.deckInputToolTip} name="deckInfo"/>
+              </Col>
+              {index >= 0 && <TiDelete className="deleteDeck" id={index} onClick={(evt) => this.deleteChapter(evt, deckInputKey)} size={"2em"}/>}
+              
+            </Row>
+          </Container>
         </FormGroup>
       )
     });
@@ -99,6 +102,7 @@ class AddCourse extends Component {
           deckInfo: {}, 
         }, this.addDeckInput);
         this.props.showAlert(withAlert.successTheme, "Added Course");
+        this.props.history.goBack();
     } catch (error) {
       if(error.response.status === 401) {
         this.props.history.replace("/");
@@ -172,17 +176,18 @@ class AddCourse extends Component {
                       warning={this.state.giveWarning}
           />
         </div>
+        <Container id="newCourseHeading"><h4>Course Information: </h4></Container>
         <Form id="courseInfo">
-        <h1>Course Information</h1>
-          <FormGroup id="courseNameGroup">
-            <label htmlFor={this.courseNameId}>Course Name:</label>
-            <FormInput id={this.courseNameId} name="coursename" onChange={this.onInputChange} value={this.state.coursename} placeholder="CMPT 470" />
-          </FormGroup>
+          <Container>
+            <label className="input-headers" htmlFor={this.courseNameId}><h5>Course Name</h5></label>
+            <FormInput id={this.courseNameId} name="coursename" onChange={this.onInputChange} value={this.state.coursename} placeholder="CMPT 470"/>
+          </Container>    
 
-          <h2>Decks:</h2>
+          {/* <h5>Decks:</h5> */}
           {this.renderAllDeckInputs()}
-          <Button id="addDeck" onClick={this.addDeckInput}>Add Deck</Button>
-          <Button id="addCourse" onClick={this.onSubmit}>Add Course</Button>
+          <Button id="addDeck" onClick={this.addDeckInput} theme="info" block size="lg">Add Deck</Button>
+          <br></br>
+          <Button id="addCourse" onClick={this.onSubmit} theme="success" size="lg">Done</Button>
         </Form>
       </div>
     );

@@ -1,7 +1,6 @@
 var router = require('express').Router();
 var Event = require('../models/event');
-var runTransaction = require('../database/helper');
-var requireLogin = require('../middleware/authentication');
+var authentication = require('../middleware/authentication');
 var moment = require('moment');
 
 
@@ -51,8 +50,8 @@ async function deleteEvent(req, res) {
     }
 }
 
-router.get('/deleteEvent', requireLogin, deleteEvent);
-router.get('/events', requireLogin, getEvents);
-router.post('/addEvent', requireLogin, addEvent);
+router.get('/deleteEvent', authentication.requireLogin, deleteEvent);
+router.get('/events', authentication.requireLogin, getEvents);
+router.post('/addEvent', authentication.requireLogin, addEvent);
 
 module.exports = router;

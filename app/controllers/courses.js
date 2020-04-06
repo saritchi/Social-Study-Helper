@@ -5,7 +5,7 @@ var Card = require('../models/card');
 var SharedCourse = require('../models/shared-course');
 var SharedDeck = require('../models/shared-deck');
 var runTransaction = require('../database/helper');
-var requireLogin = require('../middleware/authentication');
+var authentication = require('../middleware/authentication');
 
 async function getCourses(req, res) {
     console.log("Getting courses....");
@@ -186,13 +186,13 @@ async function updateCourse(req, res) {
 }
 
 
-router.get('/courses', requireLogin, getCourses)
-router.get('/course', requireLogin, getCourse);
+router.get('/courses', authentication.requireLogin, getCourses)
+router.get('/course', authentication.requireLogin, getCourse);
 
-router.post('/addCourse', requireLogin, addCourse)
-router.post('/editCourse', requireLogin, editCourse)
-router.post('/updateCourse', requireLogin, updateCourse)
+router.post('/addCourse', authentication.requireLogin, addCourse)
+router.post('/editCourse', authentication.requireLogin, editCourse)
+router.post('/updateCourse', authentication.requireLogin, updateCourse)
 
-router.delete('/deleteCourse', requireLogin, deleteCourse);
+router.delete('/deleteCourse', authentication.requireLogin, deleteCourse);
 
 module.exports = router;

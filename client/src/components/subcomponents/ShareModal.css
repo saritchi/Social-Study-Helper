@@ -12,13 +12,13 @@
     float: right;
 }
 
-.list-group {
+.access {
     text-align: left;
     max-height: 9em;
     overflow-y: auto;
 }
 
-.list-group-item {
+.sharedUser{
     border-style: none;
 }
 
