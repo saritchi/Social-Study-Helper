@@ -46,7 +46,7 @@ class CreateDeck extends React.Component {
     deleteCard = async (event, index) => {
         event.preventDefault();
         const newCards = this.state.cards
-        delete newCards[index]
+        newCards.splice(index, 1);
         this.setState({cards: newCards})
     }
 

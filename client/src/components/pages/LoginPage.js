@@ -14,7 +14,12 @@ import axios from "axios";
         this.onSubmit = this.onSubmit.bind(this); 
     }
     
-    responseGoogle = async response =>{
+    responseGoogle = async response => {
+        console.log(response);
+        if (response.error) {
+            this.props.showAlert(withAlert.errorTheme, "Unable to login with Google. Please try again later.");
+            return;
+        }
 
         var fname=response.getBasicProfile().getGivenName();
         var lname=response.getBasicProfile().getFamilyName()
@@ -24,8 +29,7 @@ import axios from "axios";
         var isAuthenticated = true;
         const user = new User(email,password,fname,lname,role,isAuthenticated);
         try {
-            //TODO: get a user object back from the server
-            const response = await axios.post('/api/google/register', user);
+            await axios.post('/api/google/register', user);
             this.props.setUser(user);
             this.setState({user: user});
         } catch (error) {
@@ -89,7 +93,7 @@ import axios from "axios";
                         <GoogleLogin
                             
                             clientId="450582683465-sa51lvh1nc8hcm86unoscffs8gcm8tsi.apps.googleusercontent.com"
-                            buttonText="Login with google"
+                            buttonText="Login with Google"
                             onSuccess={this.responseGoogle}
                             onFailure={this.responseGoogle}
                             cookiePolicy={'single_host_origin'}

@@ -5,5 +5,8 @@ runtime: nodejs
 
 env: flexible
 
+env_variables:
+  NODE_ENV: production
+
 beta_settings:
   cloud_sql_instances: <INSTANCE_CONNECTION_NAME>

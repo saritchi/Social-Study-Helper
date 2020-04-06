@@ -35,6 +35,7 @@ class EditDeck extends React.Component {
             });
   
             const deckName = response.data.result_names;
+            console.log(deckName)
             const cardSet = response.data.result_cards;
             console.log(deckName);
             cardSet.forEach((card) => {
@@ -70,7 +71,7 @@ class EditDeck extends React.Component {
     deleteCard = async (event, index) => {
         event.preventDefault();
         const newCards = this.state.cards
-        delete newCards[index]
+        newCards.splice(index, 1);
         this.setState({cards: newCards})
     }
 

@@ -50,6 +50,10 @@ export const withAlert = (WrappedComponent) => {
             clearInterval(this.interval);
             this.interval = null;
         }
+
+        componentWillUnmount() {
+            this.clearInterval();
+        }
         
     }
 

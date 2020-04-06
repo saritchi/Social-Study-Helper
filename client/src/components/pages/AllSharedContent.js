@@ -1,9 +1,11 @@
 import React, {Component} from 'react'
 import { withRouter } from "react-router-dom"
-import './AllCourses.css'
+import './AllSharedContent.css'
 import axios from "axios"
 import CardDisplay from '../subcomponents/CardDisplay';
 import * as withAlert from "../HOC/ComponentWithAlert";
+import withMenu from "../HOC/ComponentWithMenu";
+
 
 class AllCourses extends Component {
     constructor(props) {
@@ -21,7 +23,7 @@ class AllCourses extends Component {
         }
 
         try {
-            const {sharedCourses, sharedDecks} = this.getPageContent();
+            const {sharedCourses, sharedDecks} = await this.getPageContent();
             this.setState({sharedCourses: sharedCourses, sharedDecks: sharedDecks})
         } catch(error) {
             if(error.response.status === 401) {
@@ -92,4 +94,4 @@ class AllCourses extends Component {
         }
 };
 
-export default withRouter(withAlert.withAlert(AllCourses));
+export default withMenu(withRouter(withAlert.withAlert(AllCourses)));

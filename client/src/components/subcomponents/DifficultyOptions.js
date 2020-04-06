@@ -4,7 +4,7 @@ import './DifficultyOptions.css';
 
 
 const DifficultyOptions = (props) => {
-    if(props.user_role != "teacher"){
+    if(props.user_role !== "teacher"){
         return (
             <div className="difficulty-button-container">
                 <h5>How difficult is this card?</h5>
