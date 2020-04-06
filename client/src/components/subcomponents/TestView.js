@@ -1,5 +1,6 @@
 import React from 'react'
-import { ListGroup, ListGroupItem, Container, Row, Col, Button } from 'shards-react'
+import { Card, ListGroup, ListGroupItem, Container, Row, Col, Button } from 'shards-react'
+import { TiDelete } from 'react-icons/ti';
 import './TestView.css'
 
 export default class TestList extends React.Component {
@@ -11,20 +12,22 @@ export default class TestList extends React.Component {
 
     render() {
         return (
-            <div className="tests">
-                <ListGroup>
+            <div className="tests-list">
+                <ListGroup id="list-container">
                     {this.props.testInfo.map(testInfo =>
-                        <Container className="testRow" key={testInfo.id}>
-                            <Row>
-                                <Col className="testCol" >
-                                    <ListGroupItem key={testInfo.id}>
-                                        {this.props.courses[this.getIndex(testInfo.courseId)].name}:   {(testInfo.name)} on {this.props.dateParse(testInfo.testDate)}
-                                    </ListGroupItem>
-                                </Col>
-                                <Col xs="auto">
-                                    <Button className="testDelete" theme="light" squared onClick={() => this.props.handleDelete(testInfo.id)}>Delete</Button>
-                                </Col>
-                            </Row>
+                        <Container className="test-list-container" key={testInfo.id}>
+                            <Card>
+                                <Row className="testRow">
+                                    <Col className="testCol" >
+                                        {/* <ListGroupItem key={testInfo.id}> */}
+                                            <h6 className="test-list-text"><b>{this.props.courses[this.getIndex(testInfo.courseId)].name}</b>:   {(testInfo.name)} on {this.props.dateParse(testInfo.testDate)}</h6>
+                                        {/* </ListGroupItem> */}
+                                    </Col>
+                                    <Col xs="auto">
+                                        <TiDelete  size={30} onClick={() => this.props.handleDelete(testInfo.id)}/>
+                                    </Col>
+                                </Row>
+                            </Card>
                         </Container>
                     )}
                 </ListGroup>

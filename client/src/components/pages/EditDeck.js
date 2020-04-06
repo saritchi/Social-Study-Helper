@@ -160,16 +160,18 @@ class EditDeck extends React.Component {
         const cardSet = this.state.cards;
 
         for(var i = 0; i < cardSet.length; i++){
-            if(cardSet[i].prompt){
-                if(cardSet[i].prompt.length > 2000){
-                    this.props.showAlert(withAlert.errorTheme, "Error. Card Prompt and Card Answer can't be longer then 2000 characters.")
-                    validInput = false;
+            if (typeof cardSet[i] !== 'undefined'){
+                if(cardSet[i].prompt){
+                    if(cardSet[i].prompt.length > 2000){
+                        this.props.showAlert(withAlert.errorTheme, "Error. Card Prompt and Card Answer can't be longer then 2000 characters.")
+                        validInput = false;
+                    }
                 }
-            }
-            else if(cardSet[i].answer){
-                if(cardSet[i].answer.length > 2000){
-                    this.props.showAlert(withAlert.errorTheme, "Error. Card Prompt and Card Answer can't be longer then 2000 characters.")
-                    validInput = false;
+                else if(cardSet[i].answer){
+                    if(cardSet[i].answer.length > 2000){
+                        this.props.showAlert(withAlert.errorTheme, "Error. Card Prompt and Card Answer can't be longer then 2000 characters.")
+                        validInput = false;
+                    }
                 }
             }
         }

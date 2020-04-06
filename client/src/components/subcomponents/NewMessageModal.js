@@ -56,7 +56,7 @@ class NewMessageModal extends Component {
                             <FormTextarea id="message" name="message" onChange={this.onChange}/>
                         </FormGroup>
                     </ModalBody>
-                    <Button id='sendInitialMessage' onClick={() => this.sendMessage(this.state.recipientEmail, this.state.message)}>Send Message</Button>
+                    <Button id='sendInitialMessage' onClick={() => this.sendMessage(this.state.recipientEmail, this.state.message)} theme="info">Send Message</Button>
                 </Modal>
             </div>
         );

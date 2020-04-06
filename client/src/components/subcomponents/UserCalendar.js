@@ -234,11 +234,11 @@ class UserCalendar extends Component {
                         </Row>
                     </ModalHeader>
                     <ModalBody>
-                            <h6>Start:</h6>
+                            <h6 className="calender-text">Start:</h6>
                             <p>{this.state.eventStart}</p>
-                            <h6>End:</h6>
+                            <h6 className="calender-text">End:</h6>
                             <p>{this.state.eventEnd}</p>
-                            <h6>Description:</h6>
+                            <h6 className="calender-text">Description:</h6>
                             <p>{this.state.eventDesc}</p>
                     </ModalBody>
                 </Modal>
@@ -254,10 +254,11 @@ class UserCalendar extends Component {
                         <label htmlFor={this.descpId}>Description:</label>
                         <FormTextarea invalid={this.state.descriptionInvalid} id={this.descpId} name="EventDescription" value={this.state.description} onChange={this.onInputChange} placeholder="Description"></FormTextarea>
                         <br></br>
-                        <Container>
-                            <Row>
-                                <Col>
+                        <Container id="datepicker">
+                            <div id="date-start">
+                                <h6>Start</h6>
                                     <DatePicker
+                                        id="calender-datepicker"
                                         htmlFor={this.startDateId}
                                         name="startDate"
                                         selected={this.state.startDate}
@@ -268,13 +269,11 @@ class UserCalendar extends Component {
                                         timeCaption="Time"
                                         dateFormat="MMMM d, yyyy h:mm aa"
                                     ></DatePicker>
-                                </Col>
-                                <Col sm="1">
-                                    <br/>
-                                    <h6>to</h6>
-                                </Col>
-                                <Col >
-                                    <DatePicker
+                            </div>
+                            <div id="date-end">
+                                <h6>End</h6>
+                                <DatePicker
+                                        id="calender-datepicker"
                                         htmlFor={this.endDateId}
                                         name="endDate"
                                         selected={this.state.endDate}
@@ -285,17 +284,17 @@ class UserCalendar extends Component {
                                         timeCaption="Time"
                                         dateFormat="MMMM d, yyyy h:mm aa"
                                     ></DatePicker>
-                                </Col>
-                            </Row>
+                            </div>
+
 
                         </Container>
                             <br></br>
                             <br></br>
-                            <Button id="addEvent" onClick={this.onSubmit}>Add Event</Button>
+                            <Button id="addEvent" onClick={this.onSubmit} theme="info">Add Event</Button>
                     </Form>
                     </div>
                 </Modal>
-                <Button id="newEvent" onClick={this.onNewEvent} >New Event</Button>
+                <Button id="newEvent" onClick={this.onNewEvent} theme="info">New Event</Button>
             </div>
         );
     }

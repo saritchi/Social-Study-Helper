@@ -85,9 +85,10 @@ import axios from "axios";
 
                         <label id="role-picker">User Type </label>
                         <br/>
-                        <FormCheckbox className="role"  checked={isTeacher} onChange={e => this.userType(e, "teacher")}>Teacher</FormCheckbox>
-                        <br/>
-                        <FormCheckbox className="role" checked={isStudent} onChange={e => this.userType(e, "student")}>Student</FormCheckbox>
+                        <div id="role-checkbox">
+                            <FormCheckbox className="role" checked={isTeacher} onChange={e => this.userType(e, "teacher")}>Teacher</FormCheckbox>
+                            <FormCheckbox className="role" checked={isStudent} onChange={e => this.userType(e, "student")}>Student</FormCheckbox>
+                        </div>
                         <Button type="submit" id="button-signup" theme="info" size="lg" block>Sign Up</Button>
                     </Form> 
                     <div id="back-login">

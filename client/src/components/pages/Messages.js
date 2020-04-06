@@ -177,7 +177,7 @@ class Messages extends Component {
                         <Col sm="12" md="4" lg="3" className="col1">
                             <ListGroup small={false} flush={true} id="messageThreads">
                                 <ListGroupItemHeading>Message Threads:</ListGroupItemHeading>
-                                <Button id="newMessageThread" onClick={this.toggleNewMessageModal}>New Chat</Button>
+                                <Button id="newMessageThread" onClick={this.toggleNewMessageModal} theme="info">New Chat</Button>
                                 <div id="threads">
                                     {this.renderMessageThreads()}
                                 </div>
@@ -189,7 +189,7 @@ class Messages extends Component {
                             <MessageThread messages={this.state.threadMessages} user={this.props.user} />
                             <Form id="newMessageForm">
                                 <FormTextarea value={this.state.newMessage} onChange={this.onMessageChange}/>
-                                <Button id="sendMessage" disabled={sendDisabled} onClick={this.sendNewChatMessage}>Send</Button>
+                                <Button id="sendMessage" disabled={sendDisabled} onClick={this.sendNewChatMessage} theme="info">Send</Button>
                             </Form>
                             
                         </Col> 
