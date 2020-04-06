@@ -1,12 +1,13 @@
-.testRow {
-    background-color:#e9ecef; 
-    display:inline;
-    border: black;
-    border-width: thick;
+.test-list-container {
+
     margin: 1em;
 
 }
 
+.testRow {
+    padding-top: 1%;
+    margin-top: 2%;
+}
 
 .testDelete {
     margin-top: 0.125em;
@@ -15,11 +16,19 @@
 
 .list-group {
     max-height: 20em;
+    align-items: center;
 }
 
 .list-group-item {
-    background-color: #e9ecef;
     padding: 0.5rem, 1.0rem;
     font: bold;
+}
+
+#tests-list{
+    margin: auto;
+}
+
+#test-list-delete{
+    margin-right:5em;
 }
 
