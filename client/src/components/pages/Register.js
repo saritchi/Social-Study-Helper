@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import {Link,Redirect} from 'react-router-dom';
-import { Button, Card, Form,FormGroup,FormInput, CardHeader} from "shards-react";
+import { Button, Card, Form,FormGroup,FormInput, CardHeader, FormCheckbox} from "shards-react";
 import './Register.css'
 import * as withAlert from "../HOC/ComponentWithAlert";
 import axios from "axios";
+
  class Register extends Component {
     constructor(props){
         super(props);
@@ -12,15 +13,22 @@ import axios from "axios";
             password:'',
             fname:'',
             lname:'',
+            role:'',
             registered: false
         };
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.userType = this.userType.bind(this);
     }
 
     onChange(e) {
         this.setState({ [e.target.name]: e.target.value });
       }
+
+    userType(e,role){
+        this.setState({role:role});
+
+    }
     
    async onSubmit(e) {
         e.preventDefault();
@@ -29,6 +37,7 @@ import axios from "axios";
             password: this.state.password,
             fname: this.state.fname,
             lname: this.state.lname,
+            role: this.state.role
         };
         try {
             await axios.post('/api/register', user);
@@ -38,6 +47,8 @@ import axios from "axios";
         }
     }
     render() {
+        const isTeacher = this.state.role === 'teacher' ? true : false;
+        const isStudent = this.state.role === 'student' ? true : false;
         if (this.state.registered) {
             return(
                 <div>
@@ -72,6 +83,11 @@ import axios from "axios";
                         <FormInput type="text" name="lname" onChange = {this.onChange}></FormInput>
                         </FormGroup>
 
+                        <label id="role-picker">User Type </label>
+                        <br/>
+                        <FormCheckbox className="role"  checked={isTeacher} onChange={e => this.userType(e, "teacher")}>Teacher</FormCheckbox>
+                        <br/>
+                        <FormCheckbox className="role" checked={isStudent} onChange={e => this.userType(e, "student")}>Student</FormCheckbox>
                         <Button type="submit" id="button-signup" theme="info" size="lg" block>Sign Up</Button>
                     </Form> 
                     <div id="back-login">

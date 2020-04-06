@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import { withRouter } from "react-router-dom"
 import { Button } from 'shards-react'
+import { GoPlus } from 'react-icons/go';
 import './AllCourses.css'
 import axios from "axios"
 import CardDisplay from '../subcomponents/CardDisplay';
@@ -181,20 +182,23 @@ class AllCourses extends Component {
     render() {
         return (
             <div>
-                <div id="user">
+                <div id="allCourses-header">
                 <BackButton page="Home" 
                                 goback={this.goBack} 
                     />
                     <h1>All Courses</h1>
                 </div>
+
                 <CardDisplay changePage={this.courseView} options={true} 
                              sharedContentCallback={this.shareCourseCallback}
                              removeSharedContentCallback={this.removeSharedCourseCallback}
                              deleteCallback={this.deleteCourseCallback}
                              editCallback={this.editCourseView}
+                             user={this.props.user}
                              cardsInfo={this.state.courses}
                 />
-                <Button id="newCourse" onClick={this.addCourse}>Add New Course</Button>
+                                <Button id="newCourse" onClick={this.addCourse} size="lg" theme="info"><GoPlus size={30}/></Button>
+                
             </div>
             
             )

@@ -9,7 +9,7 @@ var runTransaction = require('../database/helper');
 var UserDoesNotExistError = require('../errors/UserDoesNotExistError')
 var DeckDoesNotExistError = require('../errors/DeckDoesNotExistError')
 
-var requireLogin = require('../middleware/authentication');
+var authentication = require('../middleware/authentication');
 
 async function shareCourse(req, res) {
     console.log("Sharing course")
@@ -214,17 +214,17 @@ async function deleteSharedDeck(req, res) {
     }
 }
 
-router.post('/shareCourse', requireLogin, shareCourse)
-router.post('/shareDeck', requireLogin, shareDeck)
+router.post('/shareCourse', authentication.requireLogin, shareCourse)
+router.post('/shareDeck', authentication.requireLogin, shareDeck)
 
-router.get('/sharedCourses', requireLogin, getSharedCourses)
-router.get('/sharedDecks', requireLogin, getSharedDecks)
+router.get('/sharedCourses', authentication.requireLogin, getSharedCourses)
+router.get('/sharedDecks', authentication.requireLogin, getSharedDecks)
 
-router.get('/sharedCourseContent', requireLogin, getUsersForSharedCourse)
-router.get('/sharedDeckContent', requireLogin, getUsersForSharedDeck)
+router.get('/sharedCourseContent', authentication.requireLogin, getUsersForSharedCourse)
+router.get('/sharedDeckContent', authentication.requireLogin, getUsersForSharedDeck)
 
-router.delete('/sharedCourse', requireLogin, deleteSharedCourse) 
-router.delete('/sharedDeck', requireLogin, deleteSharedDeck)
+router.delete('/sharedCourse', authentication.requireLogin, deleteSharedCourse) 
+router.delete('/sharedDeck', authentication.requireLogin, deleteSharedDeck)
 
 
 module.exports = router;
