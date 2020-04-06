@@ -49,6 +49,7 @@ async function addDeck(req, res) {
 async function getDeckData(req, res) {
     console.log("Fetching Cards...");
     const deckId = req.query.deck
+    console.log(deckId)
 
     try {
         const cards = await Card.getAllFromDeckId(deckId);
