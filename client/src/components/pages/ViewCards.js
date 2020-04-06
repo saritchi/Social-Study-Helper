@@ -22,7 +22,7 @@ class ViewCards extends React.Component {
       today_cards: [],
       cards: [],
       difficulty_selected: [],
-
+      user_role: props.user.role
     };
   }
 
@@ -49,6 +49,10 @@ class ViewCards extends React.Component {
 
       if(!this.state.cards.length){
         this.setState({cards: this.state.all_cards, view_all: true});
+      }
+
+      if(this.props.user.role === "teacher"){
+        this.setState({view_all: true});
       }
 
       document.addEventListener("keydown", this.handleKeyDown);
@@ -306,7 +310,8 @@ class ViewCards extends React.Component {
                               function_all={this.viewAll} 
                               function_toggle={this.toggle_popover} 
                               open={this.state.open_toggle}
-                              view={this.state.view_all}/>
+                              view={this.state.view_all}
+                              user_role={this.state.user_role}/>
           
           <div className="flash-container">
             <ReactCardFlip isFlipped={this.state.isFlipped} flipDirection="vertical">
@@ -318,10 +323,10 @@ class ViewCards extends React.Component {
               </Card>
             </ReactCardFlip>
 
-            <ChangeCardButtons passedFunction={this.updateCard} index={this.state.cardIndex} view={this.state.view_all}/>
+            <ChangeCardButtons passedFunction={this.updateCard} index={this.state.cardIndex} view={this.state.view_all} user_role={this.state.user_role}/>
           </div>
           <div>
-            <DifficultButtons passedFunction={this.markDifficulty} view={this.state.view_all}/>
+            <DifficultButtons passedFunction={this.markDifficulty} view={this.state.view_all} user_role={this.state.user_role}/>
           </div>
 
         </div>
