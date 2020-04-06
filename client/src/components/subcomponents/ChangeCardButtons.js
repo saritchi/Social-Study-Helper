@@ -5,7 +5,20 @@ import './ChangeCardButtons.css';
 
 
 const ChangeCardButtons = (props) => {
-    if(!props.view){
+
+    if(props.user_role === "teacher"){
+        return (
+          <div className="switch-card-button">
+            <Button id="button-click" theme="secondary" disabled={props.index === 0} onClick={() => { props.passedFunction("BACK") }}>
+              <TiMediaPlayReverse size={30} />
+            </Button>
+            <Button id="button-click" theme="secondary" onClick={() => { props.passedFunction("NEXT") }}>
+              <TiMediaPlay size={30} />
+            </Button>
+          </div>
+      );
+    }
+    else if(!props.view){
         return(null);
     }
     else{

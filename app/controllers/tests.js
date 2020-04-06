@@ -2,7 +2,7 @@
 var Test = require('../models/test');
 var router = require('express').Router();
 
-var requireLogin = require('../middleware/authentication');
+var authentication = require('../middleware/authentication');
 
 async function addTest(req, res) {
     console.log("Adding test...");
@@ -48,9 +48,9 @@ async function deleteTest(req, res) {
     }
 }
 
-router.post('/addTest', requireLogin, addTest)
-router.get('/getTests', requireLogin, getTests)
-router.delete('/deleteTest', requireLogin, deleteTest)
+router.post('/addTest', authentication.requireLogin, addTest)
+router.get('/getTests', authentication.requireLogin, getTests)
+router.delete('/deleteTest', authentication.requireLogin, deleteTest)
 
 
 module.exports = router;

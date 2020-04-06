@@ -20,8 +20,9 @@ import axios from "axios";
         var lname=response.getBasicProfile().getFamilyName()
         var email =response.getBasicProfile().getEmail();
         var password='';
+        var role='student';
         var isAuthenticated = true;
-        const user = new User(email,password,fname,lname,isAuthenticated);
+        const user = new User(email,password,fname,lname,role,isAuthenticated);
         try {
             //TODO: get a user object back from the server
             const response = await axios.post('/api/google/register', user);
@@ -43,6 +44,7 @@ import axios from "axios";
         try {
             const response = await axios.post('/api/auth', this.state.user);
             let currentUser = new User().copy(response.data);
+            console.log(currentUser);
             this.props.setUser(currentUser);
             this.setState({user: currentUser}, () => {
                 if (!this.state.user.isAuthenticated) {
@@ -50,12 +52,12 @@ import axios from "axios";
                  }
             })
         } catch(error) {
+            console.log(error);
             this.props.showAlert(withAlert.errorTheme, error.response.data.result);
         }
     }
     
     render() {
-        console.log(this.state);
         if(this.state.user.isAuthenticated){
             return(
                 <div>

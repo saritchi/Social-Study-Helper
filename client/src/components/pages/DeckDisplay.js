@@ -202,6 +202,7 @@ class DeckDisplay extends Component {
                              removeSharedContentCallback={this.removeSharedDeckCallback}
                              cardsInfo={this.state.decklist}
                              deleteCallback={this.deleteCourseCallback}
+                             user={this.props.user}
                              editCallback={this.editDeckView} />
                 <Button id="newDeck" onClick={this.addDeck}>Add New Deck</Button>
                 <div id = "newTest">

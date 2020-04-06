@@ -4,7 +4,8 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import './App.css';
 import "bootstrap/dist/css/bootstrap.min.css";
-import "shards-ui/dist/css/shards.min.css"
+import "shards-ui/dist/css/shards.min.css";
+
 import Register from './components/pages/Register';
 import LoginPage from './components/pages/LoginPage';
 import Home from './components/pages/Home';
@@ -15,10 +16,12 @@ import DeckDisplay from './components/pages/DeckDisplay';
 import ViewCards from './components/pages/ViewCards';
 import EditDeck from './components/pages/EditDeck';
 import EditCourse from './components/pages/EditCourse';
-import AllSharedContent from './components/pages/AllSharedContent'
-import User from './User';
+import AllSharedContent from './components/pages/AllSharedContent';
+import AssignedStudents from './components/pages/AssignedStudents';
 
+import User from './User';
 const userStorageKey = 'user';
+
 class App extends Component {
   //read the user object out of the browser sotrage to allow the page to be refreshed and not lose the user information
   state = {
@@ -89,7 +92,7 @@ class App extends Component {
                 exact               
                 render={props => (
                       <React.Fragment>
-                        <AllSharedContent user={this.state.user} />
+                        <AllSharedContent user={this.state.user} setUser={this.setUser} />
                       </React.Fragment>
                     )} 
               />
@@ -112,11 +115,20 @@ class App extends Component {
                 )}
               />
               <Route
+                path="/assignedStudents"
+                exact
+                render={props => (
+                  <React.Fragment>
+                    <AssignedStudents user={this.state.user} setUser={this.setUser}/>
+                  </React.Fragment>
+                )}
+             />
+             <Route
                 path="/editDeck"
                 exact
                 render={props => (
                   <React.Fragment>
-                    <EditDeck  user={this.state.user}/>
+                    <EditDeck user={this.state.user} setUser={this.setUser}/>
                   </React.Fragment>
                 )}
               />
@@ -125,7 +137,7 @@ class App extends Component {
                 exact
                 render={props => (
                   <React.Fragment>
-                    <EditCourse  user={this.state.user}/>
+                    <EditCourse  user={this.state.user} setUser={this.setUser}/>
                   </React.Fragment>
                 )}
               />

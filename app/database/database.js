@@ -67,6 +67,7 @@ class Database {
             password VARCHAR(20) NOT NULL, 
             fname VARCHAR(20) NOT NULL,
             lname VARCHAR(20),
+            role VARCHAR(20),
             PRIMARY KEY(email)
         );`
         const createCoursesTableSQL = `CREATE TABLE IF NOT EXISTS Courses(
@@ -151,10 +152,12 @@ class Database {
                 REFERENCES Decks(id)   
         );`;
 
+
         const createUserTablePromise = util.promisify(this.db.query).call(this.db, createUsersTableSQL); 
         const createCourseTablePromise = util.promisify(this.db.query).call(this.db, createCoursesTableSQL); 
         const createDeckTablePromise = util.promisify(this.db.query).call(this.db, createDeckTableSQL); 
         const createCardTablePromise = util.promisify(this.db.query).call(this.db, createCardTableSQL); 
+
         const createTestTablePromise = util.promisify(this.db.query).call(this.db, createTestTableSQL); 
         const createEventTablePromise = util.promisify(this.db.query).call(this.db, createEventTableSQL);
         const createSharedCoursesTablePromise = util.promisify(this.db.query).call(this.db, createSharedCoursesSQL);

@@ -13,7 +13,7 @@
     transform: translate(-50%, -50%)
 }
 
-#signup-text {
+#signup-text, #role-picker {
     float: left;
     font-size:20px;
 }
@@ -25,10 +25,16 @@
 
 #link{
     font-size: x-large;
-    color:greenyellow
+    color:greenyellow;
  }
 
  #back-login {
     margin-bottom: 3%;
+ }
+ .role {
+    text-align:left;
+    float: left;
+    margin-top: 3%;
+    font-size:large;
  }
  
