@@ -28,12 +28,8 @@ async function addEvent(req, res) {
 
     const event = new Event(email, title, description, startDate, endDate);
     try{
-        await runTransaction(async () => {
-            const eventId = await event.create();
-            console.log(eventId);
-        })
-        
-        res.status(200);
+        const eventId = await event.create();   
+        res.status(200).json({result: eventId});
         
     } catch (error) {
         console.log(error);
@@ -47,8 +43,8 @@ async function deleteEvent(req, res) {
 
 
     try {
-        const events = await Event.deleteEvent(id);
-        res.status(200).json({result: "Deleted"});
+        await Event.deleteEvent(id);
+        res.status(200);
     } catch (error) {
         console.log(`Unable to delete event from the database. Error: ${error.message}`)
         res.status(500).json({result: "An error occurred while attempting to delete an event from your calendar. Please try again later."})

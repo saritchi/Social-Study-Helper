@@ -5,7 +5,6 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './App.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "shards-ui/dist/css/shards.min.css"
-import AddEvent from './components/pages/AddEvent';
 import Register from './components/pages/Register';
 import LoginPage from './components/pages/LoginPage';
 import Home from './components/pages/Home';
@@ -121,7 +120,7 @@ class App extends Component {
                 )}
               />
 
-              <Route
+              {/* <Route
                 path="/addEvent"
                 exact
                 render={props => (
@@ -129,7 +128,7 @@ class App extends Component {
                     <AddEvent></AddEvent>
                   </React.Fragment>
                 )}
-              />
+              /> */}
           </Switch>
       </div>
       </Router>

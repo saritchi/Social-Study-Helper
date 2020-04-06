@@ -42,3 +42,22 @@
     width: 100%;
 }
 
+#EventInfo{
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 5%;
+    padding-bottom: 5%;
+}
+
+label{
+    float: left;
+}
+
+.react-datepicker{
+    min-width: 257pt;
+}
+
+.react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box ul.react-datepicker__time-list li.react-datepicker__time-list-item--selected{
+    background-color: #007bff;
+}

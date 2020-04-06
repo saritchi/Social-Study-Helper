@@ -105,14 +105,18 @@ class Database {
             PRIMARY KEY (id)
         );`;
 
-        const createEventTableSQL = `CREATE TABLE IF NOT EXISTS events (
+        const createEventTableSQL = `CREATE TABLE IF NOT EXISTS Events (
             id INT NOT NULL AUTO_INCREMENT,
-            userEmail VARCHAR(255),
             title VARCHAR(50) NULL,
             description VARCHAR(500) NULL,
             startDate DATETIME NULL,
             endDate DATETIME NULL,
-            PRIMARY KEY (id)
+            userEmail VARCHAR(255),
+            PRIMARY KEY (id),
+            FOREIGN KEY (userEmail)
+                REFERENCES user(email)
+                ON DELETE CASCADE
+
         );`;
         
         const createSharedCoursesSQL = `CREATE TABLE  IF NOT EXISTS SharedCourses(

@@ -15,7 +15,7 @@ class Event {
  
     async create() {
         const eventQueryString = 'INSERT INTO Events(userEmail, title, description, startDate, endDate) VALUES (?, ?, ?, ?, ?)';
-        await database.runQuery(eventQueryString, [this.userEmail, this.title, this.description, this.startDate, this.endDate]);
+        return (await database.runQuery(eventQueryString, [this.userEmail, this.title, this.description, this.startDate, this.endDate])).insertId;
     }
 
 }

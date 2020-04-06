@@ -6,7 +6,7 @@ import axios from 'axios';
 import CardDisplay from '../subcomponents/CardDisplay';
 import * as withAlert from "../HOC/ComponentWithAlert";
 import withMenu from '../HOC/ComponentWithMenu';
-import UserCalendar from './UserCalendar'
+import UserCalendar from '../subcomponents/UserCalendar'
 
 
 class Home extends Component {

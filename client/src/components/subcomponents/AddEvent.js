@@ -6,7 +6,6 @@ import axios from "axios";
 import * as withAlert from "../HOC/ComponentWithAlert";
 import withMenu from '../HOC/ComponentWithMenu';
 import moment from 'moment';
-//import { TiDelete } from 'react-icons/ti';
 
 class AddEvent extends Component {
     titleId = "Title"
