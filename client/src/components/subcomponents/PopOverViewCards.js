@@ -4,6 +4,8 @@ import './PopOverViewCards.css';
 
 
 const PopOverViewCards = (props) => {
+    console.log(props.user_role)
+    if(props.user_role != "teacher"){
         return(
             <div>
             <ButtonGroup id="viewCard-options">
@@ -25,6 +27,12 @@ const PopOverViewCards = (props) => {
             </ButtonGroup>
         </div>
         )
+    }else{
+        return(
+            <div></div>
+        )
+    }
+
 }
 
 export default PopOverViewCards;
