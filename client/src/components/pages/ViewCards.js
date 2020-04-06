@@ -23,7 +23,7 @@ class ViewCards extends React.Component {
       today_cards: [],
       cards: [],
       difficulty_selected: [],
-
+      user_role: props.user.role
     };
   }
 
@@ -50,6 +50,10 @@ class ViewCards extends React.Component {
 
       if(!this.state.cards.length){
         this.setState({cards: this.state.all_cards, view_all: true});
+      }
+
+      if(this.props.user.role === "teacher"){
+        this.setState({view_all: true});
       }
 
       document.addEventListener("keydown", this.handleKeyDown);
@@ -288,12 +292,28 @@ class ViewCards extends React.Component {
             <Card className="flashcard-done">
               <h2>Great Work!</h2>
               <h4>You just studied {this.state.cards.length} card(s)!</h4>
-              <Button onClick={this.restartDeck} block>Study Again!</Button>
-              <Button onClick={this.goBack} block>Finish</Button>
+              <div id="end-deck-buttons">
+                <Button onClick={this.restartDeck} block theme="info">Study Again!</Button>
+                <Button onClick={this.goBack} block theme="success">Finish</Button>
+              </div>
             </Card>
           </div>
         </div>
       );
+    }
+    else if(this.state.cards.length && !this.state.cards[0].prompt && !this.state.cards[0].answer){
+      return(
+        <div>
+          <div className="flash-container">
+            <Card className="flashcard-done">
+              <h3>There are no cards in this deck...</h3>
+              <div id="end-deck-buttons">
+                <Button onClick={this.goBack} block theme="info">Go Back</Button>
+              </div>
+            </Card>
+          </div>
+        </div>
+      )
     }
     else {
       return (
@@ -310,7 +330,8 @@ class ViewCards extends React.Component {
                               function_all={this.viewAll} 
                               function_toggle={this.toggle_popover} 
                               open={this.state.open_toggle}
-                              view={this.state.view_all}/>
+                              view={this.state.view_all}
+                              user_role={this.state.user_role}/>
           
           <div className="flash-container">
             <ReactCardFlip isFlipped={this.state.isFlipped} flipDirection="vertical">
@@ -321,12 +342,11 @@ class ViewCards extends React.Component {
                 {this.renderAnswer(this.state.cardIndex)}
               </Card>
             </ReactCardFlip>
+
+            <ChangeCardButtons passedFunction={this.updateCard} index={this.state.cardIndex} view={this.state.view_all} user_role={this.state.user_role}/>
           </div>
           <div>
-            <ChangeCardButtons passedFunction={this.updateCard} index={this.state.cardIndex} view={this.state.view_all}/>
-          </div>
-          <div>
-            <DifficultButtons passedFunction={this.markDifficulty} view={this.state.view_all}/>
+            <DifficultButtons passedFunction={this.markDifficulty} view={this.state.view_all} user_role={this.state.user_role}/>
           </div>
 
         </div>

@@ -15,8 +15,6 @@ export const withAlert = (WrappedComponent) => {
                 timeUntilDismissed: 5
             }
         }
-        
-
 
         render() {
             return (

@@ -1,0 +1,13 @@
+.odd {
+    text-align: left;
+    border: 1px solid rgba(0,0,0,.125) !important;
+    margin: 0;
+    border: 0;
+}
+
+.even {
+    text-align: right;
+    border: 1px solid rgba(0,0,0,.125) !important;
+    margin: 0;
+    border: 0;
+}
