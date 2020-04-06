@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {withRouter} from "react-router-dom"
 import { Button, Nav, NavItem } from 'shards-react';
+import { GoPlus } from 'react-icons/go';
 import axios from "axios";
 import './DeckDisplay.css';
 import * as withAlert from "../HOC/ComponentWithAlert";
@@ -197,6 +198,7 @@ class DeckDisplay extends Component {
                         </NavItem>
                     </Nav>
                 </div>
+
                 <CardDisplay changePage={this.cardView} options={showOptions}
                              sharedContentCallback={this.shareDeckCallback}
                              removeSharedContentCallback={this.removeSharedDeckCallback}
@@ -204,7 +206,8 @@ class DeckDisplay extends Component {
                              deleteCallback={this.deleteCourseCallback}
                              user={this.props.user}
                              editCallback={this.editDeckView} />
-                <Button id="newDeck" onClick={this.addDeck}>Add New Deck</Button>
+                             
+                <Button id="newDeck" onClick={this.addDeck} theme="info" size="lg"><GoPlus size={30}/></Button>
                 <div id = "newTest">
 
                 <TestModal coursename={this.state.coursename} 

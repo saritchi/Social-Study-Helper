@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import { withRouter } from "react-router-dom"
-import { Button,ButtonGroup, Nav, NavItem, NavLink, CardBody, CardHeader } from 'shards-react'
+import { Button, Nav, NavItem, NavLink } from 'shards-react'
 import './Home.css'
 import axios from 'axios';
 import CardDisplay from '../subcomponents/CardDisplay';
@@ -314,6 +314,7 @@ class Home extends Component {
                 <div id="user">
                     <h1>Welcome {username}!</h1>
                 </div>
+                    
                 <div>
                     <UserCalendar user={this.props.user}></UserCalendar>
                 </div>
@@ -335,7 +336,8 @@ class Home extends Component {
                              user={this.props.user}
                              cardsInfo={this.state.courses}
                 />
-                <Button id="newCourse" onClick={this.addCourse}>Add New Course</Button>
+                <Button id="newCourse-home" onClick={this.addCourse} theme="info">Create New Course</Button>
+                
                 <div id="testsView">
                     <Nav>
                         <NavItem id="upcomingTests">
@@ -355,7 +357,9 @@ class Home extends Component {
 
                     </TestModal>
                 </div>
+                
                 <div id="sharedCourses">
+                    <hr></hr>
                     <Nav>
                         <NavItem id="recentSharedCourses">
                             <h3>Shared Courses Preview: </h3>
@@ -367,6 +371,7 @@ class Home extends Component {
                     <CardDisplay changePage={this.sharedCourseView} cardsInfo={this.state.sharedCourses}/>
                 </div>
                 <div id="sharedDecks">
+                <hr></hr>
                     <Nav>
                         <NavItem id="recentSharedDecks">
                                 <h3>Shared Decks Preview: </h3>
