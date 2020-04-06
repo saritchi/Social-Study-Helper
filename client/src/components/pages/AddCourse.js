@@ -131,13 +131,13 @@ class AddCourse extends Component {
     const deckInfoArray = Object.keys(deckInfo)
     for(var i = 0; i < deckInfoArray.length; i++)  {
       const key = deckInfoArray[i];
-      var courseNameInput = document.getElementById(key);
+      var decknameInput = document.getElementById(key);
       if(!deckInfo[key]) {
-        courseNameInput.className += ' ' + this.invalidInputClassName;
+        decknameInput.className += ' ' + this.invalidInputClassName;
         validInput = false;
       }
       else {
-        courseNameInput.classList.remove(this.invalidInputClassName);
+        decknameInput.classList.remove(this.invalidInputClassName);
       }
     }
     

@@ -60,7 +60,7 @@ class UserCalendar extends Component {
             }
             else {
                 console.error(error);
-                //this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+                this.props.displayError(error.response.data.result);
             }
         }
     }
@@ -68,7 +68,7 @@ class UserCalendar extends Component {
    deleteEvent = async e => {
         try {
             
-            let idx_event = this.state.events.findIndex(({id}) => id == this.state.eventId);
+            let idx_event = this.state.events.findIndex(({id}) => id === this.state.eventId);
             this.state.events.splice(idx_event, 1);
 
             this.setState({
@@ -88,7 +88,7 @@ class UserCalendar extends Component {
             }
             else {
                 console.error(error);
-                //this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+                this.props.displayError(error.response.data.result);
             }
         }
         
@@ -172,13 +172,13 @@ class UserCalendar extends Component {
         const json = {
             title: this.state.title,
             description: this.state.description,
-            startDate: moment(this.state.startDate).format(),
-            endDate: moment(this.state.endDate).format()
+            startDate: moment(this.state.startDate).format('YYYY-MM-DD HH:mm:ss').replace('T', ' '),
+            endDate: moment(this.state.endDate).format('YYYY-MM-DD HH:mm:ss').replace('T', ' ')
         }
 
         try{
             const eventId = await axios.post("/api/addEvent", json);
-            //this.props.showAlert(withAlert.successTheme, "Added Event");
+            this.props.displayEventPrompt("Added Event");
             this.setState(prevState => ({
                 events: [...prevState.events, {id: eventId, title: this.state.title, description: this.state.description, start: moment(this.state.startDate)._d, end: moment(this.state.endDate)._d}]
             }))
@@ -194,7 +194,7 @@ class UserCalendar extends Component {
                 this.props.history.replace("/");
             }else{
                 console.log(error);
-                //this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+                this.props.displayError(error.response.data.result);
             }
         }
 
@@ -270,7 +270,7 @@ class UserCalendar extends Component {
                                     ></DatePicker>
                                 </Col>
                                 <Col sm="1">
-                                    <h6></h6>
+                                    <br/>
                                     <h6>to</h6>
                                 </Col>
                                 <Col >
