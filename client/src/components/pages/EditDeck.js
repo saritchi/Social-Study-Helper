@@ -35,6 +35,7 @@ class EditDeck extends React.Component {
             });
   
             const deckName = response.data.result_names;
+            console.log(deckName)
             const cardSet = response.data.result_cards;
             console.log(deckName);
             cardSet.forEach((card) => {
