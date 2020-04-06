@@ -155,10 +155,11 @@ export default class TestModal extends React.Component {
                     <ModalHeader>{header}</ModalHeader>
                     <ModalBody>
                         <Form onSubmit={this.onSubmit}>
-                            {courseSelect}
-                            <br />
                             <FormInput name="testName" value={this.state.testName} onChange={this.onInputChange} placeholder="Test Name" />
-                            <br />
+                            <br/>
+                            {courseSelect}
+                            <br/>
+                            <br/>
                             <MultiSelect
                                 options={this.state.options}
                                 value={this.state.selected}
@@ -166,8 +167,8 @@ export default class TestModal extends React.Component {
                                 overrideStrings={{ 'selectSomeItems': "Select Decks for Test" }} />
                             <br />
                             <FormInput name="testDate" value={this.state.testDate} onChange={this.onInputChange} type="datetime-local" />
-                            <br />
-                            <Button type="submit">Submit</Button>
+                            <br/>
+                            <Button type="submit" theme="success">Submit</Button>
                         </Form>
                     </ModalBody>
                 </Modal>
