@@ -159,13 +159,24 @@ class Home extends Component {
         return false;
     }
 
-    submitTest = (error) => {
+    submitTest = async (error) => {
         if(error) {
             console.log(error);
             this.props.showAlert(withAlert.errorTheme, error.response.data.result);
         }
         else {
             this.props.showAlert(withAlert.successTheme, "Test Added!");
+            try {
+                const testsResponse = await axios.get('api/getTests', {
+                   params: {
+                       userEmail: this.props.user.email
+                   }
+               })
+               this.setState({tests: testsResponse.data.result});
+            } catch(error) {
+               console.error(error);
+               this.props.showAlert(withAlert.errorTheme, error.response.data.result);
+            }
         }
     }
 
@@ -333,6 +344,7 @@ class Home extends Component {
                               dateParse={this.dateConverter}/>
                     <TestModal isHome="true"
                                courseOptions={this.state.courses}
+                            //    courseId={this.state.courses[0].id}
                                userEmail={this.props.user.email}
                                submitCallback={this.submitTest}
                                options={[]}>

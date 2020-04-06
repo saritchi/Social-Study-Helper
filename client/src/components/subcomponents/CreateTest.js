@@ -11,9 +11,9 @@ export default class TestModal extends React.Component {
         this.state = {
             open: false,
             selected: [],
-            courseOptions: [],
             deckOptions: [],
             options: [],
+            courseId: 0,
             testName: '',
             testDate: ""
         };
@@ -27,7 +27,8 @@ export default class TestModal extends React.Component {
     toggle() {
         this.setDate();
         this.setState({
-            open: !this.state.open
+            open: !this.state.open,
+            courseId: this.props?.courseId
         });
     }
 
@@ -53,7 +54,7 @@ export default class TestModal extends React.Component {
     onSubmit = async event => {
         event.preventDefault();
         const testName = this.state.testName;
-        const courseId = this.props.courseId;
+        const courseId = this.state.courseId;
         const testDate = this.state.testDate;
         const userEmail = this.props.userEmail;
         var decklist = {};
@@ -71,6 +72,9 @@ export default class TestModal extends React.Component {
             userEmail: userEmail
         };
         try {
+            if(courseId === 0) {
+                throw new Error("Please select a valid course");
+            }
             const response = await axios.post("api/addTest", json);
             console.log(response.status);
             this.setDate();
@@ -90,18 +94,24 @@ export default class TestModal extends React.Component {
     }
 
     changeCourse = async event => {
+        console.log(event);
+        const courseId = event.target.value;
         const deckResponse = await axios.get('/api/decks',  {
             params: {
-                id: event.target.value,
+                id: courseId,
             }
         });
         this.setState({
-            deckOptions: deckResponse.data.result
+            deckOptions: deckResponse.data.result,
+            courseId: courseId,
+            selected: []
         })
+        this.getOptions();
+        console.log(this.state.deckOptions);
     }
 
     getOptions = () => {
-            var options = this.props.deckOptions.map(function (item) {
+            var options = this.state.deckOptions.map(function (item) {
                 return {
                     label: item.name,
                     value: item.id
@@ -114,20 +124,14 @@ export default class TestModal extends React.Component {
 
     render() {
         const { open } = this.state;
-        // const options = this.props.options.map(function (item) {
-        //     return {
-        //         label: item.name,
-        //         value: item.id
-        //     }
-        // });
         var header = this.props.isHome? "New Test" : "New Test for " + this.props.coursename;
         let courseSelect;
         if(this.props.isHome) {
             courseSelect = <FormSelect onChange={this.changeCourse}>
+                            <option key={0} value={0}>Please select a course</option>
                             {this.props.courseOptions.map(courseInfo =>
                                 <option key={courseInfo.id} value={courseInfo.id}>{courseInfo.name}</option>)}
-                           </FormSelect>
-                           
+                           </FormSelect>             
         }
         else {
             courseSelect = <></>
