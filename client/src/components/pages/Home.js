@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import { withRouter } from "react-router-dom"
-import { Button, Nav, NavItem, NavLink, CardBody, CardHeader } from 'shards-react'
+import { Button, Nav, NavItem, NavLink } from 'shards-react'
 import './Home.css'
 import axios from 'axios';
 import CardDisplay from '../subcomponents/CardDisplay';
@@ -20,9 +20,9 @@ class Home extends Component {
             sharedCourses: [],
             sharedDecks: [],
         };
-        this.coursesDisplayLimit = 9
+        this.coursesDisplayLimit = 9;
         this.sharedContentDisplayLimit = 3;
-        this.orderBy = 'lastAccess'
+        this.orderBy = 'lastAccess';
     }
 
     async componentDidMount() {
@@ -82,7 +82,6 @@ class Home extends Component {
         const sharedCourses = sharedCoursesResponse.data.result;
         const sharedDecks = sharedDecksResponse.data.result
         const sharedContent = sharedContentResponse.data.result;
-
         const courseIds = courses.map((course) => course.id);
         const sharedUsers = sharedContent.filter((sharedContent) => courseIds.includes(sharedContent.courseId))
         //find the user each course has been shared with and add them to the course object
@@ -315,6 +314,7 @@ class Home extends Component {
                 <div id="user">
                     <h1>Welcome {username}!</h1>
                 </div>
+                    
                 <div>
                     <UserCalendar user={this.props.user}></UserCalendar>
                 </div>
@@ -333,9 +333,11 @@ class Home extends Component {
                              removeSharedContentCallback={this.removeSharedCourseCallback}
                              deleteCallback={this.deleteCourseCallback}
                              editCallback={this.editCourseView}
+                             user={this.props.user}
                              cardsInfo={this.state.courses}
                 />
-                <Button id="newCourse" onClick={this.addCourse}>Add New Course</Button>
+                <Button id="newCourse-home" onClick={this.addCourse} theme="info">Create New Course</Button>
+                
                 <div id="testsView">
                     <Nav>
                         <NavItem id="upcomingTests">
@@ -355,7 +357,9 @@ class Home extends Component {
 
                     </TestModal>
                 </div>
+                
                 <div id="sharedCourses">
+                    <hr></hr>
                     <Nav>
                         <NavItem id="recentSharedCourses">
                             <h3>Shared Courses Preview: </h3>
@@ -367,6 +371,7 @@ class Home extends Component {
                     <CardDisplay changePage={this.sharedCourseView} cardsInfo={this.state.sharedCourses}/>
                 </div>
                 <div id="sharedDecks">
+                <hr></hr>
                     <Nav>
                         <NavItem id="recentSharedDecks">
                                 <h3>Shared Decks Preview: </h3>

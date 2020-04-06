@@ -3,8 +3,9 @@ const Database = require('../../app/database/database');
 const database = Database(process.env);
 
 
-async function dropTables() {
-    const dropTablesSQL = `
+module.exports = class TestDatabaseManager {
+    static async reset(database) {
+        const dropTablesSQL = `
         SET FOREIGN_KEY_CHECKS = 0;
         drop table if exists user;
         drop table if exists Decks;
@@ -15,17 +16,13 @@ async function dropTables() {
         SET FOREIGN_KEY_CHECKS = 1
     `
     
-    try {
-        await database.connect();
-        await database.runQuery(dropTablesSQL, [])
-        console.log("Database clean up successful");
+        try {
+            await database.runQuery(dropTablesSQL, [])
+            console.log("Database clean up successful");
+        }
+        catch (error) {
+            console.log("Unable to clean up databases! Error: " + error.message);
+            throw error;
+        }
     }
-    catch (error) {
-        console.log("Unable to clean up databases! Error: " + error.message);
-    } finally {
-        await database.close();
-    }
-
 }
-
-dropTables();

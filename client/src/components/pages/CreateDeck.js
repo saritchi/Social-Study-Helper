@@ -63,11 +63,11 @@ class CreateDeck extends React.Component {
                     
                     <Row>
                         <Col>
-                            <label htmlFor={index}><h6>Prompt:</h6></label>
+                            <label className="input-headers" htmlFor={index}><h6>Prompt</h6></label>
                             <FormTextarea id={index} onChange={this.onInputChange} name="card_prompt"/>
                         </Col>
                         <Col>
-                            <label htmlFor={index}><h6>Answer:</h6></label>
+                            <label className="input-headers" htmlFor={index}><h6>Answer</h6></label>
                             <FormTextarea id={index} onChange={this.onInputChange} name="card_answer"/>
                         </Col>
                         <TiDelete id={index} onClick={(e) => this.deleteCard(e, index) }size={"2em"} />
@@ -185,11 +185,11 @@ class CreateDeck extends React.Component {
                 <Form id="deck">
                     
                     <Container>
-                        <label htmlFor="deckName"><h5>Deck Name:</h5></label>
+                        <label className="input-headers" htmlFor="deckName"><h5>Deck Name</h5></label>
                         <FormInput id="deckName" name="deckname" onChange={this.onInputChange} value={this.state.deckname} placeholder="Deck Name"/>
                     </Container>
                     {this.renderCardInputs()}
-                    <Button id="addCard" onClick={this.addCard} size="lg">Add Card</Button>
+                    <Button id="addCard" onClick={this.addCard} theme="info" block size="lg">Add Card</Button>
                     <br></br>
                     <Button id="addDeck" theme="success" onClick={this.onSubmit} size="lg">Create Deck</Button>
                 </Form>

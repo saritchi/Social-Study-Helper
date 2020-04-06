@@ -5,21 +5,27 @@
 #allCourses, #allSharedContent {
   margin-left: auto;
   margin-right: 9%;
+  
 }
 
+a {
+  color:#00b8d8 !important;
+}
 
-#newCourse {
-  margin-right: 10%;
-  margin-top: 5%;
-  float: right;
+hr {
+  width: 90%;
 }
 
 #user {
   margin: 5%;
 }
 
+#newCourse-home {
+  margin:auto;
+}
+
 #sharedCourses {
-  margin-top: 10%;
+  margin-top: 5%;
 }
 
 #sharedDecks {

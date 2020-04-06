@@ -3,7 +3,7 @@ var Deck = require('../models/deck');
 var Card = require('../models/card');
 var SharedDeck = require('../models/shared-deck')
 var runTransaction = require('../database/helper');
-var requireLogin = require('../middleware/authentication');
+var authentication = require('../middleware/authentication');
 
 async function getDecks(req, res) {
     console.log("Getting decks....");
@@ -49,6 +49,7 @@ async function addDeck(req, res) {
 async function getDeckData(req, res) {
     console.log("Fetching Cards...");
     const deckId = req.query.deck
+    console.log(deckId)
 
     try {
         const cards = await Card.getAllFromDeckId(deckId);
@@ -122,12 +123,12 @@ async function deleteAllCardFromDeck(deckId) {
 }
 
 
-router.get('/decks', requireLogin, getDecks)
-router.get('/editDeck', requireLogin, getDeckData)
+router.get('/decks', authentication.requireLogin, getDecks)
+router.get('/editDeck', authentication.requireLogin, getDeckData)
 
-router.post('/addDeck', requireLogin, addDeck)
-router.post('/editDeck', requireLogin, updateDeck)
+router.post('/addDeck', authentication.requireLogin, addDeck)
+router.post('/editDeck', authentication.requireLogin, updateDeck)
 
-router.delete('/deleteDeck', requireLogin, deleteDeck)
+router.delete('/deleteDeck', authentication.requireLogin, deleteDeck)
 
 module.exports = router;

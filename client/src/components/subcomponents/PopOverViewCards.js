@@ -1,11 +1,14 @@
 import React from "react";
 import { Button, ButtonGroup, Popover, PopoverHeader, PopoverBody } from "shards-react";
+import './PopOverViewCards.css';
 
 
 const PopOverViewCards = (props) => {
+    console.log(props.user_role)
+    if(props.user_role != "teacher"){
         return(
             <div>
-            <ButtonGroup >
+            <ButtonGroup id="viewCard-options">
             <Button id="popover" onClick={props.function_today} outline={props.view}>Today</Button>
                 <Popover
                 placement="bottom"
@@ -20,10 +23,16 @@ const PopOverViewCards = (props) => {
                     to view all cards.
                 </PopoverBody>
                 </Popover>
-            <Button onClick={props.function_all} outline={!props.view}>All</Button>
+            <Button id="view-all-cards" onClick={props.function_all} outline={!props.view}>All</Button>
             </ButtonGroup>
         </div>
         )
+    }else{
+        return(
+            <div></div>
+        )
+    }
+
 }
 
 export default PopOverViewCards;

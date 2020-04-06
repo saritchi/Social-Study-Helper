@@ -1,0 +1,68 @@
+#title {
+    margin: 1em;
+}
+
+#messageRow {
+    min-height: 100em;
+}
+
+.row {
+    min-height: 30em;
+    min-width: 100em;
+}
+
+
+#messageContainer {
+    margin-left: 4%;
+    margin-right: 4%;
+    width: 100%;
+    height: 100%;
+
+}
+
+#newMessageForm {
+    margin-top: 3em;
+    width: 100%;
+}
+
+#sendMessage{
+    margin-top: 2%;
+    margin-bottom: 2%;
+    margin-left: auto;
+    order: 2;
+}
+
+#messages {
+    width: 100%;
+    max-height: 22em;
+    margin-top: 2%;
+    overflow: auto;
+}
+
+#threads{
+    overflow: auto;
+    width: 100%;
+    height: 100%;
+}
+
+#messageThreads{
+    max-height: 100%;
+    max-width: 100%;
+    margin: 7%;
+    overflow: auto;
+}
+
+.messageThread{
+    cursor: pointer;
+    text-align: center;
+}
+
+#newMessageThread {
+    margin: 3em;
+    bottom: 0;
+    float: right;
+}
+
+.even .odd {
+    border-color: lightcoral;
+}
