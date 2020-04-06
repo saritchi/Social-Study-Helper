@@ -10,6 +10,11 @@
     margin-right: 50px;
 
 }
+#newTest {
+    margin: 2%;
+    margin-left: 10%;
+    float: left;
+}
 
 #decklist {
     margin-left: 10%;

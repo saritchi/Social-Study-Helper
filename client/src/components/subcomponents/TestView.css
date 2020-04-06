@@ -1,0 +1,25 @@
+.testRow {
+    background-color:#e9ecef; 
+    display:inline;
+    border: black;
+    border-width: thick;
+    margin: 1em;
+
+}
+
+
+.testDelete {
+    margin-top: 0.125em;
+    float: right;
+}
+
+.list-group {
+    max-height: 20em;
+}
+
+.list-group-item {
+    background-color: #e9ecef;
+    padding: 0.5rem, 1.0rem;
+    font: bold;
+}
+

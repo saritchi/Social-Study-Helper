@@ -15,7 +15,7 @@ export default class OptionsDropdown extends Component {
   toggleShareMenu = () => this.setState({openShareMenu: !this.state.openShareMenu})
 
   render() {
-    console.log(this.props.id);
+    const isTeacher = this.props.user.role === 'teacher' ? true : false
     return (
       <div>
         <ShareModal key={this.props.sharedWithUsers}
@@ -28,7 +28,8 @@ export default class OptionsDropdown extends Component {
           <DropdownMenu>
             <DropdownItem onClick={() => this.props.editCallback(this.props.id)}>Edit</DropdownItem>
             <DropdownItem onClick={() => this.props.deleteCallback(this.props.id)}>Delete</DropdownItem>
-            <DropdownItem onClick={this.toggleShareMenu}>Share</DropdownItem>
+            {!isTeacher && <DropdownItem onClick={this.toggleShareMenu}>Share</DropdownItem>}
+            {isTeacher && <DropdownItem onClick={this.toggleShareMenu}>Assign Students</DropdownItem>}
           </DropdownMenu>
         </Dropdown>
       </div>

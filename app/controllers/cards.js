@@ -1,7 +1,7 @@
 var router = require('express').Router();
 var Card = require('../models/card');
 var runTransaction = require('../database/helper');
-var requireLogin = require('../middleware/authentication');
+var authentication = require('../middleware/authentication');
 
 async function viewCards(req, res) {
     console.log("Fetching Cards...");
@@ -39,7 +39,7 @@ async function update_study_time(req, res) {
 
 }
 
-router.get('/viewCards', requireLogin, viewCards)
-router.post('/timestampCard', requireLogin, update_study_time)
+router.get('/viewCards', authentication.requireLogin, viewCards)
+router.post('/timestampCard', authentication.requireLogin, update_study_time)
 
 module.exports = router;

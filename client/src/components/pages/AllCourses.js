@@ -194,6 +194,7 @@ class AllCourses extends Component {
                              removeSharedContentCallback={this.removeSharedCourseCallback}
                              deleteCallback={this.deleteCourseCallback}
                              editCallback={this.editCourseView}
+                             user={this.props.user}
                              cardsInfo={this.state.courses}
                 />
                                 <Button id="newCourse" onClick={this.addCourse} size="lg" theme="info"><GoPlus size={30}/></Button>
