@@ -42,11 +42,11 @@ export default (WrappedComponent) => {
             });
         }
 
-<<<<<<< HEAD
         allSharedContent = (event) => {
             event.preventDefault();
             this.props.history.push('/allSharedContent')
-=======
+        }
+        
         messagesView = (event) => {
             event.preventDefault();
             this.props.history.push('/messages')
@@ -55,7 +55,6 @@ export default (WrappedComponent) => {
         assignedStudentsView = (event) => {
             event.preventDefault();
             this.props.history.push('/assignedStudents');
->>>>>>> master
         }
 
         logout = async (event) => {

@@ -130,8 +130,6 @@ class App extends Component {
                 render={props => (
                   <React.Fragment>
                     <EditDeck  user={this.state.user} setUser={this.setUser}/>
-<<<<<<< HEAD
-=======
                   </React.Fragment>
                 )}
               />
@@ -141,7 +139,6 @@ class App extends Component {
                 render={props => (
                   <React.Fragment>
                     <Messages  user={this.state.user} setUser={this.setUser}/>
->>>>>>> master
                   </React.Fragment>
                 )}
               />
