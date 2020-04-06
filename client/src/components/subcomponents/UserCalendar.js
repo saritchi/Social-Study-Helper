@@ -172,8 +172,8 @@ class UserCalendar extends Component {
         const json = {
             title: this.state.title,
             description: this.state.description,
-            startDate: moment(this.state.startDate).format(),
-            endDate: moment(this.state.endDate).format()
+            startDate: moment(this.state.startDate).format('YYYY-MM-DD HH:mm:ss').replace('T', ' '),
+            endDate: moment(this.state.endDate).format('YYYY-MM-DD HH:mm:ss').replace('T', ' ')
         }
 
         try{
