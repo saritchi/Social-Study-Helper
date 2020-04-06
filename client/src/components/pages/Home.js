@@ -6,6 +6,7 @@ import axios from 'axios';
 import CardDisplay from '../subcomponents/CardDisplay';
 import * as withAlert from "../HOC/ComponentWithAlert";
 import withMenu from '../HOC/ComponentWithMenu';
+import UserCalendar from '../subcomponents/UserCalendar'
 
 
 class Home extends Component {
@@ -251,6 +252,9 @@ class Home extends Component {
             <div>
                 <div id="user">
                     <h1>Welcome {username}!</h1>
+                </div>
+                <div>
+                    <UserCalendar user={this.props.user}></UserCalendar>
                 </div>
                 <div>
                     <Nav>

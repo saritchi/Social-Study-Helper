@@ -5,6 +5,7 @@ import './AddCourse.css';
 import axios from "axios";
 import * as withAlert from "../HOC/ComponentWithAlert";
 import withMenu from '../HOC/ComponentWithMenu';
+import BackButton from '../subcomponents/BackButton'
 import { TiDelete } from 'react-icons/ti';
 
 class AddCourse extends Component {
@@ -21,6 +22,8 @@ class AddCourse extends Component {
       //This stores data that the user types into the input fields
       //TODO: need to update when UI can select an midterm/final/test day.
       deckInfo: {},
+      giveWarning: false,
+      modal_open: false
     }
   }
   
@@ -32,6 +35,16 @@ class AddCourse extends Component {
 
     this.addDeckInput();
   }
+
+  goBack = () => {
+    this.props.history.goBack();
+}
+
+  toggle_modal = () => {
+    this.setState({
+      modal_open: !this.state.modal_open
+    });
+}
 
   addDeckInput = () => {
     const currentKey = "deck" + Object.keys(this.state.deckInfo).length;
@@ -128,6 +141,9 @@ class AddCourse extends Component {
   }
 
   onInputChange = e => {
+    if(this.state.giveWarning === false){
+      this.setState({giveWarning: true})
+    }
     if(e.target.name === "deckInfo") {
       const deckInfo = this.state.deckInfo;
       deckInfo[e.target.id] = e.target.value;
@@ -148,6 +164,14 @@ class AddCourse extends Component {
   render() {
     return (
       <div>
+        <div>
+          <BackButton page="Home" 
+                      goback={this.goBack} 
+                      toggle={this.toggle_modal} 
+                      open={this.state.modal_open} 
+                      warning={this.state.giveWarning}
+          />
+        </div>
         <Form id="courseInfo">
         <h1>Course Information</h1>
           <FormGroup id="courseNameGroup">

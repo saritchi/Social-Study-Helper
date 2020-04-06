@@ -1,0 +1,32 @@
+#EventInfo {
+    margin-left: 30%;
+    margin-right: 30%;
+    margin-top: 3%;
+    padding: 2%;
+    padding-left: 4%;
+    padding-right: 4%;
+    -moz-box-shadow: 0 0 3px #ccc;
+    -webkit-box-shadow: 0 0 3px #ccc;
+    box-shadow: 0 0 3px #ccc;
+    row-gap: 1em;
+    grid-column: 1/4;
+    display: inherit;
+    grid-template-columns: 1fr 0.1fr;
+}
+
+h1 {
+    grid-column: 1/4;
+}
+
+label{
+    float: left;
+}
+
+.react-datepicker{
+    min-width: 257pt;
+}
+
+.react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box ul.react-datepicker__time-list li.react-datepicker__time-list-item--selected{
+    background-color: #007bff;
+}
+
