@@ -1,3 +1,12 @@
+# About
+Social Study Helper is a group project done for CMPT 470 - Web Based Information Systems. The project was coded throughout the Spring 2020 semester, with the goal of creating a Web-based application. The frameworks used were **Node.js**, **React**, and **SQL**. 
+
+**School**: Simon Fraser University
+
+**Teacher**: Bobby Chan
+
+**Contributors**: Scott Ritchie, Scott Plummer, Aidan Earle, Linden Kwok, Ahmed Haque
+
 # Development
 To set up your development environment you must do the following
 
